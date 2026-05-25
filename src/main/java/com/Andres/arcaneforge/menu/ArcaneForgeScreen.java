@@ -3,18 +3,21 @@ package com.Andres.arcaneforge.menu;
 import com.Andres.arcaneforge.ArcaneForge;
 import com.Andres.arcaneforge.Config;
 import com.Andres.arcaneforge.block.ArcaneForgeBlockEntity;
+import com.Andres.arcaneforge.block.ArcanePedestalBlock;
 import com.Andres.arcaneforge.network.C2SEnchantPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +54,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
     private int displayedChests      = 0;
     private int displayedBookshelves = 0;
     private int displayedMagicFuel   = 0;
+    private boolean hasActivePedestal = false;
 
     // ── Botones ───────────────────────────────────────────────────────────────────
     private Button btnScrollUp, btnScrollDown, btnEnchant;
@@ -118,15 +122,16 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         btnModeMinus = addRenderableWidget(Button.builder(Component.literal("➖ Nivel"), b -> toggleSub(2))
                 .bounds(px + 80, ctrlY, 74, 14).build());
 
-        int bw = 28, gap2 = 2;
-        int[] upD    = {  1,   5,   10,   100,  1000};
-        int[] downD  = { -1,  -5,  -10,  -100, -1000};
-        String[] upL   = {"+1", "+5", "+10", "+100", "+1K"};
-        String[] downL = {"-1", "-5", "-10", "-100", "-1K"};
+        // Botones de nivel: quitamos "+1K" y "MAX", ahora son 4 botones
+        int bw = 36, gap2 = 2;
+        int[] upD    = {  1,   5,   10,   100};
+        int[] downD  = { -1,  -5,  -10,  -100};
+        String[] upL   = {"+1", "+5", "+10", "+100"};
+        String[] downL = {"-1", "-5", "-10", "-100"};
 
-        btnLvlUp   = new Button[5];
-        btnLvlDown = new Button[5];
-        for (int i = 0; i < 5; i++) {
+        btnLvlUp   = new Button[4];
+        btnLvlDown = new Button[4];
+        for (int i = 0; i < 4; i++) {
             final int d = upD[i];
             btnLvlUp[i] = addRenderableWidget(Button.builder(Component.literal(upL[i]),
                     b -> adjustLevel(d)).bounds(px + 4 + i * (bw + gap2), ctrlY, bw, 14).build());
@@ -208,7 +213,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         btnModePlus.active   = hasSel;
         btnModeMinus.active  = hasSel;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             btnLvlUp[i].visible   = hasSel && subMenuMode == 1;
             btnLvlDown[i].visible = hasSel && subMenuMode == 2;
         }
@@ -243,13 +248,21 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
             if (item.isEmpty() || Minecraft.getInstance().level == null) return;
             var reg = Minecraft.getInstance().level.registryAccess()
                     .lookupOrThrow(Registries.ENCHANTMENT);
+            
+            // Obtener encantamientos actuales del item
+            ItemEnchantments currentEnchants = item.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+            
             reg.listElements().forEach(h -> {
                 boolean compat = false;
                 try { compat = h.value().canEnchant(item); } catch (Exception ignored) {}
+                
+                // Obtener nivel actual de este encantamiento
+                int currentLevel = currentEnchants.getLevel(h);
+                
                 enchants.add(new EnchantOption(
                         h.key().identifier(),
                         Enchantment.getFullname(h, 1).getString(),
-                        h.value().getMaxLevel(), h, compat));
+                        h.value().getMaxLevel(), h, compat, currentLevel));
             });
             enchants.sort((a, b) -> {
                 if (a.isCompatible() != b.isCompatible()) return a.isCompatible() ? -1 : 1;
@@ -338,7 +351,9 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         // Info de costo (solo si hay selección)
         if (selectedIndex >= 0 && selectedIndex < enchants.size()) {
             int ctrlY = listY + VISIBLE_ROWS * ROW_H + 6;
-            int cost = Config.calculateEnchantCost(selectedLevel, displayedBookshelves);
+            EnchantOption opt = enchants.get(selectedIndex);
+            int baseCost = Config.calculateEnchantCost(opt.currentLevel(), selectedLevel, displayedBookshelves);
+            int cost = Config.calculateEnchantCostWithPedestal(baseCost, hasActivePedestal, selectedLevel);
             boolean canAfford = displayedMagicFuel >= cost;
 
             graphics.text(this.font,
@@ -348,10 +363,22 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
             graphics.text(this.font,
                     "Fuel: §a" + fmtNum(displayedMagicFuel),
                     px + 8, ctrlY + 54, 0xFFFFFFFF);
+            
+            // Mostrar estado del pedestal
+            if (hasActivePedestal) {
+                graphics.text(this.font,
+                        "✓ Pedestal Activo",
+                        px + 8, ctrlY + 65, 0xFF55FFFF);
+            } else {
+                graphics.text(this.font,
+                        "✗ Sin Pedestal",
+                        px + 8, ctrlY + 65, 0xFFFF5555);
+            }
+            
             if (!enchants.get(selectedIndex).isCompatible()) {
                 graphics.text(this.font,
                         "⚠ Incompatible vanilla",
-                        px + 8, ctrlY + 65, 0xFFFF8800);
+                        px + 8, ctrlY + 76, 0xFFFF8800);
             }
         }
     }
@@ -369,6 +396,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 displayedChests      = be.getClientLinkedChests();
                 displayedBookshelves = be.getClientBookshelves();
                 displayedMagicFuel   = be.getClientMagicFuel();
+                hasActivePedestal    = be.hasActivePedestalNearby();
             }
         } catch (Exception ignored) {}
     }
@@ -398,6 +426,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
             String displayName,
             int vanillaMaxLevel,
             Holder<Enchantment> holder,
-            boolean isCompatible
+            boolean isCompatible,
+            int currentLevel
     ) {}
 }

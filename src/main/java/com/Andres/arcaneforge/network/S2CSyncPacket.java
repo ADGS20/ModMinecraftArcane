@@ -12,7 +12,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 /**
  * Servidor → Cliente: Sincroniza datos de la forja.
  */
-public record S2CSyncPacket(BlockPos forgePos, int linkedChests, int bookshelves, int magicFuel)
+public record S2CSyncPacket(BlockPos forgePos, int linkedChests, int bookshelves, int magicFuel, boolean hasActivePedestal)
         implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<S2CSyncPacket> TYPE =
@@ -23,6 +23,7 @@ public record S2CSyncPacket(BlockPos forgePos, int linkedChests, int bookshelves
         buf.writeVarInt(linkedChests);
         buf.writeVarInt(bookshelves);
         buf.writeVarInt(magicFuel);
+        buf.writeBoolean(hasActivePedestal);
     }
 
     public static S2CSyncPacket read(FriendlyByteBuf buf) {
@@ -30,7 +31,8 @@ public record S2CSyncPacket(BlockPos forgePos, int linkedChests, int bookshelves
         int chests = buf.readVarInt();
         int shelves = buf.readVarInt();
         int fuel = buf.readVarInt();
-        return new S2CSyncPacket(pos, chests, shelves, fuel);
+        boolean hasPedestal = buf.readBoolean();
+        return new S2CSyncPacket(pos, chests, shelves, fuel, hasPedestal);
     }
 
     @Override
@@ -43,7 +45,7 @@ public record S2CSyncPacket(BlockPos forgePos, int linkedChests, int bookshelves
             if (ctx.player() != null && ctx.player().level() != null) {
                 BlockEntity be = ctx.player().level().getBlockEntity(pkt.forgePos());
                 if (be instanceof ArcaneForgeBlockEntity forge) {
-                    forge.setClientSyncData(pkt.linkedChests(), pkt.bookshelves(), pkt.magicFuel());
+                    forge.setClientSyncData(pkt.linkedChests(), pkt.bookshelves(), pkt.magicFuel(), pkt.hasActivePedestal());
                 }
             }
         });
