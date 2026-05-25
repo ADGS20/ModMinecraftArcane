@@ -4,12 +4,12 @@ import com.Andres.arcaneforge.ArcaneForge;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.BlockTags;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -32,13 +32,7 @@ public class AxeFortuneHandler {
         // Filtro nativo NeoForge para detectar cualquier tronco u hojas de árbol
         if (!state.is(BlockTags.LOGS) && !state.is(BlockTags.LEAVES) && !state.is(BlockTags.SAPLINGS)) return;
 
-        var registryAccess = player.level().registryAccess();
-        var enchantmentRegistry = registryAccess.registry(Registries.ENCHANTMENT).orElseThrow();
-        var fortuneKey = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath("minecraft", "fortune"));
-        var fortuneHolder = enchantmentRegistry.getHolder(fortuneKey).orElse(null);
-
-        if (fortuneHolder == null) return;
-        int fortuneLevel = tool.getEnchantmentLevel(fortuneHolder);
+        int fortuneLevel = tool.getEnchantmentLevel(Enchantments.FORTUNE);
 
         if (fortuneLevel > 0) {
             for (ItemEntity itemEntity : event.getDrops()) {
