@@ -32,7 +32,7 @@ public class AxeFortuneHandler {
         // Filtro nativo NeoForge para detectar cualquier tronco u hojas de árbol
         if (!state.is(BlockTags.LOGS) && !state.is(BlockTags.LEAVES) && !state.is(BlockTags.SAPLINGS)) return;
 
-        int fortuneLevel = tool.getEnchantmentLevel(Enchantments.FORTUNE);
+        int fortuneLevel = tool.getEnchantmentLevel(Enchantments.FORTUNE.value());
 
         if (fortuneLevel > 0) {
             for (ItemEntity itemEntity : event.getDrops()) {
