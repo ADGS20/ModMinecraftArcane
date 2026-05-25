@@ -90,9 +90,13 @@ public class EnchantmentFusionHandler {
                         // Añadir los elementos extras directamente a la lista de drops del evento
                         event.getDrops().add(itemEntity);
                     }
+                    
+                    String toolType = tool.getItem().toString().contains("axe") ? "Hacha" : 
+                                     tool.getItem().toString().contains("pickaxe") ? "Pico" : "Herramienta";
+                    
                     ArcaneForge.LOGGER.debug(
-                            "Fusion Core: Fortune {} + Silk Touch -> Añadidas {} copias extra de {}",
-                            fortuneLevel, extraDrops, silkDrop.getHoverName().getString());
+                            "Fusion Core: Fortune {} + Silk Touch en {} -> Añadidas {} copias extra de {}",
+                            fortuneLevel, toolType, extraDrops, silkDrop.getHoverName().getString());
                 }
             }
         } catch (Exception e) {
