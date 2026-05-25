@@ -53,6 +53,9 @@ public class Config {
     /** Intervalo de sincronización servidor→cliente (en ticks). 20 = 1 segundo. */
     public static final int SYNC_INTERVAL_TICKS = 20;
 
+    /** Radio de búsqueda del Pedestal Arcano (en bloques). */
+    public static final int PEDESTAL_RANGE = 3;
+
     // ════════════════════════════════════
     // Sistema de Combustible Mágico
     // ════════════════════════════════════
@@ -123,17 +126,60 @@ public class Config {
     /**
      * Fórmula de costo de encantamiento.
      *
-     * costo = (nivel * 2) - 1, reducido por librerías.
+     * costo = (nivelActual + nivelDeseado) * 2 - 1, reducido por librerías.
      * Mínimo: 1 punto de combustible mágico.
      *
-     * @param enchantmentLevel El nivel de encantamiento deseado
+     * @param currentLevel El nivel actual del encantamiento en el item
+     * @param targetLevel El nivel de encantamiento deseado
      * @param bookshelfCount   Número de librerías cercanas
      * @return El costo en puntos de combustible mágico
      */
-    public static int calculateEnchantCost(int enchantmentLevel, int bookshelfCount) {
-        int baseCost = (enchantmentLevel * 2) - 1;
+    public static int calculateEnchantCost(int currentLevel, int targetLevel, int bookshelfCount) {
+        int baseCost = ((currentLevel + targetLevel) * 2) - 1;
         int reduction = bookshelfCount / BOOKSHELVES_PER_REDUCTION;
         return Math.max(1, baseCost - reduction);
+    }
+    
+    /**
+     * Sobrecarga para compatibilidad (asume nivel actual = 0)
+     */
+    public static int calculateEnchantCost(int targetLevel, int bookshelfCount) {
+        return calculateEnchantCost(0, targetLevel, bookshelfCount);
+    }
+
+    /**
+     * Verifica si hay un Pedestal Arcano activo cerca y aplica multiplicador de costo.
+     * Si hay pedestal, permite niveles más altos pero aumenta el costo.
+     * 
+     * @param baseCost El costo base calculado
+     * @param hasActivePedestal Si hay un pedestal arcano activo cerca
+     * @param targetLevel El nivel objetivo del encantamiento
+     * @return El costo final ajustado
+     */
+    public static int calculateEnchantCostWithPedestal(int baseCost, boolean hasActivePedestal, int targetLevel) {
+        if (!hasActivePedestal) {
+            // Sin pedestal: solo permite hasta nivel 30 (límite vanilla mejorado)
+            return baseCost;
+        }
+        
+        // Con pedestal: permite niveles superiores pero con costo aumentado
+        // Multiplicador progresivo: más nivel = más caro exponencialmente
+        float multiplier = 1.0f;
+        
+        if (targetLevel > 30) {
+            // Nivel 31-50: 1.5x de costo
+            multiplier = 1.5f;
+        }
+        if (targetLevel > 50) {
+            // Nivel 51-100: 2.0x de costo
+            multiplier = 2.0f;
+        }
+        if (targetLevel > 100) {
+            // Nivel 101+: 3.0x de costo
+            multiplier = 3.0f;
+        }
+        
+        return Math.max(1, (int)(baseCost * multiplier));
     }
 
     /**
