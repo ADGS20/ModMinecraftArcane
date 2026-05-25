@@ -4,6 +4,7 @@ import com.Andres.arcaneforge.ArcaneForge;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -33,8 +34,11 @@ public class AxeFortuneHandler {
         if (!state.is(BlockTags.LOGS) && !state.is(BlockTags.LEAVES) && !state.is(BlockTags.SAPLINGS)) return;
 
         int fortuneLevel = 0;
-        var enchantmentRegistry = player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
-        var fortuneHolder = enchantmentRegistry.getHolder(ResourceKey.create(Registries.ENCHANTMENT, net.minecraft.resources.ResourceLocation.withDefaultNamespace("fortune")));
+        var registryAccess = player.level().registryAccess();
+        var enchantmentRegistry = registryAccess.registry(Registries.ENCHANTMENT).orElseThrow();
+        var fortuneLocation = ResourceLocation.fromNamespaceAndPath("minecraft", "fortune");
+        var fortuneKey = ResourceKey.create(Registries.ENCHANTMENT, fortuneLocation);
+        var fortuneHolder = enchantmentRegistry.getHolder(fortuneKey);
         if (fortuneHolder.isPresent()) {
             fortuneLevel = tool.getEnchantmentLevel(fortuneHolder.get());
         }
