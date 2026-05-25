@@ -66,7 +66,8 @@ public record C2SEnchantPacket(BlockPos forgePos, Identifier enchantmentId, int 
                     pkt.forgePos(),
                     forge.getLinkedChestCount(),
                     forge.getNearbyBookshelfCount(),
-                    forge.getTotalMagicFuel()
+                    forge.getTotalMagicFuel(),
+                    forge.hasActivePedestal()
             );
 
             serverPlayer.connection.send(result);

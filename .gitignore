@@ -1,40 +1,66 @@
-### Gradle ###
-.gradle
+```
+# Dependencies
+.gradle/
 build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/**/build/
+target/
 
-### IntelliJ IDEA ###
-.idea/
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/**/out/
+# Logs and temp files
+*.log
+*.tmp
 
-.run/
+# Environment
+.env
+.env.local
+*.env.*
 
-### Eclipse ###
-.apt_generated
-.classpath
-.eclipse/
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/**/bin/
-
-### VS Code ###
+# Editors
 .vscode/
+.idea/
 
-### Mac OS ###
-.DS_Store
+# Compiled files
+*.class
+*.jar
+*.war
+*.ear
+*.so
+*.dll
+*.exe
+*.out
+*.o
+*.obj
 
-### Minecraft Modding ###
-run/
-!**/src/**/run/
-**/src/generated/**/.cache/
-repo/
-!**/src/**/repo/
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+```

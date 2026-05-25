@@ -225,7 +225,22 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         cachedBookshelfCount = countNearbyBookshelves();
         cachedMagicFuel = countMagicFuelInLinkedChests();
 
-        int cost = Config.calculateEnchantCost(targetLevel, cachedBookshelfCount);
+        // Obtener nivel actual del encantamiento
+        ItemEnchantments currentEnchants = itemToEnchant.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        int currentLevel = 0;
+        try {
+            var registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+            ResourceKey<Enchantment> key = ResourceKey.create(Registries.ENCHANTMENT, enchantmentId);
+            Optional<Holder.Reference<Enchantment>> optHolder = registry.get(key);
+            if (optHolder.isPresent()) {
+                currentLevel = currentEnchants.getLevel(optHolder.get());
+            }
+        } catch (Exception e) {
+            ArcaneForge.LOGGER.warn("tryEnchant: error obteniendo nivel actual: {}", e.getMessage());
+        }
+
+        // Calcular costo basado en nivel actual + nivel objetivo
+        int cost = Config.calculateEnchantCost(currentLevel, targetLevel, cachedBookshelfCount);
         if (cachedMagicFuel < cost) return false;
 
         // Buscar encantamiento en registro data-driven
@@ -263,8 +278,8 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         setChanged();
         cachedMagicFuel = countMagicFuelInLinkedChests();
 
-        ArcaneForge.LOGGER.info("Encantamiento aplicado: {} nivel {}, costo {} fuel",
-                enchantmentId, targetLevel, cost);
+        ArcaneForge.LOGGER.info("Encantamiento aplicado: {} nivel {} (era {}), costo {} fuel",
+                enchantmentId, targetLevel, currentLevel, cost);
         return true;
     }
 
@@ -283,16 +298,27 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
     // ════════════════════════════════════
     // Datos del lado cliente
     // ════════════════════════════════════
+    private boolean clientHasActivePedestal = false;
+
     public void setClientSyncData(int chests, int bookshelves, int magicFuel) {
         this.clientLinkedChests = chests;
         this.clientBookshelves = bookshelves;
         this.clientMagicFuel = magicFuel;
     }
 
+    public void setClientSyncData(int chests, int bookshelves, int magicFuel, boolean hasActivePedestal) {
+        this.clientLinkedChests = chests;
+        this.clientBookshelves = bookshelves;
+        this.clientMagicFuel = magicFuel;
+        this.clientHasActivePedestal = hasActivePedestal;
+    }
+
     public int getClientLinkedChests() { return clientLinkedChests; }
     public int getClientBookshelves() { return clientBookshelves; }
     public int getClientLapisCount() { return clientMagicFuel; }
     public int getClientMagicFuel() { return clientMagicFuel; }
+    public boolean hasActivePedestalNearby() { return clientHasActivePedestal; }
+    public boolean hasActivePedestal() { return clientHasActivePedestal; }
 
     // ════════════════════════════════════
     // TICK
@@ -308,10 +334,13 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
             be.cachedBookshelfCount = be.countNearbyBookshelves();
             be.cachedMagicFuel = be.countMagicFuelInLinkedChests();
 
+            // Verificar si hay pedestal arcano activo cerca
+            boolean hasActivePedestal = ArcanePedestalBlock.hasActivePedestalNearby(level, pos);
+
             if (level instanceof ServerLevel serverLevel) {
                 S2CSyncPacket syncPacket = new S2CSyncPacket(
                         pos, be.linkedChests.size(),
-                        be.cachedBookshelfCount, be.cachedMagicFuel);
+                        be.cachedBookshelfCount, be.cachedMagicFuel, hasActivePedestal);
                 for (ServerPlayer player : serverLevel.players()) {
                     if (player.containerMenu instanceof ArcaneForgeMenu forgeMenu) {
                         if (forgeMenu.getBlockEntity() == be) {

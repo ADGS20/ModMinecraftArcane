@@ -2,6 +2,7 @@ package com.Andres.arcaneforge.registry;
 
 import com.Andres.arcaneforge.ArcaneForge;
 import com.Andres.arcaneforge.block.ArcaneForgeBlock;
+import com.Andres.arcaneforge.block.ArcanePedestalBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -19,5 +20,15 @@ public class ModBlocks {
                             .strength(5.0f, 6.0f)
                             .requiresCorrectToolForDrops()
                             .lightLevel(state -> 7)
+            );
+
+    public static final DeferredBlock<ArcanePedestalBlock> ARCANE_PEDESTAL =
+            BLOCKS.registerBlock(
+                    "arcane_pedestal",
+                    ArcanePedestalBlock::new,
+                    () -> BlockBehaviour.Properties.of()
+                            .strength(3.0f, 6.0f)
+                            .requiresCorrectToolForDrops()
+                            .lightLevel(state -> 5)
             );
 }
