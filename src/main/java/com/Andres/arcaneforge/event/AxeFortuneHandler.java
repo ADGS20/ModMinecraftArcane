@@ -2,11 +2,13 @@ package com.Andres.arcaneforge.event;
 
 import com.Andres.arcaneforge.ArcaneForge;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.BlockTags;
@@ -31,7 +33,9 @@ public class AxeFortuneHandler {
         if (!state.is(BlockTags.LOGS) && !state.is(BlockTags.LEAVES) && !state.is(BlockTags.SAPLINGS)) return;
 
         // Obtener el nivel de Fortune usando la nueva API de Holders
-        int fortuneLevel = tool.getEnchantmentLevel(Enchantments.FORTUNE);
+        Enchantment fortuneEnchant = BuiltInRegistries.ENCHANTMENT.getHolder(Enchantments.FORTUNE.unwrapKey().orElseThrow())
+            .orElseThrow();
+        int fortuneLevel = tool.getEnchantmentLevel(fortuneEnchant);
 
         if (fortuneLevel > 0) {
             for (ItemEntity itemEntity : event.getDrops()) {
