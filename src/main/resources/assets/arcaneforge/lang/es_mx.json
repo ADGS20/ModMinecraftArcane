@@ -1,0 +1,16 @@
+{
+  "itemGroup.arcaneforge": "Arcane Forge",
+  "block.arcaneforge.example_block": "Bloque de Ejemplo",
+  "item.arcaneforge.example_item": "Item de Ejemplo",
+  
+  "block.arcaneforge.arcane_forge": "Mesa de Encantamiento Arcana",
+  "block.arcaneforge.arcane_pedestal": "Pedestal Arcano",
+  
+  "arcaneforge.configuration.title": "Configuración de Arcane Forge",
+  "arcaneforge.configuration.section.arcaneforge.common.toml": "Configuración de Arcane Forge",
+  "arcaneforge.configuration.section.arcaneforge.common.toml.title": "Configuración de Arcane Forge",
+  "arcaneforge.configuration.items": "Lista de Items",
+  "arcaneforge.configuration.logDirtBlock": "Registrar Bloque de Tierra",
+  "arcaneforge.configuration.magicNumberIntroduction": "Texto del Número Mágico",
+  "arcaneforge.configuration.magicNumber": "Número Mágico"
+}

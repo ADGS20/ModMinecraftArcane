@@ -1,12 +1,29 @@
 ```
-# Dependencies
-.gradle/
+# Compiled and build artifacts
+*.class
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
 build/
 target/
+
+# Dependencies
+.gradle/
+node_modules/
+venv/
+.venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
 
 # Logs and temp files
 *.log
 *.tmp
+*.swp
 
 # Environment
 .env
@@ -17,25 +34,11 @@ target/
 .vscode/
 .idea/
 
-# Compiled files
-*.class
-*.jar
-*.war
-*.ear
-*.so
-*.dll
-*.exe
-*.out
-*.o
-*.obj
+# System files
+.DS_Store
+Thumbs.db
 
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Coverage
+# Coverage reports
 coverage/
 htmlcov/
 .coverage
