@@ -4,7 +4,7 @@
   "item.arcaneforge.example_item": "Example Item",
   
   "block.arcaneforge.arcane_forge": "Arcane Forge Table",
-  "block.arcaneforge.arcane_pedestal": "Arcane Pedestal",
+
   
   "arcaneforge.configuration.title": "Arcane Forge Configs",
   "arcaneforge.configuration.section.arcaneforge.common.toml": "Arcane Forge Configs",
@@ -12,5 +12,6 @@
   "arcaneforge.configuration.items": "Item List",
   "arcaneforge.configuration.logDirtBlock": "Log Dirt Block",
   "arcaneforge.configuration.magicNumberIntroduction": "Magic Number Text",
-  "arcaneforge.configuration.magicNumber": "Magic Number"
+  "arcaneforge.configuration.magicNumber": "Magic Number",
+  "block.arcaneforge.arcane_pedestal": "Arcane Power Block"
 }
