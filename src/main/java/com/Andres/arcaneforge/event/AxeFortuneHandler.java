@@ -1,15 +1,13 @@
 package com.Andres.arcaneforge.event;
 
 import com.Andres.arcaneforge.ArcaneForge;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.tags.BlockTags;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -32,11 +30,16 @@ public class AxeFortuneHandler {
         // Filtro nativo NeoForge para detectar cualquier tronco u hojas de árbol
         if (!state.is(BlockTags.LOGS) && !state.is(BlockTags.LEAVES) && !state.is(BlockTags.SAPLINGS)) return;
 
+        // 1. En NeoForge 26.1+, obtenemos el registro dinámico de encantamientos del mundo actual
         var registry = player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
-        var fortuneKey = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.withDefaultNamespace("fortune"));
-        var fortuneHolder = registry.getHolder(fortuneKey).orElse(null);
+        
+        // 2. Obtenemos el "Holder" del encantamiento Fortuna (Fortune) de forma segura 
+        // usando la llave/constante nativa de Minecraft
+        var fortuneHolder = registry.getHolder(Enchantments.FORTUNE).orElse(null);
 
         if (fortuneHolder == null) return;
+        
+        // 3. Pasamos el Holder al ItemStack para verificar el nivel de Fortuna del hacha
         int fortuneLevel = tool.getEnchantmentLevel(fortuneHolder);
 
         if (fortuneLevel > 0) {
