@@ -1,0 +1,7 @@
+/give @p arcaneforge:arcane_forge
+/give @p arcaneforge:binding_wand
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival

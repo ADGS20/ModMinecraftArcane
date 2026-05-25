@@ -1,0 +1,44 @@
+{
+  "stats": {
+    "minecraft:dropped": {
+      "minecraft:lapis_lazuli": 105,
+      "minecraft:diamond": 435
+    },
+    "minecraft:mined": {
+      "minecraft:bush": 1,
+      "minecraft:birch_log": 19,
+      "minecraft:birch_leaves": 5
+    },
+    "minecraft:custom": {
+      "minecraft:time_since_rest": 21030,
+      "minecraft:walk_one_cm": 24899,
+      "minecraft:leave_game": 4,
+      "minecraft:play_time": 10515,
+      "minecraft:jump": 11,
+      "minecraft:time_since_death": 10515,
+      "minecraft:drop": 11,
+      "minecraft:sprint_one_cm": 2066,
+      "minecraft:open_chest": 16,
+      "minecraft:fall_one_cm": 225,
+      "minecraft:total_world_time": 11863,
+      "minecraft:fly_one_cm": 1911,
+      "minecraft:crouch_one_cm": 1008,
+      "minecraft:sneak_time": 223
+    },
+    "minecraft:used": {
+      "minecraft:diamond_axe": 25,
+      "minecraft:flint_and_steel": 19,
+      "minecraft:chest": 9,
+      "arcaneforge:arcane_forge": 1,
+      "arcaneforge:binding_wand": 12,
+      "minecraft:birch_log": 1
+    },
+    "minecraft:picked_up": {
+      "minecraft:birch_leaves": 268,
+      "minecraft:birch_log": 492,
+      "minecraft:diamond": 435,
+      "minecraft:lapis_lazuli": 105
+    }
+  },
+  "DataVersion": 4790
+}
