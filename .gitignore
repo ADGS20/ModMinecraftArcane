@@ -1,6 +1,23 @@
-```
-# Compiled and build artifacts
 *.class
+target/
+.gradle/
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.env
+*.env.local
+.env.
+coverage/
+htmlcov/
+.coverage
+.mypy_cache/
+.pytest_cache/
+__pycache__/
+*.pyc
 *.o
 *.obj
 *.exe
@@ -8,42 +25,6 @@
 *.so
 *.a
 *.out
-build/
-target/
-
-# Dependencies
-.gradle/
-node_modules/
-venv/
-.venv/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
-
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-
-# Environment
-.env
-.env.local
-*.env.*
-
-# Editors
-.vscode/
-.idea/
-
-# System files
-.DS_Store
-Thumbs.db
-
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
-
-# Compressed files
 *.zip
 *.gz
 *.tar
@@ -66,74 +47,3 @@ htmlcov/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
-```
-arcaneforge-template-26.1.2.ipr
-arcaneforge-template-26.1.2.iws
-ModMinecraftArcane.iml
-ModMinecraftArcane.main.iml
-ModMinecraftArcane.test.iml
-run/.cache/jij/6a464b1c603b716033f3561a0632a7cc7be17c9d75af1cab7f1db5fe98c3888a/mixinextras-neoforge-0.5.4.jar
-run/.cache/jij/909b72f1d8225a13c4f00a23b3a5d04217543745de857d98694d4943708fc969/net.neoforged.neoforge-coremods-26.1.2.65-beta.jar
-run/command_history.txt
-run/config/fml.toml
-run/config/neoforge-client.toml
-run/config/neoforge-common.toml
-run/config/neoforge-server.toml
-run/downloads/log.json
-run/options.txt
-run/saves/New World (2)/data/minecraft/custom_boss_events.dat
-run/saves/New World (2)/data/minecraft/game_rules.dat
-run/saves/New World (2)/data/minecraft/random_sequences.dat
-run/saves/New World (2)/data/minecraft/scheduled_events.dat
-run/saves/New World (2)/data/minecraft/scoreboard.dat
-run/saves/New World (2)/data/minecraft/stopwatches.dat
-run/saves/New World (2)/data/minecraft/wandering_trader.dat
-run/saves/New World (2)/data/minecraft/weather.dat
-run/saves/New World (2)/data/minecraft/world_clocks.dat
-run/saves/New World (2)/data/minecraft/world_gen_settings.dat
-run/saves/New World (2)/dimensions/minecraft/overworld/data/minecraft/chunk_tickets.dat
-run/saves/New World (2)/dimensions/minecraft/overworld/data/minecraft/raids.dat
-run/saves/New World (2)/dimensions/minecraft/overworld/data/minecraft/world_border.dat
-run/saves/New World (2)/dimensions/minecraft/overworld/data/neoforge/data_attachments.dat
-run/saves/New World (2)/dimensions/minecraft/overworld/entities/r.-1.-1.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/entities/r.-1.0.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/entities/r.0.-1.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/entities/r.0.0.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/poi/r.-1.-1.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/poi/r.-1.0.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/poi/r.-1.1.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/poi/r.-2.-1.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/poi/r.-2.0.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/poi/r.-2.1.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/poi/r.0.-1.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/poi/r.0.0.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/poi/r.0.1.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/region/r.-1.-1.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/region/r.-1.0.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/region/r.-1.1.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/region/r.-2.-1.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/region/r.-2.0.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/region/r.-2.1.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/region/r.0.-1.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/region/r.0.0.mca
-run/saves/New World (2)/dimensions/minecraft/overworld/region/r.0.1.mca
-run/saves/New World (2)/dimensions/minecraft/the_end/data/minecraft/chunk_tickets.dat
-run/saves/New World (2)/dimensions/minecraft/the_end/data/minecraft/ender_dragon_fight.dat
-run/saves/New World (2)/dimensions/minecraft/the_end/data/minecraft/raids.dat
-run/saves/New World (2)/dimensions/minecraft/the_end/data/minecraft/world_border.dat
-run/saves/New World (2)/dimensions/minecraft/the_end/data/neoforge/data_attachments.dat
-run/saves/New World (2)/dimensions/minecraft/the_nether/data/minecraft/chunk_tickets.dat
-run/saves/New World (2)/dimensions/minecraft/the_nether/data/minecraft/raids.dat
-run/saves/New World (2)/dimensions/minecraft/the_nether/data/minecraft/world_border.dat
-run/saves/New World (2)/dimensions/minecraft/the_nether/data/neoforge/data_attachments.dat
-run/saves/New World (2)/icon.png
-run/saves/New World (2)/level.dat
-run/saves/New World (2)/level.dat_old
-run/saves/New World (2)/players/advancements/380df991-f603-344c-a090-369bad2a924a.json
-run/saves/New World (2)/players/data/380df991-f603-344c-a090-369bad2a924a.dat
-run/saves/New World (2)/players/data/380df991-f603-344c-a090-369bad2a924a.dat_old
-run/saves/New World (2)/players/stats/380df991-f603-344c-a090-369bad2a924a.json
-run/saves/New World (2)/serverconfig/readme.txt
-run/saves/New World (2)/session.lock
-run/usercache.json
-run/usernamecache.json

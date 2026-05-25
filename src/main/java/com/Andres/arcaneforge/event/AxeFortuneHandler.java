@@ -32,9 +32,10 @@ public class AxeFortuneHandler {
         // Filtro nativo NeoForge para detectar cualquier tronco u hojas de árbol
         if (!state.is(BlockTags.LOGS) && !state.is(BlockTags.LEAVES) && !state.is(BlockTags.SAPLINGS)) return;
 
-        var registry = player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
-        var fortuneKey = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.withDefaultNamespace("fortune"));
-        var fortuneHolder = registry.getHolder(fortuneKey).orElse(null);
+        var registryAccess = player.level().registryAccess();
+        var enchantmentRegistry = registryAccess.registry(Registries.ENCHANTMENT).orElseThrow();
+        var fortuneKey = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath("minecraft", "fortune"));
+        var fortuneHolder = enchantmentRegistry.getHolder(fortuneKey).orElse(null);
 
         if (fortuneHolder == null) return;
         int fortuneLevel = tool.getEnchantmentLevel(fortuneHolder);
