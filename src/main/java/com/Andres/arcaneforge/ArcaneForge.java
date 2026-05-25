@@ -1,5 +1,6 @@
 package com.Andres.arcaneforge;
 
+import com.Andres.arcaneforge.event.AxeFortuneHandler;
 import com.Andres.arcaneforge.network.ModNetwork;
 import com.Andres.arcaneforge.registry.ModBlockEntities;
 import com.Andres.arcaneforge.registry.ModBlocks;
@@ -26,5 +27,8 @@ public class ArcaneForge {
 
         // Register network packets
         ModNetwork.register(modEventBus);
+        
+        // Register event handlers
+        modEventBus.register(AxeFortuneHandler.class);
     }
 }
