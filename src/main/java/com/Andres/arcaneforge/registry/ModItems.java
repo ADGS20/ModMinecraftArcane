@@ -15,6 +15,10 @@ public class ModItems {
     public static final DeferredItem<?> ARCANE_FORGE_ITEM =
             ITEMS.registerSimpleBlockItem(ModBlocks.ARCANE_FORGE);
 
+    // Block item for the Arcane Pedestal
+    public static final DeferredItem<?> ARCANE_PEDESTAL_ITEM =
+            ITEMS.registerSimpleBlockItem(ModBlocks.ARCANE_PEDESTAL);
+
     // Binding Wand — links chests to the forge
     public static final DeferredItem<BindingWand> BINDING_WAND =
             ITEMS.registerItem(
