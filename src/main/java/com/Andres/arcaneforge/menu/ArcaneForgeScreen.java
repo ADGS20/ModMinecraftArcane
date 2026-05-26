@@ -122,19 +122,19 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         btnModeMinus = addRenderableWidget(Button.builder(Component.literal("➖ Nivel"), b -> toggleSub(2))
                 .bounds(px + 80, ctrlY, 74, 14).build());
 
-        // Botones de nivel: quitamos "+1K" y "MAX", ahora son 4 botones
+        // Botones de nivel: quitamos "+1K" y "MAX", ahora son 4 botones con Max incluido
         int bw = 36, gap2 = 2;
         int[] upD    = {  1,   5,   10,   100};
         int[] downD  = { -1,  -5,  -10,  -100};
-        String[] upL   = {"+1", "+5", "+10", "+100"};
+        String[] upL   = {"+1", "+5", "+10", "Max"};
         String[] downL = {"-1", "-5", "-10", "-100"};
 
         btnLvlUp   = new Button[4];
         btnLvlDown = new Button[4];
         for (int i = 0; i < 4; i++) {
-            final int d = upD[i];
+            final int idx = i;
             btnLvlUp[i] = addRenderableWidget(Button.builder(Component.literal(upL[i]),
-                    b -> adjustLevel(d)).bounds(px + 4 + i * (bw + gap2), ctrlY, bw, 14).build());
+                    b -> adjustLevel(idx == 3 ? Integer.MAX_VALUE : upD[idx])).bounds(px + 4 + i * (bw + gap2), ctrlY, bw, 14).build());
             final int dd = downD[i];
             btnLvlDown[i] = addRenderableWidget(Button.builder(Component.literal(downL[i]),
                     b -> adjustLevel(dd)).bounds(px + 4 + i * (bw + gap2), ctrlY, bw, 14).build());
@@ -157,7 +157,9 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         int idx = scrollOffset + visRow;
         if (idx >= 0 && idx < enchants.size()) {
             selectedIndex = idx;
-            selectedLevel = 1;
+            // Mantener el nivel actual si ya estaba seleccionado, o empezar en 1
+            EnchantOption opt = enchants.get(idx);
+            if (selectedLevel < 1) selectedLevel = 1;
             subMenuMode   = 0;
             syncButtons();
         }
@@ -170,7 +172,12 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
 
     private void adjustLevel(int delta) {
         if (selectedIndex < 0) return;
-        selectedLevel = Math.max(1, Math.min(selectedLevel + delta, Config.MAX_ENCHANTMENT_LEVEL));
+        if (delta == Integer.MAX_VALUE) {
+            // Botón Max: establece el nivel máximo posible (1000)
+            selectedLevel = Config.MAX_ENCHANTMENT_LEVEL;
+        } else {
+            selectedLevel = Math.max(1, Math.min(selectedLevel + delta, Config.MAX_ENCHANTMENT_LEVEL));
+        }
         subMenuMode = 0;
         syncButtons();
     }
@@ -242,7 +249,9 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
     }
 
     private void refreshList() {
-        enchants.clear(); selectedIndex = -1; selectedLevel = 1; scrollOffset = 0;
+        enchants.clear(); 
+        // NO reiniciar selectedIndex ni selectedLevel - mantener selección actual
+        scrollOffset = 0;
         try {
             var item = getMenu().getBlockEntity().getItem(0);
             if (item.isEmpty() || Minecraft.getInstance().level == null) return;
@@ -252,6 +261,13 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
             // Obtener encantamientos actuales del item
             ItemEnchantments currentEnchants = item.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
             
+            // Guardar el encantamiento seleccionado actualmente (por ID)
+            Identifier selectedId = null;
+            if (selectedIndex >= 0 && selectedIndex < enchants.size()) {
+                selectedId = enchants.get(selectedIndex).id();
+            }
+            
+            enchants.clear();
             reg.listElements().forEach(h -> {
                 boolean compat = false;
                 try { compat = h.value().canEnchant(item); } catch (Exception ignored) {}
@@ -268,6 +284,16 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 if (a.isCompatible() != b.isCompatible()) return a.isCompatible() ? -1 : 1;
                 return a.displayName().compareToIgnoreCase(b.displayName());
             });
+            
+            // Restaurar selección si es posible
+            if (selectedId != null) {
+                for (int i = 0; i < enchants.size(); i++) {
+                    if (enchants.get(i).id().equals(selectedId)) {
+                        selectedIndex = i;
+                        break;
+                    }
+                }
+            }
         } catch (Exception ignored) {}
     }
 

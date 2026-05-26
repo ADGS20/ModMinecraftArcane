@@ -38,7 +38,7 @@ public class Config {
     public static final int MAX_LINKED_CHESTS = 256;
 
     /** Nivel máximo de encantamiento permitido (efectivamente sin límite). */
-    public static final int MAX_ENCHANTMENT_LEVEL = 10000;
+    public static final int MAX_ENCHANTMENT_LEVEL = 1000;
 
     /** Reducción de costo por cada N librerías cercanas. */
     public static final int BOOKSHELVES_PER_REDUCTION = 5;
@@ -128,6 +128,7 @@ public class Config {
      *
      * costo = (nivelActual + nivelDeseado) * 2 - 1, reducido por librerías.
      * Mínimo: 1 punto de combustible mágico.
+     * El costo aumenta exponencialmente para niveles altos.
      *
      * @param currentLevel El nivel actual del encantamiento en el item
      * @param targetLevel El nivel de encantamiento deseado
@@ -135,9 +136,32 @@ public class Config {
      * @return El costo en puntos de combustible mágico
      */
     public static int calculateEnchantCost(int currentLevel, int targetLevel, int bookshelfCount) {
+        // Costo base: suma de niveles actuales y deseados
         int baseCost = ((currentLevel + targetLevel) * 2) - 1;
+        
+        // Reducción por librerías
         int reduction = bookshelfCount / BOOKSHELVES_PER_REDUCTION;
-        return Math.max(1, baseCost - reduction);
+        int costAfterReduction = Math.max(1, baseCost - reduction);
+        
+        // Multiplicador progresivo para niveles altos (cada vez más caro)
+        float multiplier = 1.0f;
+        if (targetLevel > 50) {
+            multiplier = 1.5f;
+        }
+        if (targetLevel > 100) {
+            multiplier = 2.0f;
+        }
+        if (targetLevel > 200) {
+            multiplier = 3.0f;
+        }
+        if (targetLevel > 500) {
+            multiplier = 5.0f;
+        }
+        if (targetLevel > 800) {
+            multiplier = 8.0f;
+        }
+        
+        return Math.max(1, (int)(costAfterReduction * multiplier));
     }
     
     /**
@@ -159,6 +183,7 @@ public class Config {
     public static int calculateEnchantCostWithPedestal(int baseCost, boolean hasActivePedestal, int targetLevel) {
         if (!hasActivePedestal) {
             // Sin pedestal: solo permite hasta nivel 30 (límite vanilla mejorado)
+            // El costo se mantiene igual, pero la UI debería limitar el nivel máximo
             return baseCost;
         }
         

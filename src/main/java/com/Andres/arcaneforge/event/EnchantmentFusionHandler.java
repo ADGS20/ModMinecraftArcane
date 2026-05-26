@@ -1,6 +1,7 @@
 package com.Andres.arcaneforge.event;
 
 import com.Andres.arcaneforge.ArcaneForge;
+import com.Andres.arcaneforge.block.ArcanePedestalBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -65,8 +66,31 @@ public class EnchantmentFusionHandler {
             int silkTouchLevel  = enchants.getOrDefault("silk_touch", 0);
             int fortuneLevel    = enchants.getOrDefault("fortune", 0);
 
-            // Si no tiene la fusión activa, ignoramos
-            if (silkTouchLevel <= 0 || fortuneLevel <= 0) return;
+            // VERIFICAR: Solo activar fusión si hay Pedestal Arcano activo cerca
+            boolean hasActivePedestal = false;
+            try {
+                var bePos = player.blockPosition();
+                var level = player.level();
+                for (int x = -3; x <= 3; x++) {
+                    for (int y = -3; y <= 3; y++) {
+                        for (int z = -3; z <= 3; z++) {
+                            var pos = bePos.offset(x, y, z);
+                            var state = level.getBlockState(pos);
+                            if (state.getBlock() instanceof ArcanePedestalBlock) {
+                                hasActivePedestal = true;
+                                break;
+                            }
+                        }
+                        if (hasActivePedestal) break;
+                    }
+                    if (hasActivePedestal) break;
+                }
+            } catch (Exception e) {
+                ArcaneForge.LOGGER.warn("Error verificando pedestal: {}", e.getMessage());
+            }
+
+            // Si no tiene la fusión activa O no hay pedestal, ignoramos
+            if (silkTouchLevel <= 0 || fortuneLevel <= 0 || !hasActivePedestal) return;
 
             BlockState brokenState = event.getState();
             BlockPos blockPos = event.getPos();
@@ -95,7 +119,7 @@ public class EnchantmentFusionHandler {
                                      tool.getItem().toString().contains("pickaxe") ? "Pico" : "Herramienta";
                     
                     ArcaneForge.LOGGER.debug(
-                            "Fusion Core: Fortune {} + Silk Touch en {} -> Añadidas {} copias extra de {}",
+                            "Fusion Core: Fortune {} + Silk Touch en {} con Pedestal -> Añadidas {} copias extra de {}",
                             fortuneLevel, toolType, extraDrops, silkDrop.getHoverName().getString());
                 }
             }
