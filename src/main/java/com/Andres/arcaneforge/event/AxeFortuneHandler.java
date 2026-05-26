@@ -33,7 +33,22 @@ public class AxeFortuneHandler {
 
         // En NeoForge 26.1+, getEnchantmentLevel acepta directamente la ResourceKey del encantamiento
         // Enchantments.FORTUNE es ahora una ResourceKey<Enchantment>
-        int fortuneLevel = tool.getEnchantmentLevel((Holder<Enchantment>) Enchantments.FORTUNE);
+        // Usamos unwrapKey() para obtener el Holder correcto
+        int fortuneLevel = 0;
+        try {
+            var registry = player.level().registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT);
+            var fortuneKey = net.minecraft.resources.ResourceKey.create(
+                net.minecraft.core.registries.Registries.ENCHANTMENT, 
+                net.minecraft.resources.Identifier.fromNamespaceAndPath("minecraft", "fortune")
+            );
+            var holderOpt = registry.get(fortuneKey);
+            if (holderOpt.isPresent()) {
+                fortuneLevel = tool.getEnchantmentLevel(holderOpt.get());
+            }
+        } catch (Exception e) {
+            ArcaneForge.LOGGER.warn("Error obteniendo nivel de Fortuna: {}", e.getMessage());
+            return;
+        }
 
         if (fortuneLevel > 0) {
             for (ItemEntity itemEntity : event.getDrops()) {
