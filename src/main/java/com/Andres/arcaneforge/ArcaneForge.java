@@ -3,6 +3,7 @@ package com.Andres.arcaneforge;
 import com.Andres.arcaneforge.network.ModNetwork;
 import com.Andres.arcaneforge.registry.ModBlockEntities;
 import com.Andres.arcaneforge.registry.ModBlocks;
+import com.Andres.arcaneforge.registry.ModDataComponents;
 import com.Andres.arcaneforge.registry.ModItems;
 import com.Andres.arcaneforge.registry.ModMenuTypes;
 import net.neoforged.bus.api.IEventBus;
@@ -24,7 +25,10 @@ public class ArcaneForge {
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModMenuTypes.MENUS.register(modEventBus);
 
-        // Register network packets
+
+        // NUEVO: registrar el Data Component arcano
+        ModDataComponents.REGISTRAR.register(modEventBus);
+
         ModNetwork.register(modEventBus);
     }
 }

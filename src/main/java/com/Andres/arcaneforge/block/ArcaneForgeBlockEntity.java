@@ -26,6 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
@@ -37,30 +38,120 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-/**
- * Arcane Forge Block Entity — VERSIÓN AVANZADA para NeoForge 26.1.2.65-beta.
- *
- * Correcciones de API aplicadas:
- * - saveAdditional(ValueOutput) / loadAdditional(ValueInput) — NO CompoundTag
- * - ValueInput: getIntOr("key", default) devuelve int directamente (NO Optional)
- * - ValueOutput: putInt("key", value), store("key", codec, value)
- * - getUpdateTag(HolderLookup.Provider) — requiere parámetro Provider
- * - Enchantments via registryAccess().lookupOrThrow(Registries.ENCHANTMENT)
- * - ItemStack.enchant(Holder<Enchantment>, int) con Holder
- * - Fuerza encantamientos via ItemEnchantments.Mutable (sin restricciones)
- *
- * Características avanzadas:
- * - Hasta 256 cofres vinculados
- * - Sistema de Combustible Mágico (cualquier item)
- * - Niveles de encantamiento de 1 a 10,000
- * - Ignora compatibilidad de encantamientos
- */
 public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider {
+
+    public static final Map<Item, Integer> MATERIAL_FUEL_VALUES = new HashMap<>();
+
+    static {
+        // TIER 1: Común (1–5 puntos)
+        MATERIAL_FUEL_VALUES.put(Items.COAL,              1);
+        MATERIAL_FUEL_VALUES.put(Items.CHARCOAL,          1);
+        MATERIAL_FUEL_VALUES.put(Items.STONE,             1);
+        MATERIAL_FUEL_VALUES.put(Items.COBBLESTONE,       1);
+        MATERIAL_FUEL_VALUES.put(Items.GRAVEL,            1);
+        MATERIAL_FUEL_VALUES.put(Items.SAND,              1);
+        MATERIAL_FUEL_VALUES.put(Items.BONE,              2);
+        MATERIAL_FUEL_VALUES.put(Items.ROTTEN_FLESH,      1);
+        MATERIAL_FUEL_VALUES.put(Items.STRING,            2);
+        MATERIAL_FUEL_VALUES.put(Items.GUNPOWDER,         2);
+        MATERIAL_FUEL_VALUES.put(Items.SPIDER_EYE,        2);
+        MATERIAL_FUEL_VALUES.put(Items.FEATHER,           2);
+        MATERIAL_FUEL_VALUES.put(Items.WHEAT,             1);
+        MATERIAL_FUEL_VALUES.put(Items.LEATHER,           2);
+        MATERIAL_FUEL_VALUES.put(Items.FLINT,             2);
+        MATERIAL_FUEL_VALUES.put(Items.SUGAR_CANE,        1);
+        MATERIAL_FUEL_VALUES.put(Items.PAPER,             1);
+
+        // TIER 2: Poco común (10–25 puntos)
+        MATERIAL_FUEL_VALUES.put(Items.IRON_INGOT,        10);
+        MATERIAL_FUEL_VALUES.put(Items.IRON_NUGGET,        2);
+        MATERIAL_FUEL_VALUES.put(Items.COPPER_INGOT,       8);
+        MATERIAL_FUEL_VALUES.put(Items.LAPIS_LAZULI,      15);
+        MATERIAL_FUEL_VALUES.put(Items.LAPIS_BLOCK,       135);
+        MATERIAL_FUEL_VALUES.put(Items.REDSTONE,          10);
+        MATERIAL_FUEL_VALUES.put(Items.GLOWSTONE_DUST,    12);
+        MATERIAL_FUEL_VALUES.put(Items.QUARTZ,            10);
+        MATERIAL_FUEL_VALUES.put(Items.ENDER_PEARL,       25);
+        MATERIAL_FUEL_VALUES.put(Items.BLAZE_POWDER,      20);
+        MATERIAL_FUEL_VALUES.put(Items.GOLD_NUGGET,        5);
+        MATERIAL_FUEL_VALUES.put(Items.GOLD_INGOT,        20);
+        MATERIAL_FUEL_VALUES.put(Items.BOOK,              12);
+        MATERIAL_FUEL_VALUES.put(Items.SLIME_BALL,        15);
+        MATERIAL_FUEL_VALUES.put(Items.MAGMA_CREAM,       18);
+        MATERIAL_FUEL_VALUES.put(Items.GHAST_TEAR,        20);
+
+        // TIER 3: Raro (50–100 puntos)
+        MATERIAL_FUEL_VALUES.put(Items.DIAMOND,           80);
+        MATERIAL_FUEL_VALUES.put(Items.EMERALD,           60);
+        MATERIAL_FUEL_VALUES.put(Items.AMETHYST_SHARD,    50);
+        MATERIAL_FUEL_VALUES.put(Items.ECHO_SHARD,       100);
+        MATERIAL_FUEL_VALUES.put(Items.PRISMARINE_SHARD,  50);
+        MATERIAL_FUEL_VALUES.put(Items.PRISMARINE_CRYSTALS, 55);
+        MATERIAL_FUEL_VALUES.put(Items.SHULKER_SHELL,     90);
+        MATERIAL_FUEL_VALUES.put(Items.RABBIT_FOOT,       55);
+        MATERIAL_FUEL_VALUES.put(Items.FERMENTED_SPIDER_EYE, 50);
+        MATERIAL_FUEL_VALUES.put(Items.BLAZE_ROD,         60);
+        MATERIAL_FUEL_VALUES.put(Items.HEART_OF_THE_SEA,  90);
+        MATERIAL_FUEL_VALUES.put(Items.TURTLE_SCUTE,      55);
+
+        // TIER 4: Épico (200–400 puntos)
+        MATERIAL_FUEL_VALUES.put(Items.NETHERITE_SCRAP,  250);
+        MATERIAL_FUEL_VALUES.put(Items.NETHERITE_INGOT,  400);
+        MATERIAL_FUEL_VALUES.put(Items.ELYTRA,           350);
+        MATERIAL_FUEL_VALUES.put(Items.DRAGON_BREATH,    300);
+        MATERIAL_FUEL_VALUES.put(Items.END_CRYSTAL,      350);
+        MATERIAL_FUEL_VALUES.put(Items.TOTEM_OF_UNDYING, 400);
+        MATERIAL_FUEL_VALUES.put(Items.MUSIC_DISC_PIGSTEP,200);
+        MATERIAL_FUEL_VALUES.put(Items.NETHER_STAR,      200);
+
+        // TIER 5: Legendario (750–2000 puntos)
+        MATERIAL_FUEL_VALUES.put(Items.ENCHANTED_GOLDEN_APPLE, 2000);
+        MATERIAL_FUEL_VALUES.put(Items.TRIDENT,          1000);
+        MATERIAL_FUEL_VALUES.put(Items.DRAGON_EGG,       2000);
+        MATERIAL_FUEL_VALUES.put(Items.BEACON,            750);
+    }
+
+    public static int getMaterialFuelValue(Item item) {
+        if (item == Items.LAPIS_LAZULI) {
+            return 15;
+        }
+        if (item == Items.LAPIS_BLOCK) {
+            return 135;
+        }
+        if (MATERIAL_FUEL_VALUES.containsKey(item)) {
+            return MATERIAL_FUEL_VALUES.get(item);
+        }
+        int configVal = Config.getFuelValue(item);
+        if (configVal > 0) return configVal;
+        return 1;
+    }
+
+    public static class FuelBreakdown {
+        public int common;
+        public int uncommon;
+        public int rare;
+        public int epic;
+        public int legendary;
+        public int total;
+
+        public FuelBreakdown(int c, int u, int r, int e, int l) {
+            this.common    = c;
+            this.uncommon  = u;
+            this.rare      = r;
+            this.epic      = e;
+            this.legendary = l;
+            this.total     = c + u + r + e + l;
+        }
+    }
 
     private final NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
     private final List<BlockPos> linkedChests = new ArrayList<>();
@@ -69,18 +160,21 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
     private int cachedMagicFuel = 0;
     private int syncTimer = 0;
 
-    // Datos del lado cliente (establecidos por S2CSyncPacket)
     private int clientLinkedChests = 0;
     private int clientBookshelves = 0;
     private int clientMagicFuel = 0;
+    private boolean clientHasActivePedestal = false;
+
+    private int clientFuelCommon    = 0;
+    private int clientFuelUncommon  = 0;
+    private int clientFuelRare      = 0;
+    private int clientFuelEpic      = 0;
+    private int clientFuelLegendary = 0;
 
     public ArcaneForgeBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.ARCANE_FORGE_BE.get(), pos, blockState);
     }
 
-    // ════════════════════════════════════
-    // Acceso al inventario
-    // ════════════════════════════════════
     public NonNullList<ItemStack> getItems() { return items; }
     public ItemStack getItem(int slot) { return items.get(slot); }
     public void setItem(int slot, ItemStack stack) {
@@ -88,9 +182,6 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         setChanged();
     }
 
-    // ════════════════════════════════════
-    // Gestión de cofres vinculados
-    // ════════════════════════════════════
     public boolean addLinkedChest(BlockPos chestPos) {
         if (linkedChests.size() >= Config.MAX_LINKED_CHESTS) return false;
         for (BlockPos existing : linkedChests) {
@@ -110,9 +201,6 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
     public List<BlockPos> getLinkedChests() { return linkedChests; }
     public int getLinkedChestCount() { return linkedChests.size(); }
 
-    // ════════════════════════════════════
-    // Conteo de librerías — radio expandido, sin cap
-    // ════════════════════════════════════
     public int countNearbyBookshelves() {
         if (level == null) return 0;
         int count = 0;
@@ -136,9 +224,25 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
 
     public int getNearbyBookshelfCount() { return cachedBookshelfCount; }
 
-    // ════════════════════════════════════
-    // SISTEMA DE COMBUSTIBLE MÁGICO
-    // ════════════════════════════════════
+    public static int calculateProgressiveCost(int currentLevel, int levelsToAdd, int bookshelves, boolean hasPedestal) {
+        int totalCost = 0;
+        int targetLevel = currentLevel + levelsToAdd;
+
+        for (int lvl = currentLevel; lvl < targetLevel; lvl++) {
+            int stepCost = 8;
+            if (lvl >= 5 && lvl < 10) stepCost += (lvl * 5);
+            else if (lvl >= 10 && lvl < 30) stepCost += (lvl * 25);
+            else if (lvl >= 30) stepCost += (lvl * 65);
+            totalCost += stepCost;
+        }
+
+        float discount = Math.min(0.40f, bookshelves * 0.02f);
+        totalCost = Math.round(totalCost * (1.0f - discount));
+        if (!hasPedestal) totalCost = Math.round(totalCost * 1.75f);
+
+        return Math.max(1, totalCost);
+    }
+
     public int countMagicFuelInLinkedChests() {
         if (level == null) return 0;
         int total = 0;
@@ -149,210 +253,257 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
                 for (int i = 0; i < chest.getContainerSize(); i++) {
                     ItemStack stack = chest.getItem(i);
                     if (stack.isEmpty()) continue;
-                    int fuelValue = Config.getFuelValue(stack.getItem());
-                    if (fuelValue > 0) {
-                        total += fuelValue * stack.getCount();
-                    }
+                    total += getMaterialFuelValue(stack.getItem()) * stack.getCount();
                 }
             }
         }
         return total;
     }
 
-    public int getTotalMagicFuel() { return cachedMagicFuel; }
-    public int getTotalLapisCount() { return cachedMagicFuel; } // Alias
-
-    // ════════════════════════════════════
-    // Extracción de combustible mágico
-    // ════════════════════════════════════
-    /**
-     * Extrae el combustible mágico necesario de los cofres vinculados.
-     * REVISADO: Ahora es más eficiente y asegura el consumo exacto.
-     */
-    private boolean extractMagicFuel(int requiredPoints) {
-        if (level == null) return false;
-        int remaining = requiredPoints;
+    public FuelBreakdown computeFuelBreakdown() {
+        if (level == null) return new FuelBreakdown(0, 0, 0, 0, 0);
+        int common = 0, uncommon = 0, rare = 0, epic = 0, legendary = 0;
 
         for (BlockPos chestPos : linkedChests) {
-            if (remaining <= 0) break;
             if (!level.isLoaded(chestPos)) continue;
-
             BlockEntity be = level.getBlockEntity(chestPos);
             if (be instanceof ChestBlockEntity chest) {
                 for (int i = 0; i < chest.getContainerSize(); i++) {
-                    if (remaining <= 0) break;
-
                     ItemStack stack = chest.getItem(i);
                     if (stack.isEmpty()) continue;
 
-                    int fuelValue = Config.getFuelValue(stack.getItem());
-                    if (fuelValue <= 0) continue; // Si el ítem no tiene valor configurado, se ignora
+                    int val = getMaterialFuelValue(stack.getItem());
+                    int totalVal = val * stack.getCount();
 
-                    // Calcular cuántos ítems de este slot necesitamos
-                    int itemsNeeded = (int) Math.ceil((double) remaining / fuelValue);
-                    int itemsToTake = Math.min(itemsNeeded, stack.getCount());
+                    if      (val >= 750) legendary += totalVal;
+                    else if (val >= 200) epic      += totalVal;
+                    else if (val >= 50)  rare      += totalVal;
+                    else if (val >= 10)  uncommon  += totalVal;
+                    else                 common    += totalVal;
+                }
+            }
+        }
+        return new FuelBreakdown(common, uncommon, rare, epic, legendary);
+    }
 
-                    int pointsGained = itemsToTake * fuelValue;
+    public int getTotalMagicFuel() { return cachedMagicFuel; }
 
-                    // Reducir el stack en el cofre
-                    stack.shrink(itemsToTake);
-                    if (stack.isEmpty()) {
-                        chest.setItem(i, ItemStack.EMPTY);
+    private boolean extractMagicFuel(int requiredPoints) {
+        if (level == null) return false;
+
+        List<SlotRef> allSlots = new ArrayList<>();
+        for (BlockPos chestPos : linkedChests) {
+            if (!level.isLoaded(chestPos)) continue;
+            BlockEntity be = level.getBlockEntity(chestPos);
+            if (be instanceof ChestBlockEntity chest) {
+                for (int i = 0; i < chest.getContainerSize(); i++) {
+                    ItemStack stack = chest.getItem(i);
+                    if (!stack.isEmpty()) {
+                        allSlots.add(new SlotRef(chest, i, getMaterialFuelValue(stack.getItem())));
                     }
-
-                    remaining -= pointsGained;
-                    chest.setChanged(); // Marcar el cofre para guardar cambios
                 }
             }
         }
 
-        // Si remaining <= 0, significa que pudimos pagar todo el costo
+        allSlots.sort((a, b) -> Integer.compare(a.fuelPerUnit, b.fuelPerUnit));
+
+        int remaining = requiredPoints;
+        for (SlotRef ref : allSlots) {
+            if (remaining <= 0) break;
+
+            ItemStack stack = ref.chest.getItem(ref.slot);
+            if (stack.isEmpty()) continue;
+
+            int fuelValue = ref.fuelPerUnit;
+            int itemsNeeded = (int) Math.ceil((double) remaining / fuelValue);
+            int itemsToTake = Math.min(itemsNeeded, stack.getCount());
+            int pointsGained = itemsToTake * fuelValue;
+
+            stack.shrink(itemsToTake);
+            if (stack.isEmpty()) ref.chest.setItem(ref.slot, ItemStack.EMPTY);
+            remaining -= pointsGained;
+            ref.chest.setChanged();
+        }
+
         return remaining <= 0;
     }
 
-    // ════════════════════════════════════
-    // ENCANTAMIENTO — SIN RESTRICCIONES
-    // Usa ItemEnchantments.Mutable para forzar cualquier encantamiento
-    // ════════════════════════════════════
-    public boolean tryEnchant(Identifier enchantmentId, int targetLevel, ServerPlayer player) {
-        if (level == null || level.isClientSide()) return false;
+    private static class SlotRef {
+        final ChestBlockEntity chest;
+        final int slot;
+        final int fuelPerUnit;
+        SlotRef(ChestBlockEntity chest, int slot, int fuelPerUnit) {
+            this.chest = chest;
+            this.slot = slot;
+            this.fuelPerUnit = fuelPerUnit;
+        }
+    }
+
+    public static float getEnchantmentMultiplier(Identifier id) {
+        String path      = id.getPath();
+        String namespace = id.getNamespace();
+
+        if (namespace.equals(ArcaneForge.MODID)) {
+            if (path.equals("apocalyptic_judgment") || path.equals("void_protection")) return 5.0f;
+            return 3.0f;
+        }
+        if (path.equals("mending") || path.equals("infinity") || path.equals("silk_touch")) return 2.5f;
+        return 1.0f;
+    }
+
+    public int tryEnchant(Identifier enchantmentId, int targetLevel, ServerPlayer player) {
+        if (level == null || level.isClientSide()) return -1;
 
         ItemStack itemToEnchant = items.get(0);
-        if (itemToEnchant.isEmpty()) return false;
-
-        if (targetLevel < 1 || targetLevel > Config.MAX_ENCHANTMENT_LEVEL) return false;
+        if (itemToEnchant.isEmpty()) return -1;
 
         cachedBookshelfCount = countNearbyBookshelves();
-        cachedMagicFuel = countMagicFuelInLinkedChests();
+        cachedMagicFuel      = countMagicFuelInLinkedChests();
 
-        // Obtener nivel actual del encantamiento
         ItemEnchantments currentEnchants = itemToEnchant.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
         int currentLevel = 0;
-        try {
-            var registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
-            ResourceKey<Enchantment> key = ResourceKey.create(Registries.ENCHANTMENT, enchantmentId);
-            Optional<Holder.Reference<Enchantment>> optHolder = registry.get(key);
-            if (optHolder.isPresent()) {
-                currentLevel = currentEnchants.getLevel(optHolder.get());
-            }
-        } catch (Exception e) {
-            ArcaneForge.LOGGER.warn("tryEnchant: error obteniendo nivel actual: {}", e.getMessage());
-        }
-
-        // Calcular costo basado en nivel actual + nivel objetivo
-        int cost = Config.calculateEnchantCost(currentLevel, targetLevel, cachedBookshelfCount);
-        if (cachedMagicFuel < cost) return false;
-
-        // Buscar encantamiento en registro data-driven
         Holder<Enchantment> enchHolder = null;
+
         try {
             var registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
             ResourceKey<Enchantment> key = ResourceKey.create(Registries.ENCHANTMENT, enchantmentId);
             Optional<Holder.Reference<Enchantment>> optHolder = registry.get(key);
             if (optHolder.isPresent()) {
                 enchHolder = optHolder.get();
+                currentLevel = currentEnchants.getLevel(enchHolder);
             }
-        } catch (Exception e) {
-            ArcaneForge.LOGGER.warn("tryEnchant: error buscando {}: {}", enchantmentId, e.getMessage());
+        } catch (Exception e) {}
+
+        if (enchHolder == null) return -1;
+
+        boolean hasPedestal = ArcanePedestalBlock.hasActivePedestalNearby(level, worldPosition);
+        int maxAllowedLevel = hasPedestal ? 1000 : 255;
+
+        int finalLevel = currentLevel + targetLevel;
+        if (finalLevel > maxAllowedLevel) {
+            targetLevel = maxAllowedLevel - currentLevel;
+            finalLevel  = maxAllowedLevel;
         }
+        if (targetLevel <= 0) return -1;
 
-        if (enchHolder == null) return false;
+        int baseCost = calculateProgressiveCost(currentLevel, targetLevel, cachedBookshelfCount, hasPedestal);
+        int totalCost  = Math.max(1, Math.round(baseCost * getEnchantmentMultiplier(enchantmentId)));
 
-        // Extraer combustible
-        if (!extractMagicFuel(cost)) return false;
+        if (player.isCreative()) totalCost = 0;
+        if (cachedMagicFuel < totalCost) return -1;
+        if (totalCost > 0 && !extractMagicFuel(totalCost)) return -1;
 
-        // FORZAR encantamiento usando Mutable (ignora TODAS las restricciones)
-        try {
-            forceApplyEnchantment(itemToEnchant, enchHolder, targetLevel);
-        } catch (Exception e) {
-            // Fallback: intentar método normal
-            ArcaneForge.LOGGER.warn("Forzado falló, intentando normal: {}", e.getMessage());
-            try {
-                itemToEnchant.enchant(enchHolder, targetLevel);
-            } catch (Exception e2) {
-                ArcaneForge.LOGGER.error("Ambos métodos fallaron", e2);
-                return false;
-            }
-        }
-
+        forceApplyEnchantment(itemToEnchant, enchHolder, finalLevel, hasPedestal);
         setChanged();
         cachedMagicFuel = countMagicFuelInLinkedChests();
-
-        ArcaneForge.LOGGER.info("Encantamiento aplicado: {} nivel {} (era {}), costo {} fuel",
-                enchantmentId, targetLevel, currentLevel, cost);
-        return true;
+        return finalLevel;
     }
 
-    /**
-     * Fuerza la aplicación de un encantamiento directamente via ItemEnchantments.Mutable.
-     * Ignora TODAS las validaciones vanilla (compatibilidad, tipo de item, nivel máximo).
-     */
-    private void forceApplyEnchantment(ItemStack stack, Holder<Enchantment> holder, int level) {
-        ItemEnchantments currentEnchants = stack.getOrDefault(DataComponents.ENCHANTMENTS,
-                ItemEnchantments.EMPTY);
+    private void forceApplyEnchantment(ItemStack stack, Holder<Enchantment> holder, int level, boolean hasPedestal) {
+        ItemStack copy = stack.copy();
+        ItemEnchantments currentEnchants = copy.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
         ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(currentEnchants);
+
         mutable.set(holder, level);
-        stack.set(DataComponents.ENCHANTMENTS, mutable.toImmutable());
-    }
+        copy.set(DataComponents.ENCHANTMENTS, mutable.toImmutable());
 
-    // ════════════════════════════════════
-    // Datos del lado cliente
-    // ════════════════════════════════════
-    private boolean clientHasActivePedestal = false;
+        // 🔮 NUEVA MEJORA: Si el ítem es un Tótem de la Inmortalidad, le inyectamos las 3 cargas iniciales directamente en la forja
+        if (copy.is(Items.TOTEM_OF_UNDYING)) {
+            net.minecraft.world.item.component.CustomData customData = copy.getOrDefault(DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
+            net.minecraft.nbt.CompoundTag tag = customData.copyTag();
+            tag.putInt("TotemCharges", 3);
+            copy.set(DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(tag));
+        }
 
-    public void setClientSyncData(int chests, int bookshelves, int magicFuel) {
-        this.clientLinkedChests = chests;
-        this.clientBookshelves = bookshelves;
-        this.clientMagicFuel = magicFuel;
+        if (hasPedestal) {
+            net.minecraft.world.item.component.CustomData customData = copy.getOrDefault(DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
+            net.minecraft.nbt.CompoundTag tag = customData.copyTag();
+            tag.putBoolean("ArcaneAwakened", true);
+            copy.set(DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(tag));
+        }
+        this.items.set(0, copy);
     }
 
     public void setClientSyncData(int chests, int bookshelves, int magicFuel, boolean hasActivePedestal) {
-        this.clientLinkedChests = chests;
-        this.clientBookshelves = bookshelves;
-        this.clientMagicFuel = magicFuel;
+        this.clientLinkedChests      = chests;
+        this.clientBookshelves       = bookshelves;
+        this.clientMagicFuel         = magicFuel;
         this.clientHasActivePedestal = hasActivePedestal;
     }
 
-    public int getClientLinkedChests() { return clientLinkedChests; }
-    public int getClientBookshelves() { return clientBookshelves; }
-    public int getClientLapisCount() { return clientMagicFuel; }
-    public int getClientMagicFuel() { return clientMagicFuel; }
+    public void setClientFuelBreakdown(int common, int uncommon, int rare, int epic, int legendary) {
+        this.clientFuelCommon    = common;
+        this.clientFuelUncommon  = uncommon;
+        this.clientFuelRare      = rare;
+        this.clientFuelEpic      = epic;
+        this.clientFuelLegendary = legendary;
+    }
+
+    public int getClientLinkedChests()  { return clientLinkedChests; }
+    public int getClientBookshelves()   { return clientBookshelves; }
+    public int getClientMagicFuel()     { return clientMagicFuel; }
     public boolean hasActivePedestalNearby() { return clientHasActivePedestal; }
-    public boolean hasActivePedestal() { return clientHasActivePedestal; }
 
-    // ════════════════════════════════════
-    // TICK
-    // ════════════════════════════════════
-    public static void tick(Level level, BlockPos pos, BlockState state,
-                            ArcaneForgeBlockEntity be) {
-        if (level.isClientSide()) return;
+    public int getClientFuelCommon()    { return clientFuelCommon; }
+    public int getClientFuelUncommon()  { return clientFuelUncommon; }
+    public int getClientFuelRare()      { return clientFuelRare; }
+    public int getClientFuelEpic()      { return clientFuelEpic; }
+    public int getClientFuelLegendary() { return clientFuelLegendary; }
 
-        be.syncTimer++;
-        if (be.syncTimer >= Config.SYNC_INTERVAL_TICKS) {
-            be.syncTimer = 0;
-            be.validateLinkedChests();
-            be.cachedBookshelfCount = be.countNearbyBookshelves();
-            be.cachedMagicFuel = be.countMagicFuelInLinkedChests();
+    public static void tick(Level level, BlockPos pos, BlockState state, ArcaneForgeBlockEntity be) {
+        if (!level.isClientSide()) {
+            be.syncTimer++;
+            if (be.syncTimer >= Config.SYNC_INTERVAL_TICKS) {
+                be.syncTimer = 0;
+                be.validateLinkedChests();
+                be.cachedBookshelfCount = be.countNearbyBookshelves();
+                be.cachedMagicFuel      = be.countMagicFuelInLinkedChests();
 
-            // Verificar si hay pedestal arcano activo cerca
-            boolean hasActivePedestal = ArcanePedestalBlock.hasActivePedestalNearby(level, pos);
+                boolean hasActivePedestal = ArcanePedestalBlock.hasActivePedestalNearby(level, pos);
 
-            if (level instanceof ServerLevel serverLevel) {
-                S2CSyncPacket syncPacket = new S2CSyncPacket(
-                        pos, be.linkedChests.size(),
-                        be.cachedBookshelfCount, be.cachedMagicFuel, hasActivePedestal);
-                for (ServerPlayer player : serverLevel.players()) {
-                    if (player.containerMenu instanceof ArcaneForgeMenu forgeMenu) {
-                        if (forgeMenu.getBlockEntity() == be) {
+                if (level instanceof ServerLevel serverLevel) {
+                    FuelBreakdown breakdown = be.computeFuelBreakdown();
+                    S2CSyncPacket syncPacket = new S2CSyncPacket(
+                            pos, be.linkedChests.size(), be.cachedBookshelfCount, be.cachedMagicFuel, hasActivePedestal,
+                            breakdown.common, breakdown.uncommon, breakdown.rare, breakdown.epic, breakdown.legendary);
+
+                    for (ServerPlayer player : serverLevel.players()) {
+                        if (player.containerMenu instanceof ArcaneForgeMenu forgeMenu && forgeMenu.getBlockEntity() == be) {
                             PacketDistributor.sendToPlayer(player, syncPacket);
                         }
                     }
                 }
             }
+        } else {
+            if (be.clientHasActivePedestal) {
+                RandomSource random = level.getRandom();
+                long time = level.getGameTime();
+
+                if (time % 3 == 0) {
+                    for (BlockPos chestPos : be.getLinkedChests()) {
+                        double dx = (pos.getX() + 0.5) - (chestPos.getX() + 0.5);
+                        double dy = (pos.getY() + 1.2) - (chestPos.getY() + 0.8);
+                        double dz = (pos.getZ() + 0.5) - (chestPos.getZ() + 0.5);
+
+                        level.addParticle(new DustParticleOptions(0x8A2BE2, 0.9f),
+                                chestPos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.5,
+                                chestPos.getY() + 0.8 + random.nextDouble() * 0.5,
+                                chestPos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.5,
+                                dx * 0.06, dy * 0.06, dz * 0.06);
+                    }
+                }
+
+                double angle  = time * 0.15;
+                double radius = 0.8 + Math.sin(time * 0.05) * 0.2;
+                double py     = pos.getY() + 0.5 + (Math.sin(time * 0.1) * 0.5);
+
+                level.addParticle(new DustParticleOptions(0xFF00FF, 1.2f), pos.getX() + 0.5 + Math.cos(angle) * radius, py, pos.getZ() + 0.5 + Math.sin(angle) * radius, 0, 0.02, 0);
+                level.addParticle(new DustParticleOptions(0x00FFFF, 1.2f), pos.getX() + 0.5 + Math.cos(angle + Math.PI) * radius, py, pos.getZ() + 0.5 + Math.sin(angle + Math.PI) * radius, 0, 0.02, 0);
+            }
         }
     }
 
-    private void validateLinkedChests() {
+    public void validateLinkedChests() {
         if (level == null) return;
         boolean changed = linkedChests.removeIf(chestPos -> {
             if (!level.isLoaded(chestPos)) return false;
@@ -362,24 +513,10 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         if (changed) setChanged();
     }
 
-    // ════════════════════════════════════
-    // SERIALIZACIÓN — ValueOutput / ValueInput API (26.1.2)
-    //
-    // En 26.1.2:
-    //   ValueOutput: putInt("key", val), store("key", codec, val)
-    //   ValueInput:  getIntOr("key", default) → devuelve int (NO Optional!)
-    //                read("key", codec) → devuelve Optional<T>
-    // ════════════════════════════════════
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-
-        // Guardar item del slot
-        if (!items.get(0).isEmpty()) {
-            output.store("slot_0", ItemStack.CODEC, items.get(0));
-        }
-
-        // Guardar cofres vinculados
+        if (!items.get(0).isEmpty()) output.store("slot_0", ItemStack.CODEC, items.get(0));
         output.putInt("chest_count", linkedChests.size());
         for (int i = 0; i < linkedChests.size(); i++) {
             BlockPos cp = linkedChests.get(i);
@@ -387,8 +524,6 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
             output.putInt("chest_" + i + "_y", cp.getY());
             output.putInt("chest_" + i + "_z", cp.getZ());
         }
-
-        // Guardar valores cacheados
         output.putInt("bookshelf_count", cachedBookshelfCount);
         output.putInt("magic_fuel", cachedMagicFuel);
     }
@@ -396,11 +531,7 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-
-        // Cargar item del slot — read() devuelve Optional<T>
         items.set(0, input.read("slot_0", ItemStack.CODEC).orElse(ItemStack.EMPTY));
-
-        // Cargar cofres vinculados — getIntOr devuelve int directamente
         linkedChests.clear();
         int chestCount = input.getIntOr("chest_count", 0);
         for (int i = 0; i < chestCount; i++) {
@@ -409,21 +540,13 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
             int cz = input.getIntOr("chest_" + i + "_z", 0);
             linkedChests.add(new BlockPos(cx, cy, cz));
         }
-
-        // Cargar valores cacheados
         cachedBookshelfCount = input.getIntOr("bookshelf_count", 0);
-        cachedMagicFuel = input.getIntOr("magic_fuel", 0);
-        // Compatibilidad con versiones anteriores
-        if (cachedMagicFuel == 0) {
-            cachedMagicFuel = input.getIntOr("lapis_count", 0);
-        }
+        cachedMagicFuel      = input.getIntOr("magic_fuel", 0);
     }
 
-    // ── getUpdateTag requiere HolderLookup.Provider en 26.1 ──
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = super.getUpdateTag(registries);
-
         tag.putInt("chest_count", linkedChests.size());
         for (int i = 0; i < linkedChests.size(); i++) {
             BlockPos cp = linkedChests.get(i);
@@ -438,22 +561,12 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
 
     @Nullable
     @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
+    public Packet<ClientGamePacketListener> getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
 
-    // ════════════════════════════════════
-    // MenuProvider
-    // ════════════════════════════════════
     @Override
-    public Component getDisplayName() {
-        return Component.translatable("block.arcaneforge.arcane_forge");
-    }
+    public Component getDisplayName() { return Component.translatable("block.arcaneforge.arcane_forge"); }
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory,
-                                            Player player) {
-        return new ArcaneForgeMenu(containerId, playerInventory, this);
-    }
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) { return new ArcaneForgeMenu(containerId, playerInventory, this); }
 }

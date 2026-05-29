@@ -5,7 +5,50 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7156b797-09f0-4912-a0af-d61f9e84f7e6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/component/ArcaneEnchantments.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/ApocalypticBowHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/ArcaneBowFusionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/ArcaneTotemKey.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/ArcaneVisualHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/EtherealPassArmorHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/PickaxeArcaneHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/SoulHarvestHoeHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/mixin/EnchantmentDisplayMixin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/mixin/SpearWeaponMixin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/registry/ModDataComponents.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/util/ArcaneEnchantHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/animations/arcane_forge.animation.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/data/arcane_resonance.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/geo/arcane_forge.geo.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/textura/block/base.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/textura/block/picosdebajot.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/textura/block/picostexture.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/textura/block/soporte.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/textura/block/t_medio.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/textura/block/t_soporte.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/textura/block/texture.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/data/arcaneforge/enchantment/apocalyptic_judgment.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/data/arcaneforge/enchantment/ethereal_launch.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/data/arcaneforge/enchantment/ethereal_walk.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/data/arcaneforge/enchantment/soul_harvest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/data/arcaneforge/enchantment/void_protection.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" beforeDir="false" afterPath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/ArcaneForge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/ArcaneForge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/block/ArcaneForgeBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/block/ArcaneForgeBlock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/block/ArcaneForgeBlockEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/block/ArcaneForgeBlockEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/AxeFortuneHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/AxeFortuneHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/EnchantmentFusionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/EnchantmentFusionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/menu/ArcaneForgeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/menu/ArcaneForgeMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/menu/ArcaneForgeScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/menu/ArcaneForgeScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/mixin/Arcaneforge.mixins.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/mixin/Arcaneforge.mixins.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/mixin/EnchantmentLevelMixin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/mixin/EnchantmentLimitMixin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/mixin/ItemEnchantmentsMixin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/network/C2SEnchantPacket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/network/C2SEnchantPacket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/network/S2CSyncPacket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/network/S2CSyncPacket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/registry/ModBlocks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/registry/ModBlocks.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/lang/en_us.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/lang/es_mx.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/lang/es_mx.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,19 +95,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.ModMinecraftArcane [:net.neoforged.devlaunch.Main.main()].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.ModMinecraftArcane [:net.neoforged.devlaunch.Main.main()].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/ModsTrabajos/ModsTrabajos/arcaneforge-template-26.1.2/ModMinecraftArcane/src/main/resources/assets/arcaneforge/textura",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\ModsTrabajos\ModsTrabajos\arcaneforge-template-26.1.2\ModMinecraftArcane\src\main\resources\assets\arcaneforge\textura" />
+      <recent name="D:\ModsTrabajos\ModsTrabajos\arcaneforge-template-26.1.2\ModMinecraftArcane\src\main\resources\assets\arcaneforge\animations" />
+      <recent name="D:\ModsTrabajos\ModsTrabajos\arcaneforge-template-26.1.2\ModMinecraftArcane\src\main\resources\assets\arcaneforge\geo" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\ModsTrabajos\ModsTrabajos\arcaneforge-template-26.1.2\ModMinecraftArcane\src\main\resources\assets\arcaneforge\textura\block" />
+      <recent name="D:\ModsTrabajos\ModsTrabajos\arcaneforge-template-26.1.2\ModMinecraftArcane\src\main\resources\data\arcaneforge\enchantment" />
+    </key>
+  </component>
   <component name="RunManager" selected="Application.Client">
     <configuration name="Client" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="net.neoforged.devlaunch.Main" />
@@ -128,6 +184,10 @@
       <workItem from="1779742908503" duration="275000" />
       <workItem from="1779743284274" duration="723000" />
       <workItem from="1779746010052" duration="290000" />
+      <workItem from="1779815301761" duration="2676000" />
+      <workItem from="1779825465873" duration="6771000" />
+      <workItem from="1779898252050" duration="7074000" />
+      <workItem from="1779953529317" duration="29826000" />
     </task>
     <servers />
   </component>

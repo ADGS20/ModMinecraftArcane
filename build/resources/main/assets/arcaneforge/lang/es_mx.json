@@ -1,0 +1,21 @@
+{
+  "itemGroup.arcaneforge": "Arcane Forge",
+  "block.arcaneforge.example_block": "Bloque de Ejemplo",
+  "item.arcaneforge.example_item": "Item de Ejemplo",
+  
+  "block.arcaneforge.arcane_forge": "Mesa de Encantamiento Arcana",
+  "block.arcaneforge.arcane_pedestal": "Bloque de Potenciación Arcana",
+  
+  "arcaneforge.configuration.title": "Configuración de Arcane Forge",
+  "arcaneforge.configuration.section.arcaneforge.common.toml": "Configuración de Arcane Forge",
+  "arcaneforge.configuration.section.arcaneforge.common.toml.title": "Configuración de Arcane Forge",
+  "arcaneforge.configuration.items": "Lista de Items",
+  "arcaneforge.configuration.logDirtBlock": "Registrar Bloque de Tierra",
+  "arcaneforge.configuration.magicNumberIntroduction": "Texto del Número Mágico",
+  "arcaneforge.configuration.magicNumber": "Número Mágico",
+  "enchantment.arcaneforge.apocalyptic_judgment": "Juicio Apocalíptico",
+  "enchantment.arcaneforge.void_protection": "Resguardo del Vacío",
+  "enchantment.arcaneforge.soul_harvest": "Cosecha de Almas",
+  "enchantment.arcaneforge.ethereal_walk": "Paso Etéreo",
+  "enchantment.arcaneforge.ethereal_launch": "Lanzamiento Etéreo"
+}

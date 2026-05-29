@@ -12,5 +12,10 @@
   "arcaneforge.configuration.items": "Lista de Items",
   "arcaneforge.configuration.logDirtBlock": "Registrar Bloque de Tierra",
   "arcaneforge.configuration.magicNumberIntroduction": "Texto del Número Mágico",
-  "arcaneforge.configuration.magicNumber": "Número Mágico"
+  "arcaneforge.configuration.magicNumber": "Número Mágico",
+  "enchantment.arcaneforge.apocalyptic_judgment": "Juicio Apocalíptico",
+  "enchantment.arcaneforge.void_protection": "Resguardo del Vacío",
+  "enchantment.arcaneforge.soul_harvest": "Cosecha de Almas",
+  "enchantment.arcaneforge.ethereal_walk": "Paso Etéreo",
+  "enchantment.arcaneforge.ethereal_launch": "Lanzamiento Etéreo"
 }

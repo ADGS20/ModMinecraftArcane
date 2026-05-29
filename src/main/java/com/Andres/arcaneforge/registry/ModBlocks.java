@@ -3,6 +3,7 @@ package com.Andres.arcaneforge.registry;
 import com.Andres.arcaneforge.ArcaneForge;
 import com.Andres.arcaneforge.block.ArcaneForgeBlock;
 import com.Andres.arcaneforge.block.ArcanePedestalBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -30,5 +31,15 @@ public class ModBlocks {
                             .strength(3.0f, 6.0f)
                             .requiresCorrectToolForDrops()
                             .lightLevel(state -> 5)
+            );
+
+    // Registro corregido usando la fábrica Block::new compatible con DeferredRegister de NeoForge
+    public static final DeferredBlock<Block> ARCANE_POWER_BLOCK =
+            BLOCKS.registerBlock(
+                    "arcane_power_block",
+                    Block::new,
+                    () -> BlockBehaviour.Properties.of()
+                            .strength(3.0f, 6.0f)
+                            .requiresCorrectToolForDrops()
             );
 }

@@ -1,11 +1,11 @@
 package com.Andres.arcaneforge.event;
 
 import com.Andres.arcaneforge.ArcaneForge;
+import com.Andres.arcaneforge.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -21,16 +21,12 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-/**
- * ╔══════════════════════════════════════════════════════════════════════╗
- * ║         SISTEMA DE FUSIÓN DE ENCANTAMIENTOS INCOMPATIBLES          ║
- * ║         Versión Final Corregida (Casteo de Breaker a Player)       ║
- * ╚══════════════════════════════════════════════════════════════════════╝
- */
 @EventBusSubscriber(modid = ArcaneForge.MODID)
 public class EnchantmentFusionHandler {
 
@@ -43,17 +39,11 @@ public class EnchantmentFusionHandler {
             EquipmentSlot.FEET
     };
 
-    // ════════════════════════════════════════════════════════════════
-    // 1. FORTUNA + TOQUE DE SEDA
-    // ════════════════════════════════════════════════════════════════
-
     @SubscribeEvent
     public static void onBlockDrops(BlockDropsEvent event) {
         try {
-            // Conseguir la entidad que rompió el bloque
             Entity breaker = event.getBreaker();
 
-            // Verificar si el "breaker" existe y si es realmente un Jugador
             if (!(breaker instanceof Player player)) return;
             if (player.level().isClientSide()) return;
 
@@ -65,48 +55,62 @@ public class EnchantmentFusionHandler {
             int silkTouchLevel  = enchants.getOrDefault("silk_touch", 0);
             int fortuneLevel    = enchants.getOrDefault("fortune", 0);
 
-            // Si no tiene la fusión activa, ignoramos
             if (silkTouchLevel <= 0 || fortuneLevel <= 0) return;
 
-            BlockState brokenState = event.getState();
             BlockPos blockPos = event.getPos();
 
-            // Calcular el número de drops extras por Fortuna
+            // Verificar la presencia del bloque de poder o el pedestal cerca
+            boolean hasRequiredBlock = false;
+            int radius = 5;
+            for (BlockPos p : BlockPos.betweenClosed(blockPos.offset(-radius, -radius, -radius), blockPos.offset(radius, radius, radius))) {
+                BlockState checkState = player.level().getBlockState(p);
+                if (checkState.is(ModBlocks.ARCANE_POWER_BLOCK.get()) || checkState.is(ModBlocks.ARCANE_PEDESTAL.get())) {
+                    hasRequiredBlock = true;
+                    break;
+                }
+            }
+
+            if (!hasRequiredBlock) return;
+
             int extraDrops = RANDOM.nextInt(fortuneLevel + 1);
 
-            if (extraDrops > 0 && player.level() instanceof ServerLevel serverLevel) {
-                ItemStack silkDrop = new ItemStack(brokenState.getBlock().asItem());
-                if (!silkDrop.isEmpty()) {
-                    for (int i = 0; i < extraDrops; i++) {
-                        ItemEntity itemEntity = new ItemEntity(
-                                serverLevel,
-                                blockPos.getX() + 0.5,
-                                blockPos.getY() + 0.5,
-                                blockPos.getZ() + 0.5,
-                                silkDrop.copy()
-                        );
-                        itemEntity.setDefaultPickUpDelay();
+            // CORRECCIÓN CLAVE: Generar nuevas entidades independientes para evitar errores de sincronización de Mojang
+            if (extraDrops > 0 && !event.getDrops().isEmpty()) {
+                List<ItemEntity> extraDropsEntities = new ArrayList<>();
 
-                        // Añadir los elementos extras directamente a la lista de drops del evento
-                        event.getDrops().add(itemEntity);
+                for (ItemEntity itemEntity : event.getDrops()) {
+                    ItemStack stack = itemEntity.getItem();
+                    if (!stack.isEmpty()) {
+                        int remainingExtra = extraDrops;
+
+                        // Divide de forma segura cantidades masivas en stacks de 64 sin topar el juego
+                        while (remainingExtra > 0) {
+                            int splitCount = Math.min(stack.getMaxStackSize(), remainingExtra);
+                            ItemStack extraStack = stack.copy();
+                            extraStack.setCount(splitCount);
+
+                            ItemEntity newEntity = new ItemEntity(
+                                    player.level(),
+                                    itemEntity.getX(),
+                                    itemEntity.getY(),
+                                    itemEntity.getZ(),
+                                    extraStack
+                            );
+                            newEntity.setDefaultPickUpDelay();
+                            extraDropsEntities.add(newEntity);
+
+                            remainingExtra -= splitCount;
+                        }
                     }
-                    
-                    String toolType = tool.getItem().toString().contains("axe") ? "Hacha" : 
-                                     tool.getItem().toString().contains("pickaxe") ? "Pico" : "Herramienta";
-                    
-                    ArcaneForge.LOGGER.debug(
-                            "Fusion Core: Fortune {} + Silk Touch en {} -> Añadidas {} copias extra de {}",
-                            fortuneLevel, toolType, extraDrops, silkDrop.getHoverName().getString());
                 }
+                // Añadir de forma segura los nuevos objetos a la lista de recolección de drops de NeoForge
+                event.getDrops().addAll(extraDropsEntities);
+                ArcaneForge.LOGGER.debug("Fusion Core: Multiplicados drops por Toque de Seda + Fortuna {} con Pedestal/Bloque", fortuneLevel);
             }
         } catch (Exception e) {
             ArcaneForge.LOGGER.debug("Fusion block drops handler error: {}", e.getMessage());
         }
     }
-
-    // ════════════════════════════════════════════════════════════════
-    // 2. DAÑO COMBINADO + 3. PROTECCIÓN MÚLTIPLE
-    // ════════════════════════════════════════════════════════════════
 
     @SubscribeEvent
     public static void onLivingDamage(LivingDamageEvent.Pre event) {
@@ -117,34 +121,24 @@ public class EnchantmentFusionHandler {
             DamageSource source = event.getSource();
             float originalDamage = event.getOriginalDamage();
 
-            // Protección múltiple
             float protectionReduction = calculateFusedProtection(target, source);
             if (protectionReduction > 0) {
                 float newDamage = Math.max(0, originalDamage * (1.0f - protectionReduction));
                 event.setNewDamage(newDamage);
-                ArcaneForge.LOGGER.debug("Fusion Protection: {} -> {} ({}% reduction)",
-                        originalDamage, newDamage, (int)(protectionReduction * 100));
             }
 
-            // Daño combinado del atacante
             Entity attacker = source.getEntity();
             if (attacker instanceof LivingEntity livingAttacker) {
                 float extraDamage = calculateFusedDamage(livingAttacker, target);
                 if (extraDamage > 0) {
                     float current = event.getNewDamage();
                     event.setNewDamage(current + extraDamage);
-                    ArcaneForge.LOGGER.debug("Fusion Damage: {} + {} extra = {}",
-                            current, extraDamage, current + extraDamage);
                 }
             }
         } catch (Exception e) {
             ArcaneForge.LOGGER.debug("Fusion damage handler error: {}", e.getMessage());
         }
     }
-
-    // ════════════════════════════════════════════════════════════════
-    // PROTECCIÓN FUSIONADA
-    // ════════════════════════════════════════════════════════════════
 
     private static float calculateFusedProtection(LivingEntity target, DamageSource source) {
         float totalReduction = 0;
@@ -163,22 +157,19 @@ public class EnchantmentFusionHandler {
             }
 
             int fireProtLevel = enchants.getOrDefault("fire_protection", 0);
-            if (fireProtLevel > 0 && isDamageType(source,
-                    "fire", "in_fire", "on_fire", "lava", "hot_floor")) {
+            if (fireProtLevel > 0 && isDamageType(source, "fire", "in_fire", "on_fire", "lava", "hot_floor")) {
                 totalReduction += fireProtLevel * 0.08f;
                 protectionTypes++;
             }
 
             int blastProtLevel = enchants.getOrDefault("blast_protection", 0);
-            if (blastProtLevel > 0 && isDamageType(source,
-                    "explosion", "player_explosion")) {
+            if (blastProtLevel > 0 && isDamageType(source, "explosion", "player_explosion")) {
                 totalReduction += blastProtLevel * 0.08f;
                 protectionTypes++;
             }
 
             int projProtLevel = enchants.getOrDefault("projectile_protection", 0);
-            if (projProtLevel > 0 && isDamageType(source,
-                    "arrow", "trident", "mob_projectile")) {
+            if (projProtLevel > 0 && isDamageType(source, "arrow", "trident", "mob_projectile")) {
                 totalReduction += projProtLevel * 0.08f;
                 protectionTypes++;
             }
@@ -187,10 +178,6 @@ public class EnchantmentFusionHandler {
         if (protectionTypes <= 1) return 0;
         return Math.min(totalReduction, 0.80f);
     }
-
-    // ════════════════════════════════════════════════════════════════
-    // DAÑO FUSIONADO
-    // ════════════════════════════════════════════════════════════════
 
     private static float calculateFusedDamage(LivingEntity attacker, LivingEntity target) {
         ItemStack weapon = attacker.getMainHandItem();
@@ -225,24 +212,12 @@ public class EnchantmentFusionHandler {
         return extraDamage;
     }
 
-    // ════════════════════════════════════════════════════════════════
-    // DETECCIÓN DE TIPO DE MOB
-    // ════════════════════════════════════════════════════════════════
-
     private static boolean isUndeadMob(LivingEntity entity) {
         try {
             String typePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).getPath();
-
             return switch (typePath) {
-                case "zombie", "husk", "drowned", "zombie_villager",
-                     "zombie_horse", "skeleton", "skeleton_horse",
-                     "wither_skeleton", "stray", "phantom",
-                     "wither", "zoglin", "zombified_piglin",
-                     "giant", "drowned_zombie" -> true;
-                default ->
-                        typePath.contains("zombie") || typePath.contains("skeleton")
-                                || typePath.contains("undead") || typePath.contains("wither")
-                                || typePath.contains("phantom") || typePath.contains("revenant");
+                case "zombie", "husk", "drowned", "zombie_villager", "skeleton", "wither_skeleton", "phantom", "wither" -> true;
+                default -> typePath.contains("zombie") || typePath.contains("skeleton") || typePath.contains("undead");
             };
         } catch (Exception e) {
             return false;
@@ -252,28 +227,18 @@ public class EnchantmentFusionHandler {
     private static boolean isArthropodMob(LivingEntity entity) {
         try {
             String typePath = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).getPath();
-
             return switch (typePath) {
-                case "spider", "cave_spider", "silverfish",
-                     "endermite", "bee" -> true;
-                default ->
-                        typePath.contains("spider") || typePath.contains("silverfish")
-                                || typePath.contains("endermite") || typePath.contains("bee")
-                                || typePath.contains("arthropod") || typePath.contains("insect");
+                case "spider", "cave_spider", "silverfish", "endermite", "bee" -> true;
+                default -> typePath.contains("spider") || typePath.contains("arthropod");
             };
         } catch (Exception e) {
             return false;
         }
     }
 
-    // ════════════════════════════════════════════════════════════════
-    // UTILIDADES
-    // ════════════════════════════════════════════════════════════════
-
     private static Map<String, Integer> getEnchantmentMap(ItemStack stack) {
         Map<String, Integer> result = new HashMap<>();
-        ItemEnchantments enchants = stack.getOrDefault(
-                DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        ItemEnchantments enchants = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
 
         for (var entry : enchants.entrySet()) {
             Holder<Enchantment> holder = entry.getKey();
@@ -294,13 +259,6 @@ public class EnchantmentFusionHandler {
             String sourceType = source.type().msgId();
             for (String name : typeNames) {
                 if (sourceType.contains(name)) return true;
-            }
-            var keyOpt = source.typeHolder().unwrapKey();
-            if (keyOpt.isPresent()) {
-                String path = keyOpt.get().identifier().getPath();
-                for (String name : typeNames) {
-                    if (path.contains(name)) return true;
-                }
             }
         } catch (Exception ignored) {}
         return false;

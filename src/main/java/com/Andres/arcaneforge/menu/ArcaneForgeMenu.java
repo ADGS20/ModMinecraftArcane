@@ -3,7 +3,9 @@ package com.Andres.arcaneforge.menu;
 import com.Andres.arcaneforge.block.ArcaneForgeBlockEntity;
 import com.Andres.arcaneforge.registry.ModBlocks;
 import com.Andres.arcaneforge.registry.ModMenuTypes;
+import com.Andres.arcaneforge.network.S2CSyncPacket;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -18,8 +20,7 @@ public class ArcaneForgeMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess levelAccess;
 
     // Constructor del servidor
-    public ArcaneForgeMenu(int containerId, Inventory playerInventory,
-                           ArcaneForgeBlockEntity be) {
+    public ArcaneForgeMenu(int containerId, Inventory playerInventory, ArcaneForgeBlockEntity be) {
         super(ModMenuTypes.ARCANE_FORGE_MENU.get(), containerId);
         this.blockEntity = be;
         this.levelAccess = ContainerLevelAccess.create(be.getLevel(), be.getBlockPos());
@@ -56,11 +57,24 @@ public class ArcaneForgeMenu extends AbstractContainerMenu {
         for (int col = 0; col < 9; col++) {
             addSlot(new Slot(playerInventory, col, 8 + col * 18, 142));
         }
+
+        // 🔄 SINCRONIZACIÓN INMEDIATA (Sugerencia 1): Al abrir el bloque, enviamos los datos actualizados
+        if (playerInventory.player instanceof ServerPlayer serverPlayer) {
+            be.validateLinkedChests();
+            int currentFuel = be.countMagicFuelInLinkedChests();
+            int bookshelves = be.countNearbyBookshelves();
+            boolean hasPedestal = com.Andres.arcaneforge.block.ArcanePedestalBlock.hasActivePedestalNearby(be.getLevel(), be.getBlockPos());
+            ArcaneForgeBlockEntity.FuelBreakdown bd = be.computeFuelBreakdown();
+
+            serverPlayer.connection.send(new S2CSyncPacket(
+                    be.getBlockPos(), be.getLinkedChestCount(), bookshelves, currentFuel, hasPedestal,
+                    bd.common, bd.uncommon, bd.rare, bd.epic, bd.legendary
+            ));
+        }
     }
 
     // Constructor de red (cliente)
-    public ArcaneForgeMenu(int containerId, Inventory playerInventory,
-                           FriendlyByteBuf extraData) {
+    public ArcaneForgeMenu(int containerId, Inventory playerInventory, FriendlyByteBuf extraData) {
         this(containerId, playerInventory, getBlockEntity(playerInventory, extraData));
     }
 
