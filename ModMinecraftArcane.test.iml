@@ -7,6 +7,15 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="ModMinecraftArcane.main" />
+    <orderEntry type="module-library">
+      <library name="Gradle: geckolib-neoforge-1.21-5.3.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/geckolib-neoforge-1.21-5.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
   <component name="TestModuleProperties" production-module="ModMinecraftArcane.main" />
 </module>

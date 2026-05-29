@@ -43,18 +43,18 @@ public class ArcaneForgeBlock extends BaseEntityBlock {
                 player.openMenu(forgeBE, buf -> buf.writeBlockPos(pos));
             }
         }
-        // SUCCESS on client for visual feedback, CONSUME on server
         return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
-
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTickerHelper(type, ModBlockEntities.ARCANE_FORGE_BE.get(), ArcaneForgeBlockEntity::tick);
     }
+
     @Override
     public RenderShape getRenderShape(BlockState state) {
+        // En 1.21/NeoForge 20.6 se usa MODEL para bloques animados por entidades de GeckoLib
         return RenderShape.MODEL;
     }
 }

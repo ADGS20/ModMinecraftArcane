@@ -16,8 +16,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -41,83 +41,89 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.util.RandomSource;
 
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider {
+public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider, GeoBlockEntity {
+
+    private final AnimatableInstanceCache geckolibCache = GeckoLibUtil.createInstanceCache(this);
+    private static final RawAnimation CUBO_MAGICO_ANIM = RawAnimation.begin().thenLoop("cubo magico");
 
     public static final Map<Item, Integer> MATERIAL_FUEL_VALUES = new HashMap<>();
 
     static {
-        // TIER 1: Común (1–5 puntos)
-        MATERIAL_FUEL_VALUES.put(Items.COAL,              1);
-        MATERIAL_FUEL_VALUES.put(Items.CHARCOAL,          1);
-        MATERIAL_FUEL_VALUES.put(Items.STONE,             1);
-        MATERIAL_FUEL_VALUES.put(Items.COBBLESTONE,       1);
-        MATERIAL_FUEL_VALUES.put(Items.GRAVEL,            1);
-        MATERIAL_FUEL_VALUES.put(Items.SAND,              1);
-        MATERIAL_FUEL_VALUES.put(Items.BONE,              2);
-        MATERIAL_FUEL_VALUES.put(Items.ROTTEN_FLESH,      1);
-        MATERIAL_FUEL_VALUES.put(Items.STRING,            2);
-        MATERIAL_FUEL_VALUES.put(Items.GUNPOWDER,         2);
-        MATERIAL_FUEL_VALUES.put(Items.SPIDER_EYE,        2);
-        MATERIAL_FUEL_VALUES.put(Items.FEATHER,           2);
-        MATERIAL_FUEL_VALUES.put(Items.WHEAT,             1);
-        MATERIAL_FUEL_VALUES.put(Items.LEATHER,           2);
-        MATERIAL_FUEL_VALUES.put(Items.FLINT,             2);
-        MATERIAL_FUEL_VALUES.put(Items.SUGAR_CANE,        1);
-        MATERIAL_FUEL_VALUES.put(Items.PAPER,             1);
+        MATERIAL_FUEL_VALUES.put(Items.COAL, 1);
+        MATERIAL_FUEL_VALUES.put(Items.CHARCOAL, 1);
+        MATERIAL_FUEL_VALUES.put(Items.STONE, 1);
+        MATERIAL_FUEL_VALUES.put(Items.COBBLESTONE, 1);
+        MATERIAL_FUEL_VALUES.put(Items.GRAVEL, 1);
+        MATERIAL_FUEL_VALUES.put(Items.SAND, 1);
+        MATERIAL_FUEL_VALUES.put(Items.BONE, 2);
+        MATERIAL_FUEL_VALUES.put(Items.ROTTEN_FLESH, 1);
+        MATERIAL_FUEL_VALUES.put(Items.STRING, 2);
+        MATERIAL_FUEL_VALUES.put(Items.GUNPOWDER, 2);
+        MATERIAL_FUEL_VALUES.put(Items.SPIDER_EYE, 2);
+        MATERIAL_FUEL_VALUES.put(Items.FEATHER, 2);
+        MATERIAL_FUEL_VALUES.put(Items.WHEAT, 1);
+        MATERIAL_FUEL_VALUES.put(Items.LEATHER, 2);
+        MATERIAL_FUEL_VALUES.put(Items.FLINT, 2);
+        MATERIAL_FUEL_VALUES.put(Items.SUGAR_CANE, 1);
+        MATERIAL_FUEL_VALUES.put(Items.PAPER, 1);
 
-        // TIER 2: Poco común (10–25 puntos)
-        MATERIAL_FUEL_VALUES.put(Items.IRON_INGOT,        10);
-        MATERIAL_FUEL_VALUES.put(Items.IRON_NUGGET,        2);
-        MATERIAL_FUEL_VALUES.put(Items.COPPER_INGOT,       8);
-        MATERIAL_FUEL_VALUES.put(Items.LAPIS_LAZULI,      15);
-        MATERIAL_FUEL_VALUES.put(Items.LAPIS_BLOCK,       135);
-        MATERIAL_FUEL_VALUES.put(Items.REDSTONE,          10);
-        MATERIAL_FUEL_VALUES.put(Items.GLOWSTONE_DUST,    12);
-        MATERIAL_FUEL_VALUES.put(Items.QUARTZ,            10);
-        MATERIAL_FUEL_VALUES.put(Items.ENDER_PEARL,       25);
-        MATERIAL_FUEL_VALUES.put(Items.BLAZE_POWDER,      20);
-        MATERIAL_FUEL_VALUES.put(Items.GOLD_NUGGET,        5);
-        MATERIAL_FUEL_VALUES.put(Items.GOLD_INGOT,        20);
-        MATERIAL_FUEL_VALUES.put(Items.BOOK,              12);
-        MATERIAL_FUEL_VALUES.put(Items.SLIME_BALL,        15);
-        MATERIAL_FUEL_VALUES.put(Items.MAGMA_CREAM,       18);
-        MATERIAL_FUEL_VALUES.put(Items.GHAST_TEAR,        20);
+        MATERIAL_FUEL_VALUES.put(Items.IRON_INGOT, 10);
+        MATERIAL_FUEL_VALUES.put(Items.IRON_NUGGET, 2);
+        MATERIAL_FUEL_VALUES.put(Items.COPPER_INGOT, 8);
+        MATERIAL_FUEL_VALUES.put(Items.LAPIS_LAZULI, 15);
+        MATERIAL_FUEL_VALUES.put(Items.LAPIS_BLOCK, 135);
+        MATERIAL_FUEL_VALUES.put(Items.REDSTONE, 10);
+        MATERIAL_FUEL_VALUES.put(Items.GLOWSTONE_DUST, 12);
+        MATERIAL_FUEL_VALUES.put(Items.QUARTZ, 10);
+        MATERIAL_FUEL_VALUES.put(Items.ENDER_PEARL, 25);
+        MATERIAL_FUEL_VALUES.put(Items.BLAZE_POWDER, 20);
+        MATERIAL_FUEL_VALUES.put(Items.GOLD_NUGGET, 5);
+        MATERIAL_FUEL_VALUES.put(Items.GOLD_INGOT, 20);
+        MATERIAL_FUEL_VALUES.put(Items.BOOK, 12);
+        MATERIAL_FUEL_VALUES.put(Items.SLIME_BALL, 15);
+        MATERIAL_FUEL_VALUES.put(Items.MAGMA_CREAM, 18);
+        MATERIAL_FUEL_VALUES.put(Items.GHAST_TEAR, 20);
 
-        // TIER 3: Raro (50–100 puntos)
-        MATERIAL_FUEL_VALUES.put(Items.DIAMOND,           80);
-        MATERIAL_FUEL_VALUES.put(Items.EMERALD,           60);
-        MATERIAL_FUEL_VALUES.put(Items.AMETHYST_SHARD,    50);
-        MATERIAL_FUEL_VALUES.put(Items.ECHO_SHARD,       100);
-        MATERIAL_FUEL_VALUES.put(Items.PRISMARINE_SHARD,  50);
+        MATERIAL_FUEL_VALUES.put(Items.DIAMOND, 80);
+        MATERIAL_FUEL_VALUES.put(Items.EMERALD, 60);
+        MATERIAL_FUEL_VALUES.put(Items.AMETHYST_SHARD, 50);
+        MATERIAL_FUEL_VALUES.put(Items.ECHO_SHARD, 100);
+        MATERIAL_FUEL_VALUES.put(Items.PRISMARINE_SHARD, 50);
         MATERIAL_FUEL_VALUES.put(Items.PRISMARINE_CRYSTALS, 55);
-        MATERIAL_FUEL_VALUES.put(Items.SHULKER_SHELL,     90);
-        MATERIAL_FUEL_VALUES.put(Items.RABBIT_FOOT,       55);
+        MATERIAL_FUEL_VALUES.put(Items.SHULKER_SHELL, 90);
+        MATERIAL_FUEL_VALUES.put(Items.RABBIT_FOOT, 55);
         MATERIAL_FUEL_VALUES.put(Items.FERMENTED_SPIDER_EYE, 50);
-        MATERIAL_FUEL_VALUES.put(Items.BLAZE_ROD,         60);
-        MATERIAL_FUEL_VALUES.put(Items.HEART_OF_THE_SEA,  90);
-        MATERIAL_FUEL_VALUES.put(Items.TURTLE_SCUTE,      55);
+        MATERIAL_FUEL_VALUES.put(Items.BLAZE_ROD, 60);
+        MATERIAL_FUEL_VALUES.put(Items.HEART_OF_THE_SEA, 90);
+        MATERIAL_FUEL_VALUES.put(Items.TURTLE_SCUTE, 55);
 
-        // TIER 4: Épico (200–400 puntos)
-        MATERIAL_FUEL_VALUES.put(Items.NETHERITE_SCRAP,  250);
-        MATERIAL_FUEL_VALUES.put(Items.NETHERITE_INGOT,  400);
-        MATERIAL_FUEL_VALUES.put(Items.ELYTRA,           350);
-        MATERIAL_FUEL_VALUES.put(Items.DRAGON_BREATH,    300);
-        MATERIAL_FUEL_VALUES.put(Items.END_CRYSTAL,      350);
+        MATERIAL_FUEL_VALUES.put(Items.NETHERITE_SCRAP, 250);
+        MATERIAL_FUEL_VALUES.put(Items.NETHERITE_INGOT, 400);
+        MATERIAL_FUEL_VALUES.put(Items.ELYTRA, 350);
+        MATERIAL_FUEL_VALUES.put(Items.DRAGON_BREATH, 300);
+        MATERIAL_FUEL_VALUES.put(Items.END_CRYSTAL, 350);
         MATERIAL_FUEL_VALUES.put(Items.TOTEM_OF_UNDYING, 400);
-        MATERIAL_FUEL_VALUES.put(Items.MUSIC_DISC_PIGSTEP,200);
-        MATERIAL_FUEL_VALUES.put(Items.NETHER_STAR,      200);
+        MATERIAL_FUEL_VALUES.put(Items.MUSIC_DISC_PIGSTEP, 200);
+        MATERIAL_FUEL_VALUES.put(Items.NETHER_STAR, 200);
 
-        // TIER 5: Legendario (750–2000 puntos)
         MATERIAL_FUEL_VALUES.put(Items.ENCHANTED_GOLDEN_APPLE, 2000);
-        MATERIAL_FUEL_VALUES.put(Items.TRIDENT,          1000);
-        MATERIAL_FUEL_VALUES.put(Items.DRAGON_EGG,       2000);
-        MATERIAL_FUEL_VALUES.put(Items.BEACON,            750);
+        MATERIAL_FUEL_VALUES.put(Items.TRIDENT, 1000);
+        MATERIAL_FUEL_VALUES.put(Items.DRAGON_EGG, 2000);
+        MATERIAL_FUEL_VALUES.put(Items.BEACON, 750);
     }
 
     public static int getMaterialFuelValue(Item item) {
@@ -144,12 +150,12 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         public int total;
 
         public FuelBreakdown(int c, int u, int r, int e, int l) {
-            this.common    = c;
-            this.uncommon  = u;
-            this.rare      = r;
-            this.epic      = e;
+            this.common = c;
+            this.uncommon = u;
+            this.rare = r;
+            this.epic = e;
             this.legendary = l;
-            this.total     = c + u + r + e + l;
+            this.total = c + u + r + e + l;
         }
     }
 
@@ -165,14 +171,26 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
     private int clientMagicFuel = 0;
     private boolean clientHasActivePedestal = false;
 
-    private int clientFuelCommon    = 0;
-    private int clientFuelUncommon  = 0;
-    private int clientFuelRare      = 0;
-    private int clientFuelEpic      = 0;
+    private int clientFuelCommon = 0;
+    private int clientFuelUncommon = 0;
+    private int clientFuelRare = 0;
+    private int clientFuelEpic = 0;
     private int clientFuelLegendary = 0;
 
     public ArcaneForgeBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.ARCANE_FORGE_BE.get(), pos, blockState);
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "forge_controller", 0, state -> {
+            return state.setAndContinue(CUBO_MAGICO_ANIM);
+        }));
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.geckolibCache;
     }
 
     public NonNullList<ItemStack> getItems() { return items; }
@@ -275,11 +293,11 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
                     int val = getMaterialFuelValue(stack.getItem());
                     int totalVal = val * stack.getCount();
 
-                    if      (val >= 750) legendary += totalVal;
-                    else if (val >= 200) epic      += totalVal;
-                    else if (val >= 50)  rare      += totalVal;
-                    else if (val >= 10)  uncommon  += totalVal;
-                    else                 common    += totalVal;
+                    if (val >= 750) legendary += totalVal;
+                    else if (val >= 200) epic += totalVal;
+                    else if (val >= 50) rare += totalVal;
+                    else if (val >= 10) uncommon += totalVal;
+                    else common += totalVal;
                 }
             }
         }
@@ -339,8 +357,8 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         }
     }
 
-    public static float getEnchantmentMultiplier(Identifier id) {
-        String path      = id.getPath();
+    public static float getEnchantmentMultiplier(ResourceLocation id) {
+        String path = id.getPath();
         String namespace = id.getNamespace();
 
         if (namespace.equals(ArcaneForge.MODID)) {
@@ -351,14 +369,14 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         return 1.0f;
     }
 
-    public int tryEnchant(Identifier enchantmentId, int targetLevel, ServerPlayer player) {
+    public int tryEnchant(ResourceLocation enchantmentId, int targetLevel, ServerPlayer player) {
         if (level == null || level.isClientSide()) return -1;
 
         ItemStack itemToEnchant = items.get(0);
         if (itemToEnchant.isEmpty()) return -1;
 
         cachedBookshelfCount = countNearbyBookshelves();
-        cachedMagicFuel      = countMagicFuelInLinkedChests();
+        cachedMagicFuel = countMagicFuelInLinkedChests();
 
         ItemEnchantments currentEnchants = itemToEnchant.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
         int currentLevel = 0;
@@ -382,12 +400,12 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         int finalLevel = currentLevel + targetLevel;
         if (finalLevel > maxAllowedLevel) {
             targetLevel = maxAllowedLevel - currentLevel;
-            finalLevel  = maxAllowedLevel;
+            finalLevel = maxAllowedLevel;
         }
         if (targetLevel <= 0) return -1;
 
         int baseCost = calculateProgressiveCost(currentLevel, targetLevel, cachedBookshelfCount, hasPedestal);
-        int totalCost  = Math.max(1, Math.round(baseCost * getEnchantmentMultiplier(enchantmentId)));
+        int totalCost = Math.max(1, Math.round(baseCost * getEnchantmentMultiplier(enchantmentId)));
 
         if (player.isCreative()) totalCost = 0;
         if (cachedMagicFuel < totalCost) return -1;
@@ -407,7 +425,6 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         mutable.set(holder, level);
         copy.set(DataComponents.ENCHANTMENTS, mutable.toImmutable());
 
-        // 🔮 NUEVA MEJORA: Si el ítem es un Tótem de la Inmortalidad, le inyectamos las 3 cargas iniciales directamente en la forja
         if (copy.is(Items.TOTEM_OF_UNDYING)) {
             net.minecraft.world.item.component.CustomData customData = copy.getOrDefault(DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
             net.minecraft.nbt.CompoundTag tag = customData.copyTag();
@@ -425,29 +442,29 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     public void setClientSyncData(int chests, int bookshelves, int magicFuel, boolean hasActivePedestal) {
-        this.clientLinkedChests      = chests;
-        this.clientBookshelves       = bookshelves;
-        this.clientMagicFuel         = magicFuel;
+        this.clientLinkedChests = chests;
+        this.clientBookshelves = bookshelves;
+        this.clientMagicFuel = magicFuel;
         this.clientHasActivePedestal = hasActivePedestal;
     }
 
     public void setClientFuelBreakdown(int common, int uncommon, int rare, int epic, int legendary) {
-        this.clientFuelCommon    = common;
-        this.clientFuelUncommon  = uncommon;
-        this.clientFuelRare      = rare;
-        this.clientFuelEpic      = epic;
+        this.clientFuelCommon = common;
+        this.clientFuelUncommon = uncommon;
+        this.clientFuelRare = rare;
+        this.clientFuelEpic = epic;
         this.clientFuelLegendary = legendary;
     }
 
-    public int getClientLinkedChests()  { return clientLinkedChests; }
-    public int getClientBookshelves()   { return clientBookshelves; }
-    public int getClientMagicFuel()     { return clientMagicFuel; }
+    public int getClientLinkedChests() { return clientLinkedChests; }
+    public int getClientBookshelves() { return clientBookshelves; }
+    public int getClientMagicFuel() { return clientMagicFuel; }
     public boolean hasActivePedestalNearby() { return clientHasActivePedestal; }
 
-    public int getClientFuelCommon()    { return clientFuelCommon; }
-    public int getClientFuelUncommon()  { return clientFuelUncommon; }
-    public int getClientFuelRare()      { return clientFuelRare; }
-    public int getClientFuelEpic()      { return clientFuelEpic; }
+    public int getClientFuelCommon() { return clientFuelCommon; }
+    public int getClientFuelUncommon() { return clientFuelUncommon; }
+    public int getClientFuelRare() { return clientFuelRare; }
+    public int getClientFuelEpic() { return clientFuelEpic; }
     public int getClientFuelLegendary() { return clientFuelLegendary; }
 
     public static void tick(Level level, BlockPos pos, BlockState state, ArcaneForgeBlockEntity be) {
@@ -457,7 +474,7 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
                 be.syncTimer = 0;
                 be.validateLinkedChests();
                 be.cachedBookshelfCount = be.countNearbyBookshelves();
-                be.cachedMagicFuel      = be.countMagicFuelInLinkedChests();
+                be.cachedMagicFuel = be.countMagicFuelInLinkedChests();
 
                 boolean hasActivePedestal = ArcanePedestalBlock.hasActivePedestalNearby(level, pos);
 
@@ -493,9 +510,9 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
                     }
                 }
 
-                double angle  = time * 0.15;
+                double angle = time * 0.15;
                 double radius = 0.8 + Math.sin(time * 0.05) * 0.2;
-                double py     = pos.getY() + 0.5 + (Math.sin(time * 0.1) * 0.5);
+                double py = pos.getY() + 0.5 + (Math.sin(time * 0.1) * 0.5);
 
                 level.addParticle(new DustParticleOptions(0xFF00FF, 1.2f), pos.getX() + 0.5 + Math.cos(angle) * radius, py, pos.getZ() + 0.5 + Math.sin(angle) * radius, 0, 0.02, 0);
                 level.addParticle(new DustParticleOptions(0x00FFFF, 1.2f), pos.getX() + 0.5 + Math.cos(angle + Math.PI) * radius, py, pos.getZ() + 0.5 + Math.sin(angle + Math.PI) * radius, 0, 0.02, 0);
@@ -541,7 +558,7 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
             linkedChests.add(new BlockPos(cx, cy, cz));
         }
         cachedBookshelfCount = input.getIntOr("bookshelf_count", 0);
-        cachedMagicFuel      = input.getIntOr("magic_fuel", 0);
+        cachedMagicFuel = input.getIntOr("magic_fuel", 0);
     }
 
     @Override

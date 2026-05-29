@@ -31,6 +31,15 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
+      <library name="Gradle: geckolib-neoforge-1.21-5.3.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/geckolib-neoforge-1.21-5.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
       <library name="Gradle: minecraft-patched-26.1.2.65-beta-merged.jar">
         <ANNOTATIONS>
           <root url="jar://$APPLICATION_PLUGINS_DIR$/Minecraft Development/lib/resources/externalAnnotations.jar!/" />
