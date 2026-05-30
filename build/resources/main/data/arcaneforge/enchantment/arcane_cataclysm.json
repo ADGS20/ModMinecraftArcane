@@ -1,0 +1,9 @@
+{
+  "description": {"translate": "enchantment.arcaneforge.arcane_cataclysm"},
+  "supported_items": "#minecraft:enchantable/mace",
+  "primary_items": "#minecraft:enchantable/mace",
+  "weight": 1, "max_level": 3,
+  "min_cost": {"base": 30, "per_level_above_first": 12},
+  "max_cost": {"base": 80, "per_level_above_first": 12},
+  "anvil_cost": 8, "slots": ["mainhand"], "effects": {}
+}

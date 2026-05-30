@@ -1,5 +1,41 @@
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/give @p arcaneforge:arcane_pedestal
+/give @p arcaneforge:arcane_forge
+/give @a
+/give @a arcaneforge:binding_wand
+/give @a
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survivala
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
 /time set minecraft:day
 /gamemode survival
+/effect give @p minecraft:hunger 60 1 true
+/effect give @p minecraft:hunger 60 5 true
+/effect give @p minecraft:hunger 60 50 true
 /gamemode creative
 /gamemode survival
 /gamemode creative
@@ -9,42 +45,6 @@
 /gamemode creative
 /gamemode survival
 /gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/experience add @p 900 levels
-/give @a minecraft:diamond_pickaxe
-/give @p minecraft:enchanted_golden_apple 64
-/give @p minecraft:netherite_axe
-/experience add @p 9000 levels
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/time set minecraft:night
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
+/give @p arc
+/give @p arcaneforge:arcane_power_block
+/give @p arcaneforge:arcane_pedestal
