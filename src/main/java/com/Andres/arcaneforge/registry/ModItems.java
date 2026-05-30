@@ -18,6 +18,10 @@ public class ModItems {
     public static final DeferredItem<Item> ARCANE_PEDESTAL = ITEMS.register("arcane_pedestal",
             () -> new BlockItem(ModBlocks.ARCANE_PEDESTAL.get(), new Item.Properties()));
 
+    // Adding ARCANE_POWER_BLOCK item
+    public static final DeferredItem<Item> ARCANE_POWER_BLOCK = ITEMS.register("arcane_power_block",
+            () -> new BlockItem(ModBlocks.ARCANE_POWER_BLOCK.get(), new Item.Properties()));
+
     public static final DeferredItem<Item> BINDING_WAND = ITEMS.register("binding_wand",
             () -> new BindingWand(new Item.Properties().stacksTo(1)));
 

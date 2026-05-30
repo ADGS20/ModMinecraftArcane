@@ -1,7 +1,9 @@
 package com.Andres.arcaneforge;
 
 import com.Andres.arcaneforge.registry.ModBlocks;
+import com.Andres.arcaneforge.registry.ModCreativeTabs;
 import com.Andres.arcaneforge.registry.ModEnchantments;
+import net.minecraft.resources.Identifier;
 import net.minecraft.text.Text;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -12,10 +14,13 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import org.slf4j.Logger;
+import com.mojang.logging.LogUtils;
 
 @Mod(ArcaneForge.MODID)
 public class ArcaneForge {
     public static final String MODID = "arcaneforge";
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public ArcaneForge(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.register(this);
