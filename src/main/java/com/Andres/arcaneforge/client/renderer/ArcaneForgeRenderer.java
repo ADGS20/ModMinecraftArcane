@@ -2,10 +2,11 @@ package com.Andres.arcaneforge.client.renderer;
 
 import com.Andres.arcaneforge.block.ArcaneForgeBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderState;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 
 public class ArcaneForgeRenderer implements BlockEntityRenderer<ArcaneForgeBlockEntity, BlockEntityRenderState> {
 
@@ -17,14 +18,8 @@ public class ArcaneForgeRenderer implements BlockEntityRenderer<ArcaneForgeBlock
     }
 
     @Override
-    public void extractRenderState(ArcaneForgeBlockEntity blockEntity, BlockEntityRenderState renderState, float partialTick) {
-        super.extractRenderState(blockEntity, renderState, partialTick);
-    }
-
-    @Override
-    public void render(BlockEntityRenderState renderState, PoseStack poseStack,
-                       MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        // Modelo estático renderizado por NeoForge via blockstates/arcane_forge.json
-        // Añade aquí overlays o partículas extra si los necesitas en el futuro
+    public void submit(BlockEntityRenderState renderState, PoseStack poseStack,
+                       SubmitNodeCollector collector, CameraRenderState cameraState) {
+        // Modelo estático — NeoForge lo renderiza via blockstates/arcane_forge.json
     }
 }
