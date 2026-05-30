@@ -1,29 +1,22 @@
 package com.Andres.arcaneforge.registry;
 
 import com.Andres.arcaneforge.ArcaneForge;
-import com.Andres.arcaneforge.item.BindingWand;
-import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.registries.DeferredItem;
+import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModItems {
-
-    public static final DeferredRegister.Items ITEMS =
-            DeferredRegister.createItems(ArcaneForge.MODID);
-
-    // Block item for the Arcane Forge
-    public static final DeferredItem<?> ARCANE_FORGE_ITEM =
-            ITEMS.registerSimpleBlockItem(ModBlocks.ARCANE_FORGE);
-
-    // Block item for the Arcane Pedestal
-    public static final DeferredItem<?> ARCANE_PEDESTAL_ITEM =
-            ITEMS.registerSimpleBlockItem(ModBlocks.ARCANE_PEDESTAL);
-
-    // Binding Wand — links chests to the forge
-    public static final DeferredItem<BindingWand> BINDING_WAND =
-            ITEMS.registerItem(
-                    "binding_wand",
-                    BindingWand::new,
-                    () -> new Item.Properties().stacksTo(1).durability(250)
-            );
+    
+    public static final DeferredRegister<Item> ITEMS =
+            DeferredRegister.create(Registries.ITEM, ArcaneForge.MODID);
+    
+    // Agrega tus items aquí
+    // public static final DeferredHolder<Item, Item> YOUR_ITEM = 
+    //         ITEMS.register("your_item", () -> new Item(new Item.Settings()));
+    
+    public static void register(net.neoforged.bus.api.IEventBus eventBus) {
+        ITEMS.register(eventBus);
+    }
 }

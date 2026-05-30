@@ -38,6 +38,12 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
+// Excluir el archivo neoforge.mods.toml de la carpeta de recursos principal
+// para evitar duplicados si se genera desde una plantilla.
+tasks.named('processResources', Copy) {
+    exclude 'META-INF/neoforge.mods.toml'
+}
+
 neoForge {
     version = project.neo_version
 

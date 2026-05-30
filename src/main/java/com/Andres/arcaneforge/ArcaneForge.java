@@ -1,34 +1,46 @@
 package com.Andres.arcaneforge;
 
-import com.Andres.arcaneforge.network.ModNetwork;
-import com.Andres.arcaneforge.registry.ModBlockEntities;
 import com.Andres.arcaneforge.registry.ModBlocks;
-import com.Andres.arcaneforge.registry.ModDataComponents;
-import com.Andres.arcaneforge.registry.ModItems;
-import com.Andres.arcaneforge.registry.ModMenuTypes;
+import com.Andres.arcaneforge.registry.ModCreativeTabs;
+import com.Andres.arcaneforge.registry.ModEnchantments;
+import net.minecraft.resources.Identifier;
+import net.minecraft.text.Text;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import org.slf4j.Logger;
-import com.mojang.logging.LogUtils;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 @Mod(ArcaneForge.MODID)
 public class ArcaneForge {
-
     public static final String MODID = "arcaneforge";
-    public static final String MOD_ID = MODID;
-    public static final Logger LOGGER = LogUtils.getLogger();
 
     public ArcaneForge(IEventBus modEventBus, ModContainer modContainer) {
-        ModBlocks.BLOCKS.register(modEventBus);
-        ModItems.ITEMS.register(modEventBus);
-        ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
-        ModMenuTypes.MENUS.register(modEventBus);
+        modEventBus.register(this);
+        
+        ModBlocks.register(modEventBus);
+        ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
+        ModEnchantments.ENCHANTMENTS.register(modEventBus);
+        
+        NeoForge.EVENT_BUS.register(this);
+    }
 
+    @SubscribeEvent
+    public void onCommonSetup(FMLCommonSetupEvent event) {
+        // Setup común
+    }
 
-        // NUEVO: registrar el Data Component arcano
-        ModDataComponents.REGISTRAR.register(modEventBus);
+    @SubscribeEvent
+    public void onServerStarting(ServerStartingEvent event) {
+        // Setup del servidor
+    }
 
-        ModNetwork.register(modEventBus);
+    @SubscribeEvent
+    public void registerDataPacks(DataPackRegistryEvent.NewRegistry event) {
+        event.dataPackRegistry(NeoForgeRegistries.Keys.ENCHANTMENTS, ModEnchantments.ENCHANTMENTS);
     }
 }

@@ -155,7 +155,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         int currentLevel = opt.currentLevel();
 
         boolean isCreative = Minecraft.getInstance().player != null && Minecraft.getInstance().player.isCreative();
-        int maxLimit = hasActivePedestal ? 1000 : 255;
+        int maxLimit = hasActivePedestal ? 255 : 15;
 
         if (delta == 9999) {
             if (isCreative) {

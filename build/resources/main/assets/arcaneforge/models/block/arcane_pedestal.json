@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "minecraft:block/purple_terracotta"
-  }
+  "parent": "arcaneforge:block/arcane_power_block"
 }
