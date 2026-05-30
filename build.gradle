@@ -12,6 +12,12 @@ tasks.named('wrapper', Wrapper).configure {
 version = mod_version
 group = mod_id
 
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
 sourceSets.main.resources {
     srcDir('src/generated/resources')
     exclude("**/*.bbmodel")
@@ -21,31 +27,16 @@ sourceSets.main.resources {
 repositories {
     mavenLocal()
     mavenCentral()
-    // Repositorio oficial de GeckoLib
-    maven {
-        name = "GeckoLib"
-        url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/"
-    }
-    // Repositorios adicionales por si acaso
-    maven {
-        name = "Modrinth"
-        url = "https://api.modrinth.com/maven"
-    }
-    maven {
-        name = "CurseMaven"
-        url = "https://www.cursemaven.com"
-    }
-    // Eliminamos el flatDir para JARs locales, ya que usaremos la dependencia remota oficial
-    // flatDir {
-    //     dirs 'libs'
-    // }
 }
 
-base {
-    archivesName = mod_id
+dependencies {
+    implementation "net.neoforged:neoforge:${project.neo_version}"
+    // ✅ Sin GeckoLib — modelo estático nativo
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(25) // Confirmado en 25
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
 
 neoForge {
     version = project.neo_version
@@ -55,23 +46,21 @@ neoForge {
             client()
             systemProperty 'neoforged.enabledGameTestNamespaces', project.mod_id
         }
-
         server {
             server()
             programArgument '--nogui'
             systemProperty 'neoforged.enabledGameTestNamespaces', project.mod_id
         }
-
         gameTestServer {
             type = "gameTestServer"
             systemProperty 'neoforged.enabledGameTestNamespaces', project.mod_id
         }
-
         data {
             clientData()
-            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+            programArguments.addAll '--mod', project.mod_id, '--all',
+                    '--output', file('src/generated/resources/').getAbsolutePath(),
+                    '--existing', file('src/main/resources/').getAbsolutePath()
         }
-
         configureEach {
             systemProperty 'forge.logging.markers', 'REGISTRIES'
             logLevel = org.slf4j.event.Level.DEBUG
@@ -84,19 +73,6 @@ neoForge {
         }
     }
 }
-
-configurations {
-    runtimeClasspath.extendsFrom localRuntime
-}
-
-dependencies {
-    // Dependencia explícita de NeoForge
-    implementation "net.neoforged:neoforge:${project.neo_version}"
-    // Dependencia de GeckoLib con el formato oficial para NeoForge 26.1.2
-    implementation "com.geckolib:geckolib-neoforge-26.1.2:5.5.1"
-}
-
-// Eliminamos la estrategia de resolución que causaba el error de sintaxis
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
     var replaceProperties = [
@@ -128,10 +104,6 @@ publishing {
             url "file://${project.projectDir}/repo"
         }
     }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
 }
 
 idea {

@@ -18,7 +18,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -126,26 +126,15 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     public static class FuelBreakdown {
-        public int common;
-        public int uncommon;
-        public int rare;
-        public int epic;
-        public int legendary;
-        public int total;
-
+        public int common, uncommon, rare, epic, legendary, total;
         public FuelBreakdown(int c, int u, int r, int e, int l) {
-            this.common = c;
-            this.uncommon = u;
-            this.rare = r;
-            this.epic = e;
-            this.legendary = l;
+            this.common = c; this.uncommon = u; this.rare = r; this.epic = e; this.legendary = l;
             this.total = c + u + r + e + l;
         }
     }
 
     private final NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
     private final List<BlockPos> linkedChests = new ArrayList<>();
-
     private int cachedBookshelfCount = 0;
     private int cachedMagicFuel = 0;
     private int syncTimer = 0;
@@ -166,6 +155,7 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     public NonNullList<ItemStack> getItems() { return items; }
+
     public ItemStack getItem(int slot) { return items.get(slot); }
 
     public void setItem(int slot, ItemStack stack) {
@@ -202,13 +192,12 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
             for (int y = -ry; y <= ry; y++) {
                 for (int z = -rxz; z <= rxz; z++) {
                     if (x == 0 && y == 0 && z == 0) continue;
-                    BlockState state = level.getBlockState(center.offset(x, y, z));
-                    if (state.is(Blocks.BOOKSHELF)) count++;
+                    BlockState bs = level.getBlockState(center.offset(x, y, z));
+                    if (bs.is(Blocks.BOOKSHELF)) count++;
                 }
             }
         }
-        if (Config.MAX_BOOKSHELF_COUNT > 0) return Math.min(count, Config.MAX_BOOKSHELF_COUNT);
-        return count;
+        return Config.MAX_BOOKSHELF_COUNT > 0 ? Math.min(count, Config.MAX_BOOKSHELF_COUNT) : count;
     }
 
     public int getNearbyBookshelfCount() { return cachedBookshelfCount; }
@@ -327,8 +316,7 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         }
     }
 
-    // CORREGIDO: Recibe Identifier en lugar de ResourceLocation
-    public static float getEnchantmentMultiplier(ResourceLocation id) {
+    public static float getEnchantmentMultiplier(Identifier id) {
         String path = id.getPath();
         String namespace = id.getNamespace();
 
@@ -340,11 +328,10 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         return 1.0f;
     }
 
-    // CORREGIDO: Recibe Identifier en lugar de String
-    public int tryEnchant(ResourceLocation enchantmentId, int targetLevel, ServerPlayer player) {
+    public int tryEnchant(Identifier enchantmentId, int targetLevel, ServerPlayer player) {
         if (level == null || level.isClientSide()) return -1;
 
-        ItemStack itemToEnchant = items.get(0);
+        ItemStack itemToEnchant = items.getFirst();
         if (itemToEnchant.isEmpty()) return -1;
 
         cachedBookshelfCount = countNearbyBookshelves();
@@ -440,6 +427,7 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
     public int getClientFuelEpic() { return clientFuelEpic; }
     public int getClientFuelLegendary() { return clientFuelLegendary; }
 
+    @SuppressWarnings("unused")
     public static void tick(Level level, BlockPos pos, BlockState state, ArcaneForgeBlockEntity be) {
         if (!level.isClientSide()) {
             be.syncTimer++;
@@ -487,8 +475,12 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
                 double radius = 0.8 + Math.sin(time * 0.05) * 0.2;
                 double py = pos.getY() + 0.5 + (Math.sin(time * 0.1) * 0.5);
 
-                level.addParticle(new DustParticleOptions(0xFF00FF, 1.2f), pos.getX() + 0.5 + Math.cos(angle) * radius, py, pos.getZ() + 0.5 + Math.sin(angle) * radius, 0, 0.02, 0);
-                level.addParticle(new DustParticleOptions(0x00FFFF, 1.2f), pos.getX() + 0.5 + Math.cos(angle + Math.PI) * radius, py, pos.getZ() + 0.5 + Math.sin(angle + Math.PI) * radius, 0, 0.02, 0);
+                level.addParticle(new DustParticleOptions(0xFF00FF, 1.2f),
+                        pos.getX() + 0.5 + Math.cos(angle) * radius, py,
+                        pos.getZ() + 0.5 + Math.sin(angle) * radius, 0, 0.02, 0);
+                level.addParticle(new DustParticleOptions(0x00FFFF, 1.2f),
+                        pos.getX() + 0.5 + Math.cos(angle + Math.PI) * radius, py,
+                        pos.getZ() + 0.5 + Math.sin(angle + Math.PI) * radius, 0, 0.02, 0);
             }
         }
     }
@@ -506,7 +498,7 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        if (!items.get(0).isEmpty()) output.store("slot_0", ItemStack.CODEC, items.get(0));
+        if (!items.getFirst().isEmpty()) output.store("slot_0", ItemStack.CODEC, items.getFirst());
         output.putInt("chest_count", linkedChests.size());
         for (int i = 0; i < linkedChests.size(); i++) {
             BlockPos cp = linkedChests.get(i);
