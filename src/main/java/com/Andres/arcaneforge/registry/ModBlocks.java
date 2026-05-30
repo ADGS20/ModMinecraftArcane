@@ -28,4 +28,13 @@ public class ModBlocks {
                     .explosionResistance(5.0f)
                     .setId(ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(ArcaneForge.MODID, "arcane_pedestal"))))
     );
+
+    // Adding ARCANE_FORGE block as it's referenced in ArcaneForgeScreen
+    public static final DeferredBlock<Block> ARCANE_FORGE = BLOCKS.register(
+            "arcane_forge",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .destroyTime(3.0f)
+                    .explosionResistance(6.0f)
+                    .setId(ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(ArcaneForge.MODID, "arcane_forge"))))
+    );
 }
