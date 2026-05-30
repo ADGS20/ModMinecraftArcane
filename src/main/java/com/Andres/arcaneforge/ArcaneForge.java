@@ -1,7 +1,7 @@
 package com.Andres.arcaneforge;
 
 import com.Andres.arcaneforge.registry.ModBlocks;
-import com.Andres.arcaneforge.registry.ModCreativeTabs;
+import com.Andres.arcaneforge.registry.ModCreativeTab; // Changed to singular
 import com.Andres.arcaneforge.registry.ModEnchantments;
 import com.Andres.arcaneforge.registry.ModItems;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ public class ArcaneForge {
     public ArcaneForge(IEventBus modEventBus) {
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
-        ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
+        ModCreativeTab.CREATIVE_MODE_TABS.register(modEventBus); // Changed to singular
         ModEnchantments.ENCHANTMENTS.register(modEventBus);
     }
 }

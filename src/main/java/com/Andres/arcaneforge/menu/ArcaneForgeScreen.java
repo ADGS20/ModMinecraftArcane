@@ -25,7 +25,7 @@ import java.util.List;
 public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> {
 
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(
-            ArcaneForge.MOD_ID, "textures/gui/container/arcane_forge.png");
+            ArcaneForge.MODID, "textures/gui/container/arcane_forge.png"); // Corrected MOD_ID to MODID
 
     private static final float TEX_W = 256f;
     private static final float TEX_H = 256f;
@@ -129,6 +129,24 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
 
         refreshList();
         syncButtons();
+    }
+
+    @Override
+    public void containerTick() {
+        super.containerTick();
+        try {
+            ItemStack cur = getMenu().getSlot(0).getItem();
+            boolean pedestalChanged = this.hasActivePedestal != this.lastPedestalCache;
+
+            if (!ItemStack.isSameItemSameComponents(cur, lastItem) || pedestalChanged) {
+                lastItem = cur.copy();
+                this.lastPedestalCache = this.hasActivePedestal;
+                int prev = selectedIndex;
+                refreshList();
+                if (prev >= 0 && prev < enchants.size()) selectedIndex = prev;
+                syncButtons();
+            }
+        } catch (Exception ignored) {}
     }
 
     private void doScrollUp()   { if (scrollOffset > 0) { scrollOffset--; syncButtons(); } }
@@ -238,75 +256,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
     }
 
     @Override
-    public void containerTick() {
-        super.containerTick();
-        try {
-            ItemStack cur = getMenu().getSlot(0).getItem();
-            boolean pedestalChanged = this.hasActivePedestal != this.lastPedestalCache;
-
-            if (!ItemStack.isSameItemSameComponents(cur, lastItem) || pedestalChanged) {
-                lastItem = cur.copy();
-                this.lastPedestalCache = this.hasActivePedestal;
-                int prev = selectedIndex;
-                refreshList();
-                if (prev >= 0 && prev < enchants.size()) selectedIndex = prev;
-                syncButtons();
-            }
-        } catch (Exception ignored) {}
-    }
-
-    private void refreshList() {
-        enchants.clear(); selectedIndex = -1; selectedLevel = 1; scrollOffset = 0;
-        try {
-            var item = getMenu().getSlot(0).getItem();
-            if (item.isEmpty() || Minecraft.getInstance().level == null) return;
-
-            var reg = Minecraft.getInstance().level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
-            ItemEnchantments currentEnchants = item.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
-
-            boolean isTotem  = item.is(Items.TOTEM_OF_UNDYING);
-            boolean isRanged = item.is(Items.BOW) || item.is(Items.CROSSBOW);
-
-            reg.listElements().forEach(h -> {
-                try {
-                    if (!h.isBound()) return;
-
-                    net.minecraft.resources.Identifier id = h.key().identifier();
-                    boolean isOurTotemEnchant = id.getNamespace().equals(ArcaneForge.MODID) && id.getPath().equals("void_protection");
-                    boolean isApocalyptic     = id.getNamespace().equals(ArcaneForge.MODID) && id.getPath().equals("apocalyptic_judgment");
-
-                    if (isTotem  && !isOurTotemEnchant) return;
-                    if (!isTotem && isOurTotemEnchant)  return;
-                    if (isApocalyptic && !isRanged)     return;
-
-                    boolean vanillaCompat = false;
-                    try { vanillaCompat = h.value().canEnchant(item); }
-                    catch (Exception ignored) {}
-
-                    boolean finalCompat = vanillaCompat || (hasActivePedestal && (isTotem || !vanillaCompat));
-                    if (isApocalyptic) finalCompat = hasActivePedestal;
-
-                    int currentLevel = currentEnchants.getLevel(h);
-                    enchants.add(new EnchantOption(
-                            id,
-                            Enchantment.getFullname(h, 1).getString(),
-                            h.value().getMaxLevel(), h, finalCompat, currentLevel));
-                } catch (Exception e) {}
-            });
-
-            enchants.sort((a, b) -> {
-                boolean aCustom = a.id().getNamespace().equals(ArcaneForge.MODID);
-                boolean bCustom = b.id().getNamespace().equals(ArcaneForge.MODID);
-                if (aCustom != bCustom) return aCustom ? -1 : 1;
-                if (a.isCompatible() != b.isCompatible()) return a.isCompatible() ? -1 : 1;
-                return a.displayName().compareToIgnoreCase(b.displayName());
-            });
-        } catch (Exception e) {
-            ArcaneForge.LOGGER.error("Error al refrescar la lista de la forja: ", e);
-        }
-    }
-
-    protected void extractBackground(GuiGraphicsExtractor graphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor graphics, float partialTick, int mouseX, int mouseY) {
         int x = getLeftPos();
         int y = getTopPos();
 
