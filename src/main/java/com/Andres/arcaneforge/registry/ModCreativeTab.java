@@ -17,7 +17,6 @@ public class ModCreativeTab {
                     .title(Component.translatable("creativetab.arcaneforge"))
                     .icon(() -> new ItemStack(ModBlocks.ARCANE_FORGE.get()))
                     .displayItems((parameters, output) -> {
-                        // Agregar aquí todos tus ítems para que aparezcan en tu pestaña
                         output.accept(ModBlocks.ARCANE_FORGE.get());
                         output.accept(ModBlocks.ARCANE_PEDESTAL.get());
                         output.accept(ModItems.BINDING_WAND.get());

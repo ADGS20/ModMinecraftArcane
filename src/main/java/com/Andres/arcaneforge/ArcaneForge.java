@@ -1,9 +1,7 @@
 package com.Andres.arcaneforge;
 
 import com.Andres.arcaneforge.registry.ModBlocks;
-import com.Andres.arcaneforge.registry.ModCreativeTabs;
 import com.Andres.arcaneforge.registry.ModEnchantments;
-import net.minecraft.resources.Identifier;
 import net.minecraft.text.Text;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
