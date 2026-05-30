@@ -1,0 +1,9 @@
+{
+  "description": {"translate": "enchantment.arcaneforge.chain_thunder"},
+  "supported_items": "#minecraft:enchantable/trident",
+  "primary_items": "#minecraft:enchantable/trident",
+  "weight": 1, "max_level": 3,
+  "min_cost": {"base": 25, "per_level_above_first": 10},
+  "max_cost": {"base": 75, "per_level_above_first": 10},
+  "anvil_cost": 7, "slots": ["mainhand"], "effects": {}
+}

@@ -1,0 +1,9 @@
+{
+  "description": {"translate": "enchantment.arcaneforge.soul_delve"},
+  "supported_items": "#minecraft:enchantable/mining_loot",
+  "primary_items": "#minecraft:enchantable/mining_loot",
+  "weight": 2, "max_level": 3,
+  "min_cost": {"base": 20, "per_level_above_first": 9},
+  "max_cost": {"base": 70, "per_level_above_first": 9},
+  "anvil_cost": 5, "slots": ["mainhand"], "effects": {}
+}

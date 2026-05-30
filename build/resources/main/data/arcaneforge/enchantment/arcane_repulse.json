@@ -1,0 +1,9 @@
+{
+  "description": {"translate": "enchantment.arcaneforge.arcane_repulse"},
+  "supported_items": "#minecraft:enchantable/durability",
+  "primary_items": "#minecraft:enchantable/durability",
+  "weight": 2, "max_level": 3,
+  "min_cost": {"base": 20, "per_level_above_first": 8},
+  "max_cost": {"base": 60, "per_level_above_first": 8},
+  "anvil_cost": 6, "slots": ["offhand"], "effects": {}
+}

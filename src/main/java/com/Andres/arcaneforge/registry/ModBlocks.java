@@ -2,44 +2,30 @@ package com.Andres.arcaneforge.registry;
 
 import com.Andres.arcaneforge.ArcaneForge;
 import com.Andres.arcaneforge.block.ArcaneForgeBlock;
-import com.Andres.arcaneforge.block.ArcanePedestalBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.neoforged.neoforge.registries.DeferredBlock;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.util.Identifier;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModBlocks {
-
-    public static final DeferredRegister.Blocks BLOCKS =
-            DeferredRegister.createBlocks(ArcaneForge.MODID);
-
-    public static final DeferredBlock<ArcaneForgeBlock> ARCANE_FORGE =
-            BLOCKS.registerBlock(
-                    "arcane_forge",
-                    ArcaneForgeBlock::new,
-                    () -> BlockBehaviour.Properties.of()
-                            .strength(5.0f, 6.0f)
-                            .requiresCorrectToolForDrops()
-                            .lightLevel(state -> 7)
-            );
-
-    public static final DeferredBlock<ArcanePedestalBlock> ARCANE_PEDESTAL =
-            BLOCKS.registerBlock(
-                    "arcane_pedestal",
-                    ArcanePedestalBlock::new,
-                    () -> BlockBehaviour.Properties.of()
-                            .strength(3.0f, 6.0f)
-                            .requiresCorrectToolForDrops()
-                            .lightLevel(state -> 5)
-            );
-
-    // Registro corregido usando la fábrica Block::new compatible con DeferredRegister de NeoForge
-    public static final DeferredBlock<Block> ARCANE_POWER_BLOCK =
-            BLOCKS.registerBlock(
-                    "arcane_power_block",
-                    Block::new,
-                    () -> BlockBehaviour.Properties.of()
-                            .strength(3.0f, 6.0f)
-                            .requiresCorrectToolForDrops()
-            );
+    
+    public static final DeferredRegister<Block> BLOCKS =
+            DeferredRegister.create(Registries.BLOCK, ArcaneForge.MODID);
+    
+    public static final DeferredHolder<Block, Block> ARCANE_FORGE_BLOCK = 
+            BLOCKS.register("arcane_forge", () -> new ArcaneForgeBlock(
+                AbstractBlock.Settings.create()
+                    .strength(3.0f)
+                    .requiresTool()
+            ));
+    
+    public static void register(IEventBus eventBus) {
+        BLOCKS.register(eventBus);
+    }
 }

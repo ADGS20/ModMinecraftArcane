@@ -1,24 +1,5 @@
 {
-  "itemGroup.arcaneforge": "Arcane Forge",
-  "block.arcaneforge.example_block": "Example Block",
-  "item.arcaneforge.example_item": "Example Item",
-
-  "block.arcaneforge.arcane_forge": "Arcane Forge Table",
-  "block.arcaneforge.arcane_pedestal": "Arcane Power Block",
-
-  "arcaneforge.configuration.title": "Arcane Forge Configs",
-  "arcaneforge.configuration.section.arcaneforge.common.toml": "Arcane Forge Configs",
-  "arcaneforge.configuration.section.arcaneforge.common.toml.title": "Arcane Forge Configs",
-  "arcaneforge.configuration.items": "Item List",
-  "arcaneforge.configuration.logDirtBlock": "Log Dirt Block",
-  "arcaneforge.configuration.magicNumberIntroduction": "Magic Number Text",
-  "arcaneforge.configuration.magicNumber": "Magic Number",
-
-  "enchantment.arcaneforge.apocalyptic_judgment": "Apocalyptic Judgment",
-  "enchantment.arcaneforge.void_protection": "Void Protection",
-
-  "enchantment.arcaneforge.soul_harvest": "Soul Harvest",
-  "enchantment.arcaneforge.ethereal_walk": "Ethereal Walk",
-  "enchantment.arcaneforge.ethereal_launch": "Ethereal Launch"
-
+    "itemGroup.arcaneforge": "Arcane Forge",
+    "enchantment.arcaneforge.apocalyptic_judgment": "Apocalyptic Judgment",
+    "block.arcaneforge.arcane_forge": "Arcane Forge"
 }

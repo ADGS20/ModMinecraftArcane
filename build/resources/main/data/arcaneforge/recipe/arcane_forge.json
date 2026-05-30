@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "NON",
+    "GEG",
+    "OBO"
+  ],
+  "key": {
+    "N": {"item": "minecraft:netherite_ingot"},
+    "O": {"item": "minecraft:obsidian"},
+    "G": {"item": "minecraft:enchanted_golden_apple"},
+    "E": {"item": "minecraft:nether_star"},
+    "B": {"item": "minecraft:bookshelf"}
+  },
+  "result": {
+    "id": "arcaneforge:arcane_forge",
+    "count": 1
+  }
+}
