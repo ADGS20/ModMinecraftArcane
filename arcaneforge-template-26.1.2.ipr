@@ -72,6 +72,21 @@
       <option name="name" value="MavenRepo" />
       <option name="url" value="https://repo.maven.apache.org/maven2/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="GeckoLib" />
+      <option name="name" value="GeckoLib" />
+      <option name="url" value="https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="Modrinth" />
+      <option name="name" value="Modrinth" />
+      <option name="url" value="https://api.modrinth.com/maven" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="CurseMaven" />
+      <option name="name" value="CurseMaven" />
+      <option name="url" value="https://www.cursemaven.com" />
+    </remote-repository>
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
@@ -129,6 +144,18 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/toml/3.8.3/56dfa8456ff270f6028c513c9e743af03ad850e3/toml-3.8.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: com.geckolib:geckolib-neoforge-26.1.2:5.5.1" type="java-imported" external-system-id="GRADLE">
+      <properties groupId="com.geckolib" artifactId="geckolib-neoforge-26.1.2" version="5.5.1" baseVersion="5.5.1" />
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.geckolib/geckolib-neoforge-26.1.2/5.5.1/ea53340011e1794bfdd01e3dc5fdef83afd83d1c/geckolib-neoforge-26.1.2-5.5.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.geckolib/geckolib-neoforge-26.1.2/5.5.1/e2cacdb6dd3286176265342db6451278c83b6e79/geckolib-neoforge-26.1.2-5.5.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.geckolib/geckolib-neoforge-26.1.2/5.5.1/612783aa1ff6328669895240e872b27aec082c6f/geckolib-neoforge-26.1.2-5.5.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: com.github.oshi:oshi-core:6.9.0" type="java-imported" external-system-id="GRADLE">

@@ -10,6 +10,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -20,6 +21,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -38,27 +40,15 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
-import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.util.RandomSource;
-
-import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider, GeoBlockEntity {
-
-    private final AnimatableInstanceCache geckolibCache = GeckoLibUtil.createInstanceCache(this);
-    private static final RawAnimation CUBO_MAGICO_ANIM = RawAnimation.begin().thenLoop("cubo magico");
+public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider {
 
     public static final Map<Item, Integer> MATERIAL_FUEL_VALUES = new HashMap<>();
 
@@ -127,15 +117,9 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider,
     }
 
     public static int getMaterialFuelValue(Item item) {
-        if (item == Items.LAPIS_LAZULI) {
-            return 15;
-        }
-        if (item == Items.LAPIS_BLOCK) {
-            return 135;
-        }
-        if (MATERIAL_FUEL_VALUES.containsKey(item)) {
-            return MATERIAL_FUEL_VALUES.get(item);
-        }
+        if (item == Items.LAPIS_LAZULI) return 15;
+        if (item == Items.LAPIS_BLOCK) return 135;
+        if (MATERIAL_FUEL_VALUES.containsKey(item)) return MATERIAL_FUEL_VALUES.get(item);
         int configVal = Config.getFuelValue(item);
         if (configVal > 0) return configVal;
         return 1;
@@ -181,20 +165,9 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider,
         super(ModBlockEntities.ARCANE_FORGE_BE.get(), pos, blockState);
     }
 
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "forge_controller", 0, state -> {
-            return state.setAndContinue(CUBO_MAGICO_ANIM);
-        }));
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.geckolibCache;
-    }
-
     public NonNullList<ItemStack> getItems() { return items; }
     public ItemStack getItem(int slot) { return items.get(slot); }
+
     public void setItem(int slot, ItemStack stack) {
         items.set(slot, stack);
         setChanged();
@@ -234,9 +207,7 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider,
                 }
             }
         }
-        if (Config.MAX_BOOKSHELF_COUNT > 0) {
-            return Math.min(count, Config.MAX_BOOKSHELF_COUNT);
-        }
+        if (Config.MAX_BOOKSHELF_COUNT > 0) return Math.min(count, Config.MAX_BOOKSHELF_COUNT);
         return count;
     }
 
@@ -270,8 +241,7 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider,
             if (be instanceof ChestBlockEntity chest) {
                 for (int i = 0; i < chest.getContainerSize(); i++) {
                     ItemStack stack = chest.getItem(i);
-                    if (stack.isEmpty()) continue;
-                    total += getMaterialFuelValue(stack.getItem()) * stack.getCount();
+                    if (!stack.isEmpty()) total += getMaterialFuelValue(stack.getItem()) * stack.getCount();
                 }
             }
         }
@@ -323,7 +293,7 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider,
             }
         }
 
-        allSlots.sort((a, b) -> Integer.compare(a.fuelPerUnit, b.fuelPerUnit));
+        allSlots.sort(Comparator.comparingInt(a -> a.fuelPerUnit));
 
         int remaining = requiredPoints;
         for (SlotRef ref : allSlots) {
@@ -357,6 +327,7 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider,
         }
     }
 
+    // CORREGIDO: Recibe Identifier en lugar de ResourceLocation
     public static float getEnchantmentMultiplier(ResourceLocation id) {
         String path = id.getPath();
         String namespace = id.getNamespace();
@@ -369,6 +340,7 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider,
         return 1.0f;
     }
 
+    // CORREGIDO: Recibe Identifier en lugar de String
     public int tryEnchant(ResourceLocation enchantmentId, int targetLevel, ServerPlayer player) {
         if (level == null || level.isClientSide()) return -1;
 
@@ -390,7 +362,8 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider,
                 enchHolder = optHolder.get();
                 currentLevel = currentEnchants.getLevel(enchHolder);
             }
-        } catch (Exception e) {}
+        } catch (Exception ignored) {
+        }
 
         if (enchHolder == null) return -1;
 
@@ -427,14 +400,14 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider,
 
         if (copy.is(Items.TOTEM_OF_UNDYING)) {
             net.minecraft.world.item.component.CustomData customData = copy.getOrDefault(DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
-            net.minecraft.nbt.CompoundTag tag = customData.copyTag();
+            CompoundTag tag = customData.copyTag();
             tag.putInt("TotemCharges", 3);
             copy.set(DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(tag));
         }
 
         if (hasPedestal) {
             net.minecraft.world.item.component.CustomData customData = copy.getOrDefault(DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
-            net.minecraft.nbt.CompoundTag tag = customData.copyTag();
+            CompoundTag tag = customData.copyTag();
             tag.putBoolean("ArcaneAwakened", true);
             copy.set(DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(tag));
         }
@@ -578,12 +551,18 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider,
 
     @Nullable
     @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
 
     @Override
-    public Component getDisplayName() { return Component.translatable("block.arcaneforge.arcane_forge"); }
+    public Component getDisplayName() {
+        return Component.translatable("block.arcaneforge.arcane_forge");
+    }
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) { return new ArcaneForgeMenu(containerId, playerInventory, this); }
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+        return new ArcaneForgeMenu(containerId, playerInventory, this);
+    }
 }

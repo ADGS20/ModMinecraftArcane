@@ -5,34 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7156b797-09f0-4912-a0af-d61f9e84f7e6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/client/model/ArcaneForgeModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/client/renderer/ArcaneForgeRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ModMinecraftArcane.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ModMinecraftArcane.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ModMinecraftArcane.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ModMinecraftArcane.main.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ModMinecraftArcane.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ModMinecraftArcane.test.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/arcaneforge-template-26.1.2.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/arcaneforge-template-26.1.2.ipr" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" beforeDir="false" afterPath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/clientLog4j2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/clientRunProgramArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/clientRunVmArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/dataLog4j2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/dataRunProgramArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/dataRunVmArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/gameTestServerLog4j2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/gameTestServerRunProgramArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/gameTestServerRunVmArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/minecraft_assets.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/serverLog4j2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/serverRunProgramArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/serverRunVmArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/1e4jeja8n858rwrhhmry121uz/2hksyiw8dzkomoxdn4epdt1aa/configuration-cache-report.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/SpearWeaponMixin.class.uniqueId0" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/tmp/createMinecraftArtifacts/nfrt_artifact_manifest.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/createMinecraftArtifacts/nfrt_artifact_manifest.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/downloadAssets/nfrt_artifact_manifest.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/block/ArcaneForgeBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/block/ArcaneForgeBlock.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/block/ArcaneForgeBlockEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/block/ArcaneForgeBlockEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/client/model/ArcaneForgeModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/client/model/ArcaneForgeModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/client/renderer/ArcaneForgeRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/client/renderer/ArcaneForgeRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/ClientModEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/ClientModEvents.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -68,6 +51,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 8
@@ -94,6 +80,7 @@
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/ModsTrabajos/ModsTrabajos/arcaneforge-template-26.1.2/ModMinecraftArcane/src/main/resources/assets/arcaneforge/textura&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -176,7 +163,12 @@
       <workItem from="1779898252050" duration="7074000" />
       <workItem from="1779953529317" duration="29826000" />
       <workItem from="1780068849909" duration="2953000" />
-      <workItem from="1780073267821" duration="3379000" />
+      <workItem from="1780073267821" duration="5593000" />
+      <workItem from="1780080838599" duration="1638000" />
+      <workItem from="1780084392917" duration="468000" />
+      <workItem from="1780084939379" duration="1174000" />
+      <workItem from="1780086766458" duration="2969000" />
+      <workItem from="1780132163612" duration="3678000" />
     </task>
     <servers />
   </component>
