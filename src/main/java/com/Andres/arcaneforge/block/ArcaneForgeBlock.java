@@ -1,27 +1,22 @@
 package com.Andres.arcaneforge.block;
 
-import net.minecraft.world.level.block.Block; // Corrected import
-import net.minecraft.world.level.block.state.BlockState; // Corrected import
-import net.minecraft.world.level.block.state.properties.Property; // Corrected import
-import net.minecraft.world.level.block.state.StateDefinition; // Corrected import
-import net.minecraft.world.level.block.state.BlockBehaviour; // Corrected import
-import net.minecraft.world.item.context.BlockPlaceContext; // Corrected import
-import net.minecraft.core.Direction; // Corrected import
-import net.minecraft.core.BlockPos; // Corrected import
-import net.minecraft.world.level.LevelAccessor; // Corrected import
-import net.minecraft.world.phys.shapes.VoxelShape; // Corrected import
-import net.minecraft.world.phys.shapes.Shapes; // Corrected import
-import net.minecraft.resources.Identifier; // Corrected import
-import com.mojang.serialization.MapCodec; // Corrected import
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import com.mojang.serialization.MapCodec;
 
 public class ArcaneForgeBlock extends Block {
-    
-    public ArcaneForgeBlock(BlockBehaviour.Properties settings) { // Corrected constructor parameter
-        super(settings);
+    public static final MapCodec<ArcaneForgeBlock> CODEC = simpleCodec(ArcaneForgeBlock::new);
+
+    public ArcaneForgeBlock(BlockBehaviour.Properties properties) {
+        super(properties);
     }
-    
+
     @Override
-    protected MapCodec<? extends Block> codec() { // Corrected method name to codec()
-        return MapCodec.unit(this::new);
+    public MapCodec<? extends Block> codec() {
+        return CODEC;
     }
 }

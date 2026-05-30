@@ -3,47 +3,21 @@ package com.Andres.arcaneforge;
 import com.Andres.arcaneforge.registry.ModBlocks;
 import com.Andres.arcaneforge.registry.ModCreativeTabs;
 import com.Andres.arcaneforge.registry.ModEnchantments;
-import net.minecraft.resources.Identifier;
-import net.minecraft.text.Text;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import net.neoforged.neoforge.registries.DataPackRegistryEvent;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import com.Andres.arcaneforge.registry.ModItems;
 import org.slf4j.Logger;
-import com.mojang.logging.LogUtils;
+import org.slf4j.LoggerFactory;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
 
 @Mod(ArcaneForge.MODID)
 public class ArcaneForge {
     public static final String MODID = "arcaneforge";
-    public static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
-    public ArcaneForge(IEventBus modEventBus, ModContainer modContainer) {
-        modEventBus.register(this);
-        
-        ModBlocks.register(modEventBus);
+    public ArcaneForge(IEventBus modEventBus) {
+        ModBlocks.BLOCKS.register(modEventBus);
+        ModItems.ITEMS.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         ModEnchantments.ENCHANTMENTS.register(modEventBus);
-        
-        NeoForge.EVENT_BUS.register(this);
-    }
-
-    @SubscribeEvent
-    public void onCommonSetup(FMLCommonSetupEvent event) {
-        // Setup común
-    }
-
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        // Setup del servidor
-    }
-
-    @SubscribeEvent
-    public void registerDataPacks(DataPackRegistryEvent.NewRegistry event) {
-        event.dataPackRegistry(NeoForgeRegistries.Keys.ENCHANTMENTS, ModEnchantments.ENCHANTMENTS);
     }
 }

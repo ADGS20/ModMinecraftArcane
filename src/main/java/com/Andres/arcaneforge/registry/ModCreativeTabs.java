@@ -1,32 +1,24 @@
 package com.Andres.arcaneforge.registry;
 
 import com.Andres.arcaneforge.ArcaneForge;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.chat.Component; // Corrected import for Text
-import net.minecraft.resources.Identifier; // Corrected import for Identifier
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
-            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ArcaneForge.MODID);
+            DeferredRegister.create(net.minecraft.core.registries.Registries.CREATIVE_MODE_TAB, ArcaneForge.MODID);
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> ARCANEFORGE_TAB =
-            CREATIVE_MODE_TABS.register("arcaneforge_tab", () -> 
-                CreativeModeTab.builder()
-                    .title(Component.translatable("itemGroup.arcaneforge")) // Corrected Text.translatable to Component.translatable
+            CREATIVE_MODE_TABS.register("arcaneforge_tab", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.arcaneforge"))
                     .icon(() -> new ItemStack(Items.DIAMOND_SWORD))
-                    .displayItems((parameters, output) -> {
-                        // Agrega tus items aquí
-                        // Ejemplo: output.accept(ModItems.YOUR_ITEM.get());
+                    .displayItems((params, output) -> {
+                        output.accept(Items.DIAMOND_SWORD);
+                        output.accept(ModItems.TEST_ITEM.get());
                     })
-                    .build()
-            );
-
-    public static void register() {
-        // Registration automática
-    }
+                    .build());
 }
