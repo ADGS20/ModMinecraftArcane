@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f670cab7-85c4-46c8-9541-5d0f45000684" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/ModMinecraftArcane.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ModMinecraftArcane.main.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" beforeDir="false" afterPath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/moddev/minecraft_assets.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/moddev/minecraft_assets.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/ec2x0zizmkfa9y9untmlmayrz/6unwngh27xbfglzjwaden3dgo/configuration-cache-report.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/kzgg0vejql6v00i2k8279io4/cj55wya8yspestjjrrevwukjv/configuration-cache-report.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/createMinecraftArtifacts/nfrt_artifact_manifest.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/createMinecraftArtifacts/nfrt_artifact_manifest.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/downloadAssets/nfrt_artifact_manifest.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/downloadAssets/nfrt_artifact_manifest.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/menu/ArcaneForgeScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/menu/ArcaneForgeScreen.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -41,19 +47,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.ModMinecraftArcane [:net.neoforged.devlaunch.Main.main()].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Client.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ModMinecraftArcane [:net.neoforged.devlaunch.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.Client">
     <configuration name="Client" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="net.neoforged.devlaunch.Main" />
@@ -112,7 +120,10 @@
       <option name="presentableId" value="Default" />
       <updated>1780261193819</updated>
       <workItem from="1780261195642" duration="23000" />
-      <workItem from="1780261273384" duration="1428000" />
+      <workItem from="1780261273384" duration="1778000" />
+      <workItem from="1780263067424" duration="12000" />
+      <workItem from="1780263088487" duration="51000" />
+      <workItem from="1780263171738" duration="799000" />
     </task>
     <servers />
   </component>

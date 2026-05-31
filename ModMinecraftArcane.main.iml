@@ -6,7 +6,6 @@
         <autoDetectTypes>
           <platformType>MIXIN</platformType>
           <platformType>NEOFORGE</platformType>
-          <platformType>MCP</platformType>
         </autoDetectTypes>
         <projectReimportVersion>1</projectReimportVersion>
       </configuration>
@@ -32,9 +31,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library name="Gradle: minecraft-patched-26.1.2.65-beta-merged.jar">
-        <ANNOTATIONS>
-          <root url="jar://$APPLICATION_PLUGINS_DIR$/Minecraft Development/lib/resources/externalAnnotations.jar!/" />
-        </ANNOTATIONS>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/build/moddev/artifacts/minecraft-patched-26.1.2.65-beta-merged.jar!/" />
         </CLASSES>
