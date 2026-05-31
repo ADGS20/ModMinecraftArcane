@@ -18,7 +18,8 @@ public class ModCreativeTabs {
                     .icon(() -> new ItemStack(Items.DIAMOND_SWORD))
                     .displayItems((params, output) -> {
                         output.accept(Items.DIAMOND_SWORD);
-                        output.accept(ModItems.TEST_ITEM.get());
+                        output.accept(ModItems.BINDING_WAND.get());
+                        output.accept(ModItems.ARCANE_GUIDE_BOOK.get());
                     })
                     .build());
 }
