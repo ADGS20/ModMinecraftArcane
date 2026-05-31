@@ -67,6 +67,10 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
 
     public ArcaneForgeScreen(ArcaneForgeMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
+        this.titleLabelX = 8;
+        this.titleLabelY = 6;
+        this.inventoryLabelX = 8;
+        this.inventoryLabelY = VANILLA_H - 94;
     }
 
     @Override
@@ -135,7 +139,9 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         int x = getLeftPos();
         int y = getTopPos();
-        graphics.blit(TEXTURE, x, y, VANILLA_W, VANILLA_H, 0f, 0f, (float) VANILLA_W / TEX_W, (float) VANILLA_H / TEX_H);
+
+        graphics.blit(TEXTURE, x, y, 0, 0, VANILLA_W, VANILLA_H, 256, 256);
+
         int px = x + VANILLA_W + GAP;
         graphics.fill(px, y, px + PANEL_W, y + VANILLA_H, 0xDD111122);
         graphics.fill(px, y, px + PANEL_W, y + 2, 0xFFFFAA00);
@@ -147,6 +153,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         try {
             ItemStack cur = getMenu().getSlot(0).getItem();
             boolean pedestalChanged = this.hasActivePedestal != this.lastPedestalCache;
+
             if (!ItemStack.isSameItemSameComponents(cur, lastItem) || pedestalChanged) {
                 lastItem = cur.copy();
                 this.lastPedestalCache = this.hasActivePedestal;
@@ -155,7 +162,8 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 if (prev >= 0 && prev < enchants.size()) selectedIndex = prev;
                 syncButtons();
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     private void doScrollUp() {
@@ -412,7 +420,8 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 fuelEpic = be.getClientFuelEpic();
                 fuelLegendary = be.getClientFuelLegendary();
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
@@ -459,7 +468,8 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                     boolean vanillaCompat = false;
                     try {
                         vanillaCompat = h.value().canEnchant(item);
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
 
                     boolean finalCompat = vanillaCompat || hasActivePedestal;
                     if (isApocalyptic) finalCompat = hasActivePedestal;
