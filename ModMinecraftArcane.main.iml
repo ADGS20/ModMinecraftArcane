@@ -76,10 +76,10 @@
     <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-core:2.25.2" level="project" />
     <orderEntry type="library" name="Gradle: org.jline:jline-reader:3.20.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:failureaccess:1.0.3" level="project" />
-    <orderEntry type="library" name="Gradle: org.jspecify:jspecify:1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.errorprone:error_prone_annotations:2.41.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.errorprone:error_prone_annotations:2.41.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.j2objc:j2objc-annotations:3.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.jspecify:jspecify:1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: at.yawk.lz4:lz4-java:1.10.1" level="project" />
     <orderEntry type="library" name="Gradle: com.azure:azure-json:1.4.0" level="project" />
     <orderEntry type="library" name="Gradle: com.github.oshi:oshi-core:6.9.0" level="project" />
@@ -130,7 +130,6 @@
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl:natives-windows:3.4.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl:natives-windows-arm64:3.4.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl:natives-windows-x86:3.4.1" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: com.mojang:jtracy:natives-windows:1.0.37" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-freetype:natives-windows:3.4.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-freetype:natives-windows-arm64:3.4.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-freetype:natives-windows-x86:3.4.1" level="project" />
@@ -149,5 +148,6 @@
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-stb:natives-windows:3.4.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-stb:natives-windows-arm64:3.4.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-stb:natives-windows-x86:3.4.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: com.mojang:jtracy:natives-windows:1.0.37" level="project" />
   </component>
 </module>

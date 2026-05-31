@@ -4,7 +4,6 @@ import com.Andres.arcaneforge.ArcaneForge;
 import com.Andres.arcaneforge.Config;
 import com.Andres.arcaneforge.block.ArcaneForgeBlockEntity;
 import com.Andres.arcaneforge.network.C2SEnchantPacket;
-import com.Andres.arcaneforge.registry.ModEnchantments;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -136,9 +135,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         int x = getLeftPos();
         int y = getTopPos();
-
         graphics.blit(TEXTURE, x, y, VANILLA_W, VANILLA_H, 0f, 0f, (float) VANILLA_W / TEX_W, (float) VANILLA_H / TEX_H);
-
         int px = x + VANILLA_W + GAP;
         graphics.fill(px, y, px + PANEL_W, y + VANILLA_H, 0xDD111122);
         graphics.fill(px, y, px + PANEL_W, y + 2, 0xFFFFAA00);
@@ -150,7 +147,6 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         try {
             ItemStack cur = getMenu().getSlot(0).getItem();
             boolean pedestalChanged = this.hasActivePedestal != this.lastPedestalCache;
-
             if (!ItemStack.isSameItemSameComponents(cur, lastItem) || pedestalChanged) {
                 lastItem = cur.copy();
                 this.lastPedestalCache = this.hasActivePedestal;
@@ -159,8 +155,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 if (prev >= 0 && prev < enchants.size()) selectedIndex = prev;
                 syncButtons();
             }
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
     }
 
     private void doScrollUp() {
@@ -171,7 +166,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
     }
 
     private void doScrollDown() {
-        if (scrollOffset < enchants.size() - VISIBLE_ROWS) {
+        if (scrollOffset < Math.max(0, enchants.size() - VISIBLE_ROWS)) {
             scrollOffset++;
             syncButtons();
         }
@@ -202,7 +197,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
 
         if (delta == 9999) {
             if (isCreative) {
-                selectedLevel = maxLimit - currentLevel;
+                selectedLevel = Math.max(1, maxLimit - currentLevel);
             } else {
                 float enchMult = ArcaneForgeBlockEntity.getEnchantmentMultiplier(opt.id());
                 int maxPossibleToAdd = 0;
@@ -226,7 +221,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         } else if (delta == 0) {
             selectedLevel = 1;
         } else {
-            selectedLevel = Math.max(1, Math.min(selectedLevel + delta, maxLimit - currentLevel));
+            selectedLevel = Math.max(1, Math.min(selectedLevel + delta, Math.max(1, maxLimit - currentLevel)));
         }
         subMenuMode = 0;
         syncButtons();
@@ -237,11 +232,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         var conn = Minecraft.getInstance().getConnection();
         if (conn == null) return;
         EnchantOption opt = enchants.get(selectedIndex);
-        conn.send(new C2SEnchantPacket(
-                getMenu().getBlockEntity().getBlockPos(),
-                opt.id(),
-                selectedLevel
-        ));
+        conn.send(new C2SEnchantPacket(getMenu().getBlockEntity().getBlockPos(), opt.id(), selectedLevel));
     }
 
     private void syncButtons() {
@@ -276,12 +267,12 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         }
 
         btnEnchant.active = hasSel;
-        btnEnchant.setMessage(Component.literal(
-                hasSel ? "⚡ ENCHANT +" + fmtNum(selectedLevel) : "⚡ ENCHANT"));
+        btnEnchant.setMessage(Component.literal(hasSel ? "⚡ ENCHANT +" + fmtNum(selectedLevel) : "⚡ ENCHANT"));
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTick);
 
         int px = getLeftPos() + VANILLA_W + GAP;
@@ -318,8 +309,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
             boolean isCreative = Minecraft.getInstance().player != null && Minecraft.getInstance().player.isCreative();
             if (isCreative) totalCost = 0;
 
-            boolean canAfford = isCreative || (displayedMagicFuel >= totalCost);
-
+            boolean canAfford = isCreative || displayedMagicFuel >= totalCost;
             graphics.drawString(this.font, Component.literal("Fuel material: " + fmtNum(totalCost)), px + 8, ctrlY + 36, canAfford ? 0xFF55FF55 : 0xFFFF5555, false);
 
             if (!isCreative && Minecraft.getInstance().player != null) {
@@ -400,6 +390,8 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
             }
             graphics.drawString(this.font, Component.literal("Total: " + fmtNum(displayedMagicFuel)), px + 8, yOff, 0xFFFFFFFF, false);
         }
+
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
@@ -414,15 +406,13 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 displayedBookshelves = be.getClientBookshelves();
                 displayedMagicFuel = be.getClientMagicFuel();
                 hasActivePedestal = be.hasActivePedestalNearby();
-
                 fuelCommon = be.getClientFuelCommon();
                 fuelUncommon = be.getClientFuelUncommon();
                 fuelRare = be.getClientFuelRare();
                 fuelEpic = be.getClientFuelEpic();
                 fuelLegendary = be.getClientFuelLegendary();
             }
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
     }
 
     @Override
@@ -458,7 +448,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 try {
                     if (!h.isBound()) return;
 
-                    Identifier id = h.key().location();
+                    Identifier id = h.unwrapKey().orElseThrow().location();
                     boolean isOurTotemEnchant = id.getNamespace().equals(ArcaneForge.MODID) && id.getPath().equals("void_protection");
                     boolean isApocalyptic = id.getNamespace().equals(ArcaneForge.MODID) && id.getPath().equals("apocalyptic_judgment");
 
@@ -469,17 +459,20 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                     boolean vanillaCompat = false;
                     try {
                         vanillaCompat = h.value().canEnchant(item);
-                    } catch (Exception ignored) {
-                    }
+                    } catch (Exception ignored) {}
 
-                    boolean finalCompat = vanillaCompat || (hasActivePedestal && (isTotem || !vanillaCompat));
+                    boolean finalCompat = vanillaCompat || hasActivePedestal;
                     if (isApocalyptic) finalCompat = hasActivePedestal;
 
                     int currentLevel = currentEnchants.getLevel(h);
                     enchants.add(new EnchantOption(
                             id,
                             Enchantment.getFullname(h, 1).getString(),
-                            h.value().getMaxLevel(), h, finalCompat, currentLevel));
+                            h.value().getMaxLevel(),
+                            h,
+                            finalCompat,
+                            currentLevel
+                    ));
                 } catch (Exception e) {
                     ArcaneForge.LOGGER.error("Error processing enchantment: {}", e.getMessage());
                 }

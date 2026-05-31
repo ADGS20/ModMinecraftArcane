@@ -4,107 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-<<<<<<< Updated upstream
-    <list default="true" id="7156b797-09f0-4912-a0af-d61f9e84f7e6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/data/ModEnchantmentProvider.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/registry/ModCreativeTabs.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/registry/ModEnchantments.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/neoforge.mods.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/lang/es_es.json" afterDir="false" />
+    <list default="true" id="f670cab7-85c4-46c8-9541-5d0f45000684" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/ModMinecraftArcane.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ModMinecraftArcane.main.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ModMinecraftArcane.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ModMinecraftArcane.test.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/arcaneforge-template-26.1.2.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/arcaneforge-template-26.1.2.ipr" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" beforeDir="false" afterPath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/sources/modMetadata/META-INF/neoforge.mods.toml" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/sources/modMetadata/META-INF/neoforge.mods.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/clientLog4j2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/clientRunProgramArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/clientRunVmArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/dataLog4j2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/dataRunProgramArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/dataRunVmArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/gameTestServerLog4j2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/gameTestServerRunProgramArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/gameTestServerRunVmArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/minecraft_assets.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/serverLog4j2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/serverRunProgramArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/serverRunVmArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/1e4jeja8n858rwrhhmry121uz/4keujrmcrracmishfsjfvk55d/configuration-cache-report.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/3cf0m8l42apgd537lxs37qyiw/2wjfiy23y9dgkb37koplsitg3/configuration-cache-report.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/moddev/minecraft_assets.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/moddev/minecraft_assets.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/1e4jeja8n858rwrhhmry121uz/3kycj03l05b8z97m5qbafy2e3/configuration-cache-report.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/1e4jeja8n858rwrhhmry121uz/5v74c88qigkfbpbry5hd7u4se/configuration-cache-report.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/1e4jeja8n858rwrhhmry121uz/a7mkf188i4ka110jdee2ku8ro/configuration-cache-report.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/bfrvix7puo6lfzngkengmss43/dt0u2b79iv4rdzgn4yb5c1gs0/configuration-cache-report.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/META-INF/neoforge.mods.toml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/animations/arcane_forge.animation.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/animations/arcane_forge.animation.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/geo/arcane_forge.geo.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/geo/arcane_forge.geo.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/lang/en_us.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/lang/es_mx.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/lang/es_mx.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/models/block/arcane_pedestal.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/models/block/arcane_pedestal.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/models/item/arcane_pedestal.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/models/item/arcane_pedestal.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/apocalyptic_judgment.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/apocalyptic_judgment.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/tmp/createMinecraftArtifacts/nfrt_artifact_manifest.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/createMinecraftArtifacts/nfrt_artifact_manifest.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/downloadAssets/nfrt_artifact_manifest.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/command_history.txt" beforeDir="false" afterPath="$PROJECT_DIR$/run/command_history.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/random_sequences.dat" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/random_sequences.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/wandering_trader.dat" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/wandering_trader.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/weather.dat" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/weather.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/world_clocks.dat" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/world_clocks.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/data/minecraft/raids.dat" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/data/minecraft/raids.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.-1.0.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.-1.0.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.-1.1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.-1.1.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.0.-1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.0.-1.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.0.0.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.0.0.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.0.1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.0.1.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.1.0.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.1.0.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.1.1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.1.1.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.-1.0.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.-1.0.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.-1.1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.-1.1.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.0.-1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.0.-1.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.0.0.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.0.0.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.0.1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.0.1.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.1.0.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.1.0.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.-1.-1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.-1.-1.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.-1.0.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.-1.0.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.-1.1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.-1.1.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.-1.2.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.-1.2.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.0.-1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.0.-1.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.0.0.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.0.0.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.0.1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.0.1.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.0.2.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.0.2.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.1.-1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.1.-1.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.1.0.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.1.0.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.1.1.mca" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.1.1.mca" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/data/minecraft/ender_dragon_fight.dat" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/data/minecraft/ender_dragon_fight.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/data/minecraft/raids.dat" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/data/minecraft/raids.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_nether/data/minecraft/raids.dat" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_nether/data/minecraft/raids.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/level.dat" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/level.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/level.dat_old" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/level.dat_old" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/players/advancements/380df991-f603-344c-a090-369bad2a924a.json" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/players/advancements/380df991-f603-344c-a090-369bad2a924a.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/players/data/380df991-f603-344c-a090-369bad2a924a.dat" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/players/data/380df991-f603-344c-a090-369bad2a924a.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/players/data/380df991-f603-344c-a090-369bad2a924a.dat_old" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/players/data/380df991-f603-344c-a090-369bad2a924a.dat_old" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/players/stats/380df991-f603-344c-a090-369bad2a924a.json" beforeDir="false" afterPath="$PROJECT_DIR$/run/saves/New World (3)/players/stats/380df991-f603-344c-a090-369bad2a924a.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/usercache.json" beforeDir="false" afterPath="$PROJECT_DIR$/run/usercache.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/ArcaneForge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/ArcaneForge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/block/ArcaneForgeBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/block/ArcaneForgeBlock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/block/ArcaneForgeBlockEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/block/ArcaneForgeBlockEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/block/ArcanePedestalBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/block/ArcanePedestalBlock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/client/model/ArcaneForgeModel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/client/renderer/ArcaneForgeRenderer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/ApocalypticBowHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/ApocalypticBowHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/PickaxeArcaneHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/event/PickaxeArcaneHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/downloadAssets/nfrt_artifact_manifest.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/downloadAssets/nfrt_artifact_manifest.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/menu/ArcaneForgeScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/menu/ArcaneForgeScreen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/registry/ModBlocks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/registry/ModBlocks.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/registry/ModItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/registry/ModItems.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/blockstates/arcane_forge.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/blockstates/arcane_forge.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/lang/en_us.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/lang/es_mx.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/lang/es_mx.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/models/block/arcane_forge.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/models/block/arcane_forge.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/models/block/arcane_pedestal.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/models/block/arcane_pedestal.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/models/item/arcane_pedestal.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/models/item/arcane_pedestal.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data/arcaneforge/enchantment/apocalyptic_judgment.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/arcaneforge/enchantment/apocalyptic_judgment.json" afterDir="false" />
     </list>
-=======
-    <list default="true" id="7156b797-09f0-4912-a0af-d61f9e84f7e6" name="Changes" comment="" />
->>>>>>> Stashed changes
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -121,91 +37,35 @@
         <task path="$PROJECT_DIR$">
           <activation />
         </task>
-        <projects_view>
-          <tree_state>
-            <expand>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="ModMinecraftArcane" type="f1a62948:ProjectNode" />
-              </path>
-            </expand>
-            <select />
-          </tree_state>
-        </projects_view>
+        <projects_view />
       </state>
     </system>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.neoforged/neoforge/26.1.2.65-beta/734b1bedc61d7b74da9de0c5d7a70746fe584eb8/neoforge-26.1.2.65-beta-sources.jar!/net/neoforged/neoforge/common/CommonHooks.java" root0="SKIP_INSPECTION" />
-  </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
-  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 8
+  &quot;associatedIndex&quot;: 0
 }</component>
-  <component name="ProjectId" id="3EEE9TW9SBJtriLxIe4ahNQRU9D" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectId" id="3EVQKUgUbBrigg1vP4slZFDiuV8" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-<<<<<<< Updated upstream
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Client.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build ModMinecraftArcane.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ModMinecraftArcane [:net.neoforged.devlaunch.Main.main()].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;remove-geckolib-static-renderer&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/ModsTrabajos/ModsTrabajos/arcaneforge-template-26.1.2/ModMinecraftArcane/src/main/resources/assets/arcaneforge/models/block&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
-=======
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Gradle.Build ModMinecraftArcane.executor": "Run",
     "Gradle.ModMinecraftArcane [:net.neoforged.devlaunch.Main.main()].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "remove-geckolib-static-renderer",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/ModsTrabajos/ModsTrabajos/arcaneforge-template-26.1.2/ModMinecraftArcane/src/main/resources/assets/arcaneforge/textura",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
->>>>>>> Stashed changes
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\ModsTrabajos\ModsTrabajos\arcaneforge-template-26.1.2\ModMinecraftArcane\src\main\resources\assets\arcaneforge\models\block" />
-      <recent name="D:\ModsTrabajos\ModsTrabajos\arcaneforge-template-26.1.2\ModMinecraftArcane\src\main\resources\assets\arcaneforge\textura" />
-      <recent name="D:\ModsTrabajos\ModsTrabajos\arcaneforge-template-26.1.2\ModMinecraftArcane\src\main\resources\assets\arcaneforge\animations" />
-      <recent name="D:\ModsTrabajos\ModsTrabajos\arcaneforge-template-26.1.2\ModMinecraftArcane\src\main\resources\assets\arcaneforge\geo" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\ModsTrabajos\ModsTrabajos\arcaneforge-template-26.1.2\ModMinecraftArcane\src\main\resources\assets\arcaneforge\textura\block" />
-      <recent name="D:\ModsTrabajos\ModsTrabajos\arcaneforge-template-26.1.2\ModMinecraftArcane\src\main\resources\data\arcaneforge\enchantment" />
-    </key>
-  </component>
   <component name="RunManager" selected="Application.Client">
     <configuration name="Client" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="net.neoforged.devlaunch.Main" />
@@ -258,36 +118,13 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="7156b797-09f0-4912-a0af-d61f9e84f7e6" name="Changes" comment="" />
-      <created>1779735177511</created>
+      <changelist id="f670cab7-85c4-46c8-9541-5d0f45000684" name="Changes" comment="" />
+      <created>1780261193819</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1779735177511</updated>
-      <workItem from="1779735179330" duration="21000" />
-      <workItem from="1779735216627" duration="832000" />
-      <workItem from="1779738653033" duration="345000" />
-      <workItem from="1779742908503" duration="275000" />
-      <workItem from="1779743284274" duration="723000" />
-      <workItem from="1779746010052" duration="290000" />
-      <workItem from="1779815301761" duration="2676000" />
-      <workItem from="1779825465873" duration="6771000" />
-      <workItem from="1779898252050" duration="7074000" />
-      <workItem from="1779953529317" duration="29826000" />
-      <workItem from="1780068849909" duration="2953000" />
-      <workItem from="1780073267821" duration="5593000" />
-      <workItem from="1780080838599" duration="1638000" />
-      <workItem from="1780084392917" duration="468000" />
-      <workItem from="1780084939379" duration="1174000" />
-      <workItem from="1780086766458" duration="2969000" />
-      <workItem from="1780132163612" duration="11434000" />
-      <workItem from="1780144383576" duration="796000" />
-      <workItem from="1780150015506" duration="101000" />
-      <workItem from="1780150202821" duration="791000" />
-      <workItem from="1780151024997" duration="336000" />
-      <workItem from="1780155748545" duration="617000" />
-      <workItem from="1780157939417" duration="1576000" />
-      <workItem from="1780161543407" duration="5294000" />
-      <workItem from="1780168319265" duration="998000" />
+      <updated>1780261193819</updated>
+      <workItem from="1780261195642" duration="23000" />
+      <workItem from="1780261273384" duration="370000" />
     </task>
     <servers />
   </component>
