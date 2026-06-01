@@ -4,23 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f670cab7-85c4-46c8-9541-5d0f45000684" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/neoforge.mods.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ModMinecraftArcane.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ModMinecraftArcane.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ModMinecraftArcane.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ModMinecraftArcane.main.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ModMinecraftArcane.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ModMinecraftArcane.test.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" beforeDir="false" afterPath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/sources/modMetadata/META-INF/mods.toml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/69dcgphn7xc4tepgwpmw757ya/69kwnbcvtvsmkf0qi68lffztb/configuration-cache-report.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/kzgg0vejql6v00i2k8279io4/2odk6xuty5962b47py3mii7sf/configuration-cache-report.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/META-INF/mods.toml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/createMinecraftArtifacts/nfrt_artifact_manifest.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/createMinecraftArtifacts/nfrt_artifact_manifest.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run/mods/arcaneforge-1.0.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/ArcaneForge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/ArcaneForge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/templates/META-INF/mods.toml" beforeDir="false" />
-    </list>
+    <list default="true" id="f670cab7-85c4-46c8-9541-5d0f45000684" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -148,7 +132,7 @@
       <workItem from="1780337077736" duration="109000" />
       <workItem from="1780337201137" duration="174000" />
       <workItem from="1780337400798" duration="388000" />
-      <workItem from="1780337826943" duration="2540000" />
+      <workItem from="1780337826943" duration="2826000" />
     </task>
     <servers />
   </component>
