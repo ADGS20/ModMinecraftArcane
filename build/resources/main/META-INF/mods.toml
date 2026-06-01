@@ -18,7 +18,7 @@ side = "BOTH"
 
 [[mods]]
 modId = "arcaneforge"
-version = "1.0.0"
+version = "10.0.0"
 displayName = "Arcane Forge"
 description = '''
 Sistema avanzado de encantamiento con extracción de recursos desde cofres vinculados.

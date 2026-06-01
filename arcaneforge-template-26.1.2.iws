@@ -5,16 +5,171 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f670cab7-85c4-46c8-9541-5d0f45000684" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/ModMinecraftArcane.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ModMinecraftArcane.main.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" beforeDir="false" afterPath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/generated/sources/modMetadata/META-INF/neoforge.mods.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/generated/sources/modMetadata/META-INF/mods.toml" beforeDir="false" afterPath="$PROJECT_DIR$/build/generated/sources/modMetadata/META-INF/mods.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/libs/arcaneforge-1.0.0.jar" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/moddev/clientLog4j2.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/moddev/clientRunProgramArgs.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/moddev/clientRunVmArgs.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/moddev/minecraft_assets.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/x892pl3j7rsjkquj1g0y0dpl/3vf0uqb5wt4w3rek7q83fv4b3/configuration-cache-report.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/neoforge.mods.toml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/templates/META-INF/neoforge.mods.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/META-INF/mods.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/animations/arcane_forge.animation.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/blockstates/arcane_forge.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/blockstates/arcane_pedestal.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/blockstates/arcane_power_block.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/data/arcane_resonance.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/geo/arcane_forge.geo.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/lang/en_us.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/lang/es_es.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/lang/es_mx.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/models/block/arcane_forge.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/models/block/arcane_pedestal.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/models/block/arcane_power_block.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/models/item/arcane_forge.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/models/item/arcane_pedestal.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/models/item/arcane_power_block.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/models/item/binding_wand.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textura/block/base.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textura/block/picosdebajot.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textura/block/picostexture.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textura/block/soporte.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textura/block/t_medio.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textura/block/t_soporte.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textura/block/texture.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textures/block/arcane_power_block/borde.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textures/block/arcane_power_block/centro_pequeno.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textures/block/arcane_power_block/neo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textures/block/arcane_power_block/vara.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textures/block/arcane_power_block/vidrio.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textures/block/base.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textures/block/picos_debajo_t.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textures/block/picos_texture.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textures/block/soporte.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textures/block/t_medio.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textures/block/t_soporte.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/assets/arcaneforge/textures/block/texture.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/apocalyptic_judgment.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/arcane_cataclysm.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/arcane_repulse.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/chain_thunder.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/eternal_feast.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/ethereal_hook.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/ethereal_launch.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/ethereal_walk.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/soul_delve.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/soul_harvest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/void_protection.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/void_wings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/recipe/arcane_forge.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/recipe/binding_wand.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/createMinecraftArtifacts/nfrt_artifact_manifest.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/createMinecraftArtifacts/nfrt_artifact_manifest.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/downloadAssets/nfrt_artifact_manifest.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/downloadAssets/nfrt_artifact_manifest.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/jar/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/.cache/jij/6a464b1c603b716033f3561a0632a7cc7be17c9d75af1cab7f1db5fe98c3888a/mixinextras-neoforge-0.5.4.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/.cache/jij/909b72f1d8225a13c4f00a23b3a5d04217543745de857d98694d4943708fc969/net.neoforged.neoforge-coremods-26.1.2.65-beta.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/command_history.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/config/fml.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/config/neoforge-client.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/config/neoforge-common.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/config/neoforge-server.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/downloads/log.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/options.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/custom_boss_events.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/game_rules.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/random_sequences.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/scheduled_events.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/scoreboard.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/stopwatches.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/wandering_trader.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/weather.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/world_clocks.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/data/minecraft/world_gen_settings.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/data/minecraft/chunk_tickets.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/data/minecraft/raids.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/data/minecraft/world_border.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/data/neoforge/data_attachments.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.-1.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.-1.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.-1.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.0.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.0.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.0.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.1.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.1.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/entities/r.1.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.-1.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.-1.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.-1.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.-1.2.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.0.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.0.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.0.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.0.2.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.1.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.1.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/poi/r.1.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.-1.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.-1.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.-1.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.-1.2.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.0.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.0.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.0.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.0.2.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.1.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.1.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/overworld/region/r.1.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/data/minecraft/chunk_tickets.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/data/minecraft/ender_dragon_fight.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/data/minecraft/raids.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/data/minecraft/world_border.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/data/neoforge/data_attachments.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/entities/r.-1.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/entities/r.-1.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/entities/r.0.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/entities/r.0.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/poi/r.-1.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/poi/r.-1.-2.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/poi/r.-1.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/poi/r.-1.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/poi/r.-2.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/poi/r.-2.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/poi/r.0.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/poi/r.0.-2.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/poi/r.0.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/poi/r.0.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/poi/r.1.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/poi/r.1.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/region/r.-1.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/region/r.-1.-2.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/region/r.-1.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/region/r.-1.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/region/r.-2.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/region/r.-2.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/region/r.0.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/region/r.0.-2.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/region/r.0.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/region/r.0.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/region/r.1.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_end/region/r.1.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_nether/data/minecraft/chunk_tickets.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_nether/data/minecraft/raids.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_nether/data/minecraft/world_border.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/dimensions/minecraft/the_nether/data/neoforge/data_attachments.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/level.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/level.dat_old" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/players/advancements/380df991-f603-344c-a090-369bad2a924a.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/players/data/380df991-f603-344c-a090-369bad2a924a.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/players/data/380df991-f603-344c-a090-369bad2a924a.dat_old" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/players/stats/380df991-f603-344c-a090-369bad2a924a.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/serverconfig/readme.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/saves/New World (3)/session.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/usercache.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/usernamecache.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/templates/META-INF/mods.toml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/templates/META-INF/mods.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +285,14 @@
       <workItem from="1780263171738" duration="2334000" />
       <workItem from="1780265531700" duration="581000" />
       <workItem from="1780266129672" duration="25000" />
-      <workItem from="1780334104179" duration="2324000" />
+      <workItem from="1780334104179" duration="2624000" />
+      <workItem from="1780336745099" duration="61000" />
+      <workItem from="1780336817542" duration="50000" />
+      <workItem from="1780336910380" duration="144000" />
+      <workItem from="1780337077736" duration="109000" />
+      <workItem from="1780337201137" duration="174000" />
+      <workItem from="1780337400798" duration="388000" />
+      <workItem from="1780337826943" duration="537000" />
     </task>
     <servers />
   </component>
