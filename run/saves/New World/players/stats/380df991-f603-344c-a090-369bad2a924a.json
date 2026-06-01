@@ -1,33 +1,41 @@
 {
   "stats": {
-    "minecraft:mined": {
-      "minecraft:deepslate_diamond_ore": 16
-    },
     "minecraft:custom": {
-      "minecraft:time_since_rest": 37592,
-      "minecraft:walk_one_cm": 4386,
-      "minecraft:leave_game": 7,
-      "minecraft:play_time": 18796,
-      "minecraft:jump": 15,
-      "minecraft:time_since_death": 18796,
+      "minecraft:time_since_rest": 40476,
+      "minecraft:walk_one_cm": 6574,
+      "minecraft:leave_game": 8,
+      "minecraft:play_time": 20238,
+      "minecraft:jump": 22,
+      "minecraft:time_since_death": 20238,
+      "minecraft:drop": 5,
       "minecraft:sprint_one_cm": 18,
       "minecraft:fall_one_cm": 300,
-      "minecraft:total_world_time": 18796,
+      "minecraft:total_world_time": 20238,
       "minecraft:fly_one_cm": 9769,
-      "minecraft:walk_on_water_one_cm": 1068,
+      "minecraft:walk_on_water_one_cm": 1090,
       "minecraft:crouch_one_cm": 56,
-      "minecraft:sneak_time": 86,
+      "minecraft:sneak_time": 110,
       "minecraft:climb_one_cm": 12
-    },
-    "minecraft:used": {
-      "minecraft:diamond_pickaxe": 16,
-      "arcaneforge:arcane_forge": 9,
-      "arcaneforge:arcane_power_block": 7,
-      "arcaneforge:arcane_pedestal": 5,
-      "minecraft:deepslate_diamond_ore": 17
     },
     "minecraft:picked_up": {
       "minecraft:deepslate_diamond_ore": 1975
+    },
+    "minecraft:dropped": {
+      "arcaneforge:arcane_forge": 1,
+      "arcaneforge:arcane_pedestal": 1,
+      "arcaneforge:arcane_pedestal_item": 1,
+      "arcaneforge:arcane_forge_item": 1,
+      "arcaneforge:binding_wand": 1
+    },
+    "minecraft:used": {
+      "minecraft:diamond_pickaxe": 16,
+      "arcaneforge:arcane_forge": 10,
+      "arcaneforge:arcane_power_block": 7,
+      "arcaneforge:arcane_pedestal": 6,
+      "minecraft:deepslate_diamond_ore": 17
+    },
+    "minecraft:mined": {
+      "minecraft:deepslate_diamond_ore": 16
     }
   },
   "DataVersion": 4790

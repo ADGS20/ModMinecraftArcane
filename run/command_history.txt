@@ -8,3 +8,4 @@
 /give @p arcaneforge:arcane_pedestal
 /gamemode survival
 /gamemode creative
+/give @p arcaneforge:arcane_pedestal
