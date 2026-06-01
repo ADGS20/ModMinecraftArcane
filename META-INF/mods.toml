@@ -1,5 +1,5 @@
-modLoader = "javafml"
-loaderVersion = "[4,)"
+modLoader = "neoforge"
+loaderVersion = "[26.1,)"
 license = "MIT"
 
 [[dependencies.arcaneforge]]
@@ -18,9 +18,9 @@ side = "BOTH"
 
 [[mods]]
 modId = "arcaneforge"
-version = "${mod_version}"
+version = "1.0.0"
 displayName = "Arcane Forge"
 description = '''
-        Sistema avanzado de encantamiento con extracción de recursos desde cofres vinculados.
-        Supera los límites de nivel vanilla y funciona en servidores multijugador.
-    '''
+Sistema avanzado de encantamiento con extracción de recursos desde cofres vinculados.
+Supera los límites de nivel vanilla y funciona en servidores multijugador.
+'''
