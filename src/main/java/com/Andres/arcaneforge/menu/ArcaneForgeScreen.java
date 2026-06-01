@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> {
-    private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(
-            ArcaneForge.MODID, "textures/gui/container/arcane_forge.png");
 
     private static final int VANILLA_W = 176;
     private static final int VANILLA_H = 166;
@@ -127,10 +125,8 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         super.containerTick();
         try {
             refreshClientData();
-
             ItemStack cur = this.menu.getSlot(0).getItem();
             boolean pedestalChanged = this.hasActivePedestal != this.lastPedestalCache;
-
             if (!ItemStack.isSameItemSameComponents(cur, lastItem) || pedestalChanged) {
                 lastItem = cur.copy();
                 this.lastPedestalCache = this.hasActivePedestal;
@@ -139,8 +135,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 if (prev >= 0 && prev < enchants.size()) selectedIndex = prev;
                 syncButtons();
             }
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
     }
 
 
@@ -148,13 +143,19 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         int x = this.leftPos;
         int y = this.topPos;
 
-        graphics.blit(TEXTURE, x, y, x + VANILLA_W, y + VANILLA_H, 0f, 176f / 256f, 0f, 166f / 256f);
+        // Fondo izquierdo: panel vanilla oscuro
+        graphics.fill(x, y, x + VANILLA_W, y + VANILLA_H, 0xCC222233);
+        graphics.fill(x, y, x + VANILLA_W, y + 2, 0xFFFFAA00);
 
+        // Panel derecho de encantamientos
         int px = x + VANILLA_W + GAP;
         graphics.fill(px, y, px + PANEL_W, y + VANILLA_H, 0xDD111122);
         graphics.fill(px, y, px + PANEL_W, y + 2, 0xFFFFAA00);
-    }
 
+        // Borde fondo lista
+        int listY = y + 38;
+        graphics.fill(px + 4, listY - 2, px + PANEL_W - 4, listY + VISIBLE_ROWS * ROW_H + 2, 0xBB000022);
+    }
 
     protected void renderLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         int px = this.leftPos + VANILLA_W + GAP;
@@ -163,12 +164,12 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
 
         refreshClientData();
 
-        graphics.text(font, "⚡ Arcane Forge ⚡", px + 8, py + 6, 0xFFFFAA00, false);
-        graphics.text(font, "Cofres: " + displayedChests + "/" + Config.MAX_LINKED_CHESTS, px + 8, py + 17, 0xFFAAFFAA, false);
-        graphics.text(font, "Librerías: " + displayedBookshelves, px + 8, py + 27, 0xFF8888FF, false);
+        // Título panel
+        graphics.text(font, "⚡ Arcane Forge ⚡", px + 8, py + 6, 0xFFFFAA00);
+        graphics.text(font, "Cofres: " + displayedChests + "/" + Config.MAX_LINKED_CHESTS, px + 8, py + 17, 0xFFAAFFAA);
+        graphics.text(font, "Librerías: " + displayedBookshelves, px + 8, py + 27, 0xFF8888FF);
 
         int listY = py + 38;
-        graphics.fill(px + 4, listY - 2, px + PANEL_W - 4, listY + VISIBLE_ROWS * ROW_H + 2, 0xBB000022);
 
         if (selectedIndex >= 0 && selectedIndex < enchants.size()) {
             int ctrlY = listY + VISIBLE_ROWS * ROW_H + 6;
@@ -183,87 +184,56 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
             if (isCreative) totalCost = 0;
 
             boolean canAfford = isCreative || displayedMagicFuel >= totalCost;
-            graphics.text(font, "Fuel material: " + fmtNum(totalCost), px + 8, ctrlY + 36, canAfford ? 0xFF55FF55 : 0xFFFF5555, false);
+            graphics.text(font, "Fuel material: " + fmtNum(totalCost), px + 8, ctrlY + 36, canAfford ? 0xFF55FF55 : 0xFFFF5555);
 
             if (!isCreative && Minecraft.getInstance().player != null) {
                 int xpCost = Math.max(1, (int) (selectedLevel * 3 * enchMult));
                 int playerXP = Minecraft.getInstance().player.experienceLevel;
                 boolean canAffordXP = playerXP >= xpCost;
-                graphics.text(font, "EXP: -" + xpCost + " lvl (tienes " + playerXP + ")", px + 8, ctrlY + 46, canAffordXP ? 0xFFFF55 : 0xFFFF5555, false);
+                graphics.text(font, "EXP: -" + xpCost + " lvl (tienes " + playerXP + ")", px + 8, ctrlY + 46, canAffordXP ? 0xFFFFFF55 : 0xFFFF5555);
             } else if (isCreative) {
-                graphics.text(font, "EXP: Gratis (Creativo)", px + 8, ctrlY + 46, 0xFF55FF55, false);
+                graphics.text(font, "EXP: Gratis (Creativo)", px + 8, ctrlY + 46, 0xFF55FF55);
             }
 
             String multStr = enchMult == 1.0f ? "x1 (Común)" : enchMult == 2.5f ? "x2.5 (Raro vanilla)" : enchMult == 3.0f ? "x3 (Mod Arcano)" : "x5 (LEGENDARIO)";
-            int multColor = enchMult >= 5.0f ? 0xFFFF00FF : enchMult >= 3.0f ? 0xFF8800FF : enchMult >= 2.5f ? 0xFF00FFFF : 0xFFFF;
-            graphics.text(font, "Rareza: " + multStr, px + 8, ctrlY + 56, multColor, false);
+            int multColor = enchMult >= 5.0f ? 0xFFFF00FF : enchMult >= 3.0f ? 0xFF8800FF : enchMult >= 2.5f ? 0xFF00FFFF : 0xFFFFFFFF;
+            graphics.text(font, "Rareza: " + multStr, px + 8, ctrlY + 56, multColor);
 
             int yOff = ctrlY + 66;
-            graphics.text(font, "— Materiales en cofres —", px + 8, yOff, 0xFFCCCC, false);
+            graphics.text(font, "— Materiales en cofres —", px + 8, yOff, 0xFFCCCCCC);
             yOff += 9;
 
-            if (fuelCommon > 0) {
-                graphics.text(font, "§7Común: " + fmtNum(fuelCommon), px + 8, yOff, 0xFFAAAA, false);
-                yOff += 9;
-            }
-            if (fuelUncommon > 0) {
-                graphics.text(font, "§aPoco común: " + fmtNum(fuelUncommon), px + 8, yOff, 0xFF55FF55, false);
-                yOff += 9;
-            }
-            if (fuelRare > 0) {
-                graphics.text(font, "§bRaro: " + fmtNum(fuelRare), px + 8, yOff, 0xFF55FFFF, false);
-                yOff += 9;
-            }
-            if (fuelEpic > 0) {
-                graphics.text(font, "§dÉpico: " + fmtNum(fuelEpic), px + 8, yOff, 0xFFFF55FF, false);
-                yOff += 9;
-            }
-            if (fuelLegendary > 0) {
-                graphics.text(font, "§5Legendario: " + fmtNum(fuelLegendary), px + 8, yOff, 0xFFAA00FF, false);
-                yOff += 9;
-            }
+            if (fuelCommon > 0)    { graphics.text(font, "Común: "      + fmtNum(fuelCommon),    px + 8, yOff, 0xFFAAAAAA); yOff += 9; }
+            if (fuelUncommon > 0)  { graphics.text(font, "Poco común: " + fmtNum(fuelUncommon),  px + 8, yOff, 0xFF55FF55); yOff += 9; }
+            if (fuelRare > 0)      { graphics.text(font, "Raro: "       + fmtNum(fuelRare),      px + 8, yOff, 0xFF55FFFF); yOff += 9; }
+            if (fuelEpic > 0)      { graphics.text(font, "Épico: "      + fmtNum(fuelEpic),      px + 8, yOff, 0xFFFF55FF); yOff += 9; }
+            if (fuelLegendary > 0) { graphics.text(font, "Legendario: " + fmtNum(fuelLegendary), px + 8, yOff, 0xFFAA00FF); yOff += 9; }
 
-            graphics.text(font, "Total fuel: §a" + (isCreative ? "∞ (Creativo)" : fmtNum(displayedMagicFuel)), px + 8, yOff, 0xFFFF, false);
+            boolean isCreative2 = Minecraft.getInstance().player != null && Minecraft.getInstance().player.isCreative();
+            graphics.text(font, "Total fuel: " + (isCreative2 ? "∞ (Creativo)" : fmtNum(displayedMagicFuel)), px + 8, yOff, 0xFF00FFFF);
             yOff += 9;
 
             if (hasActivePedestal) {
-                graphics.text(font, "✓ Pedestal Activo (Max 1000)", px + 8, yOff, 0xFF55FFFF, false);
+                graphics.text(font, "✓ Pedestal Activo (Max 1000)", px + 8, yOff, 0xFF55FFFF);
             } else {
-                graphics.text(font, "✗ Sin Pedestal (Max 255)", px + 8, yOff, 0xFFFF5555, false);
+                graphics.text(font, "✗ Sin Pedestal (Max 255)", px + 8, yOff, 0xFFFF5555);
             }
             yOff += 9;
 
             if (!enchants.get(selectedIndex).isCompatible()) {
-                graphics.text(font, "⚠ Incompatible vanilla", px + 8, yOff, 0xFFFF8800, false);
+                graphics.text(font, "⚠ Incompatible vanilla", px + 8, yOff, 0xFFFF8800);
             }
         } else {
             int ctrlY = listY + VISIBLE_ROWS * ROW_H + 6;
             int yOff = ctrlY + 36;
-            graphics.text(font, "— Materiales en cofres —", px + 8, yOff, 0xFFCCCC, false);
+            graphics.text(font, "— Materiales en cofres —", px + 8, yOff, 0xFFCCCCCC);
             yOff += 9;
-
-            if (fuelCommon > 0) {
-                graphics.text(font, "§7Común: " + fmtNum(fuelCommon), px + 8, yOff, 0xFFAAAA, false);
-                yOff += 9;
-            }
-            if (fuelUncommon > 0) {
-                graphics.text(font, "§aPoco común: " + fmtNum(fuelUncommon), px + 8, yOff, 0xFF55FF55, false);
-                yOff += 9;
-            }
-            if (fuelRare > 0) {
-                graphics.text(font, "§bRaro: " + fmtNum(fuelRare), px + 8, yOff, 0xFF55FFFF, false);
-                yOff += 9;
-            }
-            if (fuelEpic > 0) {
-                graphics.text(font, "§dÉpico: " + fmtNum(fuelEpic), px + 8, yOff, 0xFFFF55FF, false);
-                yOff += 9;
-            }
-            if (fuelLegendary > 0) {
-                graphics.text(font, "§5Legendario: " + fmtNum(fuelLegendary), px + 8, yOff, 0xFFAA00FF, false);
-                yOff += 9;
-            }
-
-            graphics.text(font, "Total: " + fmtNum(displayedMagicFuel), px + 8, yOff, 0xFFFF, false);
+            if (fuelCommon > 0)    { graphics.text(font, "Común: "      + fmtNum(fuelCommon),    px + 8, yOff, 0xFFAAAAAA); yOff += 9; }
+            if (fuelUncommon > 0)  { graphics.text(font, "Poco común: " + fmtNum(fuelUncommon),  px + 8, yOff, 0xFF55FF55); yOff += 9; }
+            if (fuelRare > 0)      { graphics.text(font, "Raro: "       + fmtNum(fuelRare),      px + 8, yOff, 0xFF55FFFF); yOff += 9; }
+            if (fuelEpic > 0)      { graphics.text(font, "Épico: "      + fmtNum(fuelEpic),      px + 8, yOff, 0xFFFF55FF); yOff += 9; }
+            if (fuelLegendary > 0) { graphics.text(font, "Legendario: " + fmtNum(fuelLegendary), px + 8, yOff, 0xFFAA00FF); yOff += 9; }
+            graphics.text(font, "Total: " + fmtNum(displayedMagicFuel), px + 8, yOff, 0xFF00FFFF);
         }
     }
 
@@ -278,17 +248,11 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
     }
 
     private void doScrollUp() {
-        if (scrollOffset > 0) {
-            scrollOffset--;
-            syncButtons();
-        }
+        if (scrollOffset > 0) { scrollOffset--; syncButtons(); }
     }
 
     private void doScrollDown() {
-        if (scrollOffset < Math.max(0, enchants.size() - VISIBLE_ROWS)) {
-            scrollOffset++;
-            syncButtons();
-        }
+        if (scrollOffset < Math.max(0, enchants.size() - VISIBLE_ROWS)) { scrollOffset++; syncButtons(); }
     }
 
     private void selectRow(int visRow) {
@@ -310,7 +274,6 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         if (selectedIndex < 0) return;
         EnchantOption opt = enchants.get(selectedIndex);
         int currentLevel = opt.currentLevel();
-
         boolean isCreative = Minecraft.getInstance().player != null && Minecraft.getInstance().player.isCreative();
         int maxLimit = hasActivePedestal ? 255 : 15;
 
@@ -322,18 +285,11 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 int maxPossibleToAdd = 0;
                 int fuel = displayedMagicFuel;
                 int testLevel = currentLevel;
-
                 while (testLevel < maxLimit) {
-                    int baseCostForOne = ArcaneForgeBlockEntity.calculateProgressiveCost(
-                            testLevel, 1, displayedBookshelves, hasActivePedestal);
+                    int baseCostForOne = ArcaneForgeBlockEntity.calculateProgressiveCost(testLevel, 1, displayedBookshelves, hasActivePedestal);
                     int realCostForOne = Math.max(1, Math.round(baseCostForOne * enchMult));
-                    if (fuel >= realCostForOne) {
-                        fuel -= realCostForOne;
-                        maxPossibleToAdd++;
-                        testLevel++;
-                    } else {
-                        break;
-                    }
+                    if (fuel >= realCostForOne) { fuel -= realCostForOne; maxPossibleToAdd++; testLevel++; }
+                    else break;
                 }
                 selectedLevel = Math.max(1, maxPossibleToAdd);
             }
@@ -412,11 +368,8 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
             reg.listElements().forEach(h -> {
                 try {
                     if (!h.isBound()) return;
-
                     Identifier id = reg.getKey(h.value());
-                    if (id == null) {
-                        id = Identifier.fromNamespaceAndPath("minecraft", "unknown");
-                    }
+                    if (id == null) id = Identifier.fromNamespaceAndPath("minecraft", "unknown");
 
                     boolean isOurTotemEnchant = id.getNamespace().equals(ArcaneForge.MODID) && id.getPath().equals("void_protection");
                     boolean isApocalyptic = id.getNamespace().equals(ArcaneForge.MODID) && id.getPath().equals("apocalyptic_judgment");
@@ -426,23 +379,14 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                     if (isApocalyptic && !isRanged) return;
 
                     boolean vanillaCompat = false;
-                    try {
-                        vanillaCompat = h.value().canEnchant(item);
-                    } catch (Exception ignored) {
-                    }
+                    try { vanillaCompat = h.value().canEnchant(item); } catch (Exception ignored) {}
 
                     boolean finalCompat = vanillaCompat || hasActivePedestal;
                     if (isApocalyptic) finalCompat = hasActivePedestal;
 
                     int currentLevel = currentEnchants.getLevel(h);
-                    enchants.add(new EnchantOption(
-                            id,
-                            Enchantment.getFullname(h, 1).getString(),
-                            h.value().getMaxLevel(),
-                            h,
-                            finalCompat,
-                            currentLevel
-                    ));
+                    enchants.add(new EnchantOption(id, Enchantment.getFullname(h, 1).getString(),
+                            h.value().getMaxLevel(), h, finalCompat, currentLevel));
                 } catch (Exception e) {
                     ArcaneForge.LOGGER.error("Error processing enchantment: {}", e.getMessage());
                 }
@@ -474,9 +418,9 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 fuelEpic = be.getClientFuelEpic();
                 fuelLegendary = be.getClientFuelLegendary();
             }
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
     }
 
-    private record EnchantOption(Identifier id, String displayName, int vanillaMaxLevel, Holder<Enchantment> holder, boolean isCompatible, int currentLevel) {}
+    private record EnchantOption(Identifier id, String displayName, int vanillaMaxLevel,
+                                 Holder<Enchantment> holder, boolean isCompatible, int currentLevel) {}
 }

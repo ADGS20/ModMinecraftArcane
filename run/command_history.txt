@@ -6,3 +6,5 @@
 /give @p arcaneforge:arcane_power_block
 /give @p arcaneforge:arcane_guide_book
 /give @p arcaneforge:arcane_pedestal
+/gamemode survival
+/gamemode creative

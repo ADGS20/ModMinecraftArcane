@@ -4,6 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< Updated upstream
     <list default="true" id="f670cab7-85c4-46c8-9541-5d0f45000684" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/models/block/arcane_forge_viejo.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ModMinecraftArcane.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ModMinecraftArcane.main.iml" afterDir="false" />
@@ -41,6 +42,10 @@
       <change beforePath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/lang/en_us.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/models/block/arcane_forge.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/models/block/arcane_forge.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/assets/arcaneforge/models/block/arcane_power_block.json" beforeDir="false" />
+=======
+    <list default="true" id="7156b797-09f0-4912-a0af-d61f9e84f7e6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" beforeDir="false" afterPath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
