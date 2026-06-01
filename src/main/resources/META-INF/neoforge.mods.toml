@@ -1,0 +1,30 @@
+modLoader="javafml"
+loaderVersion="[3,)"
+license="All rights reserved"
+issueTrackerURL="https://github.com/ADGS20/ModMinecraftArcane/issues"
+showAsResourcePack=false
+
+[[mods]]
+modId="arcaneforge"
+version="1.0.0"
+displayName="Arcane Forge"
+logoFile="logo.png"
+credits="Andres"
+authors="Andres"
+description='''
+Modificacion magica para la forja de armamentos.
+'''
+
+[[dependencies.arcaneforge]]
+modId="neoforge"
+type="required"
+versionRange="[26.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.arcaneforge]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.4,)"
+ordering="NONE"
+side="BOTH"

@@ -1,9 +1,6 @@
 package com.Andres.arcaneforge;
 
-import com.Andres.arcaneforge.registry.ModBlocks;
-import com.Andres.arcaneforge.registry.ModCreativeTab;
-import com.Andres.arcaneforge.registry.ModEnchantments;
-import com.Andres.arcaneforge.registry.ModItems;
+import com.Andres.arcaneforge.registry.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.neoforged.bus.api.IEventBus;
@@ -19,5 +16,6 @@ public class ArcaneForge {
         ModItems.ITEMS.register(modEventBus);
         ModCreativeTab.CREATIVE_MODE_TABS.register(modEventBus);
         ModEnchantments.ENCHANTMENTS.register(modEventBus);
+        ModMenuTypes.MENUS.register(modEventBus);
     }
 }
