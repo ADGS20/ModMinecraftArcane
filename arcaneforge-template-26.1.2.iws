@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f670cab7-85c4-46c8-9541-5d0f45000684" name="Changes" comment="" />
+    <list default="true" id="f670cab7-85c4-46c8-9541-5d0f45000684" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" beforeDir="false" afterPath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/apocalyptic_judgment.json" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/data/arcaneforge/enchantment/apocalyptic_judgment.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run/options.txt" beforeDir="false" afterPath="$PROJECT_DIR$/run/options.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/arcaneforge/enchantment/apocalyptic_judgment.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/arcaneforge/enchantment/apocalyptic_judgment.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -132,7 +137,7 @@
       <workItem from="1780337077736" duration="109000" />
       <workItem from="1780337201137" duration="174000" />
       <workItem from="1780337400798" duration="388000" />
-      <workItem from="1780337826943" duration="2826000" />
+      <workItem from="1780337826943" duration="3615000" />
     </task>
     <servers />
   </component>

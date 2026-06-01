@@ -2,8 +2,8 @@
   "description": {
     "translate": "enchantment.arcaneforge.apocalyptic_judgment"
   },
-  "supported_items": "#minecraft:weapon_enchantable",
-  "primary_items": "#minecraft:weapon_enchantable",
+  "supported_items": "#minecraft:enchantable/weapon",
+  "primary_items": "#minecraft:enchantable/weapon",
   "weight": 1,
   "max_level": 3,
   "min_cost": {
