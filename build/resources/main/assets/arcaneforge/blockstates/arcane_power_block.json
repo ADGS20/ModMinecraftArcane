@@ -1,5 +1,5 @@
 {
-  "variants": {
-    "": { "model": "arcaneforge:block/arcane_power_block" }
-  }
+    "variants": {
+        "": { "model": "arcaneforge:block/arcane_power_block" }
+    }
 }

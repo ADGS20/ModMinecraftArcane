@@ -14,13 +14,11 @@ public class ModCreativeTab {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> ARCANEFORGE_TAB =
             CREATIVE_MODE_TABS.register("arcaneforge_tab", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.arcaneforge"))
-                    .icon(() -> new ItemStack(ModBlocks.ARCANE_FORGE_ITEM.get()))
+                    .icon(() -> new ItemStack(ModBlocks.ARCANE_FORGE.get().asItem()))
                     .displayItems((params, output) -> {
-                        output.accept(ModBlocks.ARCANE_FORGE_ITEM.get());
-                        output.accept(ModBlocks.ARCANE_PEDESTAL_ITEM.get());
-                        output.accept(ModBlocks.ARCANE_POWER_BLOCK_ITEM.get());
+                        output.accept(ModItems.ARCANE_FORGE_ITEM.get());
+                        output.accept(ModItems.ARCANE_PEDESTAL_ITEM.get());
                         output.accept(ModItems.BINDING_WAND.get());
-                        output.accept(ModItems.ARCANE_GUIDE_BOOK.get());
                     })
                     .build());
 }

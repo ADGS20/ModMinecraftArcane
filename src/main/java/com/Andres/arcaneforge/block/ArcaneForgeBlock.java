@@ -21,18 +21,13 @@ public class ArcaneForgeBlock extends BaseEntityBlock {
 
     public static final MapCodec<ArcaneForgeBlock> CODEC = simpleCodec(ArcaneForgeBlock::new);
 
-    public ArcaneForgeBlock(BlockBehaviour.Properties properties) {
+    public ArcaneForgeBlock(Properties properties) {
         super(properties);
     }
 
     @Override
-    public MapCodec<? extends ArcaneForgeBlock> codec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
-    }
-
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
     }
 
     @Nullable
@@ -41,26 +36,27 @@ public class ArcaneForgeBlock extends BaseEntityBlock {
         return new ArcaneForgeBlockEntity(pos, state);
     }
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
-            Level level, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, ModBlockEntities.ARCANE_FORGE_BE.get(),
-                ArcaneForgeBlockEntity::tick);
-    }
-
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level,
                                                BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide()) {
-            if (level.getBlockEntity(pos) instanceof ArcaneForgeBlockEntity be) {
-                if (player instanceof ServerPlayer serverPlayer) {
-                    // openMenu con Consumer<FriendlyByteBuf> escribe el BlockPos
-                    // para que el cliente pueda leerlo en ArcaneForgeMenu(FriendlyByteBuf)
-                    serverPlayer.openMenu(be, buf -> buf.writeBlockPos(pos));
-                }
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof ArcaneForgeBlockEntity forgeBE) {
+                player.openMenu(forgeBE, buf -> buf.writeBlockPos(pos));
             }
         }
         return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, ModBlockEntities.ARCANE_FORGE_BE.get(), ArcaneForgeBlockEntity::tick);
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+        // En 1.21/NeoForge 20.6 se usa MODEL para bloques animados por entidades de GeckoLib
+        return RenderShape.MODEL;
     }
 }

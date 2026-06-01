@@ -1,6 +1,5 @@
 {
-    "parent": "minecraft:block/cube_all",
-    "textures": {
-        "all": "arcaneforge:block/texture"
-    }
+  "variants": {
+    "": { "model": "arcaneforge:block/arcane_forge" }
+  }
 }
