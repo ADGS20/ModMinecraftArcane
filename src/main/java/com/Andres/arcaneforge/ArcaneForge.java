@@ -1,5 +1,6 @@
 package com.Andres.arcaneforge;
 
+import com.Andres.arcaneforge.network.ModNetwork;
 import com.Andres.arcaneforge.registry.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +15,10 @@ public class ArcaneForge {
     public ArcaneForge(IEventBus modEventBus) {
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
+        ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModCreativeTab.CREATIVE_MODE_TABS.register(modEventBus);
         ModEnchantments.ENCHANTMENTS.register(modEventBus);
         ModMenuTypes.MENUS.register(modEventBus);
+        ModNetwork.register(modEventBus);
     }
 }

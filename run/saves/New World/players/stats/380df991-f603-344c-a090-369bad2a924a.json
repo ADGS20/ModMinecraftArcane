@@ -1,10 +1,24 @@
 {
   "stats": {
     "minecraft:custom": {
-      "minecraft:time_since_rest": 490,
-      "minecraft:total_world_time": 245,
-      "minecraft:play_time": 245,
-      "minecraft:time_since_death": 245
+      "minecraft:time_since_rest": 18896,
+      "minecraft:walk_one_cm": 2899,
+      "minecraft:leave_game": 3,
+      "minecraft:play_time": 9448,
+      "minecraft:jump": 11,
+      "minecraft:time_since_death": 9448,
+      "minecraft:sprint_one_cm": 18,
+      "minecraft:total_world_time": 9448,
+      "minecraft:fly_one_cm": 9178,
+      "minecraft:walk_on_water_one_cm": 406,
+      "minecraft:crouch_one_cm": 8,
+      "minecraft:sneak_time": 25,
+      "minecraft:climb_one_cm": 12
+    },
+    "minecraft:used": {
+      "arcaneforge:arcane_forge": 7,
+      "arcaneforge:arcane_power_block": 5,
+      "arcaneforge:arcane_pedestal": 3
     }
   },
   "DataVersion": 4790

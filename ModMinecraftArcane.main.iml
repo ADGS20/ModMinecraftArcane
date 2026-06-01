@@ -20,9 +20,6 @@
   <component name="NewModuleRootManager">
     <output url="file://$MODULE_DIR$/build/classes/java/main" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/build/generated/sources/modMetadata">
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/sources/modMetadata" type="java-resource" />
-    </content>
     <content url="file://$MODULE_DIR$/src/generated" />
     <content url="file://$MODULE_DIR$/src/main">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />

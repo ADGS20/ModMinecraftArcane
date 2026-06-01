@@ -1,0 +1,8 @@
+/give @p
+/give @p arcaneforge:arcane_forge
+/give @p arcaneforge:arcane_power_block
+/give @p arcaneforge:arcane
+/give @p arcaneforge:arcane_forge
+/give @p arcaneforge:arcane_power_block
+/give @p arcaneforge:arcane_guide_book
+/give @p arcaneforge:arcane_pedestal

@@ -17,7 +17,7 @@ public class ModCreativeTab {
                     .title(Component.translatable("itemGroup.arcaneforge"))
                     .icon(() -> new ItemStack(Items.DIAMOND_SWORD))
                     .displayItems((params, output) -> {
-                        output.accept(new ItemStack(ModBlocks.ARCANE_PEDESTAL.get().asItem()));
+                        output.accept(ModBlocks.ARCANE_PEDESTAL_ITEM.get());
                         output.accept(ModItems.BINDING_WAND.get());
                         output.accept(ModItems.ARCANE_GUIDE_BOOK.get());
                     })
