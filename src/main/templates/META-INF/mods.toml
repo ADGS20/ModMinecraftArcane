@@ -1,0 +1,26 @@
+modLoader = "neoforge"
+loaderVersion = "[26.1,)"
+license = "MIT"
+
+[[dependencies.arcaneforge]]
+modId = "neoforge"
+type = "required"
+versionRange = "[26.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.arcaneforge]]
+modId = "minecraft"
+type = "required"
+versionRange = "[26.1.2,26.2)"
+ordering = "NONE"
+side = "BOTH"
+
+[[mods]]
+modId = "arcaneforge"
+version = "1.0.0"
+displayName = "Arcane Forge"
+description = '''
+Sistema avanzado de encantamiento con extracción de recursos desde cofres vinculados.
+Supera los límites de nivel vanilla y funciona en servidores multijugador.
+'''

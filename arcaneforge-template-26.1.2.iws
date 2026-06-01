@@ -5,27 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f670cab7-85c4-46c8-9541-5d0f45000684" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/templates/META-INF/mods.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" beforeDir="false" afterPath="$PROJECT_DIR$/arcaneforge-template-26.1.2.iws" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/clientLog4j2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/clientRunProgramArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/clientRunVmArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/dataLog4j2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/dataRunProgramArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/dataRunVmArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/gameTestServerLog4j2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/gameTestServerRunProgramArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/gameTestServerRunVmArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/minecraft_assets.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/serverLog4j2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/serverRunProgramArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/moddev/serverRunVmArgs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/4rvl6rlgeg6dpbbfhnblewfa4/esw1d69q5830kdy11kwujwhbe/configuration-cache-report.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/ec2x0zizmkfa9y9untmlmayrz/blhhl995m30qb48x05j0to078/configuration-cache-report.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/configuration-cache/kzgg0vejql6v00i2k8279io4/5hkv24u6hdz9dsyiik2an2o4h/configuration-cache-report.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/createMinecraftArtifacts/nfrt_artifact_manifest.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/createMinecraftArtifacts/nfrt_artifact_manifest.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/downloadAssets/nfrt_artifact_manifest.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/downloadAssets/nfrt_artifact_manifest.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/menu/ArcaneForgeScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Andres/arcaneforge/menu/ArcaneForgeScreen.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,6 +123,7 @@
       <workItem from="1780263171738" duration="2334000" />
       <workItem from="1780265531700" duration="581000" />
       <workItem from="1780266129672" duration="25000" />
+      <workItem from="1780334104179" duration="968000" />
     </task>
     <servers />
   </component>
