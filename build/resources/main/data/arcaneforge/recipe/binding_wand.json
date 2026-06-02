@@ -7,9 +7,9 @@
     "S  "
   ],
   "key": {
-    "E": {"item": "minecraft:ender_pearl"},
-    "A": {"item": "minecraft:amethyst_shard"},
-    "S": {"item": "minecraft:stick"}
+    "E": "minecraft:ender_pearl",
+    "A": "minecraft:amethyst_shard",
+    "S": "minecraft:stick"
   },
   "result": {
     "id": "arcaneforge:binding_wand",

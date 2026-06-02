@@ -1,39 +1,45 @@
 {
   "stats": {
-    "minecraft:dropped": {
-      "arcaneforge:arcane_forge": 1,
-      "arcaneforge:arcane_pedestal": 1,
-      "arcaneforge:binding_wand": 2
-    },
     "minecraft:mined": {
       "minecraft:deepslate_diamond_ore": 16
-    },
-    "minecraft:custom": {
-      "minecraft:time_since_rest": 49982,
-      "minecraft:walk_one_cm": 8527,
-      "minecraft:leave_game": 10,
-      "minecraft:play_time": 24991,
-      "minecraft:jump": 25,
-      "minecraft:time_since_death": 24991,
-      "minecraft:drop": 6,
-      "minecraft:sprint_one_cm": 18,
-      "minecraft:open_chest": 4,
-      "minecraft:fall_one_cm": 300,
-      "minecraft:total_world_time": 25446,
-      "minecraft:fly_one_cm": 10114,
-      "minecraft:walk_on_water_one_cm": 1718,
-      "minecraft:crouch_one_cm": 552,
-      "minecraft:sneak_time": 394,
-      "minecraft:climb_one_cm": 12
     },
     "minecraft:used": {
       "minecraft:sand": 1,
       "minecraft:diamond_pickaxe": 16,
       "minecraft:chest": 11,
-      "arcaneforge:arcane_forge": 10,
+      "arcaneforge:arcane_forge": 11,
+      "minecraft:crafting_table": 1,
       "arcaneforge:arcane_power_block": 7,
       "arcaneforge:arcane_pedestal": 6,
+      "arcaneforge:binding_wand": 7,
+      "minecraft:written_book": 2,
       "minecraft:deepslate_diamond_ore": 17
+    },
+    "minecraft:custom": {
+      "minecraft:interact_with_crafting_table": 1,
+      "minecraft:time_since_rest": 53820,
+      "minecraft:walk_one_cm": 9806,
+      "minecraft:leave_game": 11,
+      "minecraft:play_time": 26910,
+      "minecraft:jump": 30,
+      "minecraft:time_since_death": 26910,
+      "minecraft:drop": 9,
+      "minecraft:sprint_one_cm": 58,
+      "minecraft:open_chest": 5,
+      "minecraft:fall_one_cm": 300,
+      "minecraft:total_world_time": 27785,
+      "minecraft:fly_one_cm": 10436,
+      "minecraft:walk_on_water_one_cm": 2318,
+      "minecraft:crouch_one_cm": 740,
+      "minecraft:sneak_time": 465,
+      "minecraft:climb_one_cm": 12
+    },
+    "minecraft:dropped": {
+      "arcaneforge:arcane_forge": 1,
+      "arcaneforge:arcane_pedestal": 1,
+      "arcaneforge:arcane_guide_book": 1,
+      "minecraft:written_book": 2,
+      "arcaneforge:binding_wand": 2
     },
     "minecraft:picked_up": {
       "minecraft:deepslate_diamond_ore": 1975

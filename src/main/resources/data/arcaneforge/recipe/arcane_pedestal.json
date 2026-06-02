@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "AEA",
+    " O ",
+    "OOO"
+  ],
+  "key": {
+    "A": "minecraft:amethyst_shard",
+    "E": "minecraft:ender_eye",
+    "O": "minecraft:obsidian"
+  },
+  "result": {
+    "id": "arcaneforge:arcane_pedestal",
+    "count": 1
+  }
+}
