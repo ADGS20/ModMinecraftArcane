@@ -15,8 +15,15 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 /**
- * Guía de encantamientos arcanos — al hacer clic derecho entrega un
- * libro escrito con la guía completa en español/inglés.
+ * Guia de encantamientos arcanos. Clic derecho -> entrega un libro escrito.
+ *
+ * LEGIBILIDAD (el papel del libro es claro, casi blanco):
+ *  - Cuerpo SIN codigo de color = NEGRO puro = maximo contraste y legibilidad.
+ *    (El gris §8 se lee peor sobre papel; por eso aqui el cuerpo va en negro.)
+ *  - Titulos: §1 (azul oscuro) o §4 (rojo oscuro) en NEGRITA §l. Buen contraste.
+ *  - Lineas cortas (<=16 caracteres) para que NUNCA se corten ni se amontonen.
+ *  - Lineas en blanco entre bloques para que respire.
+ *  - Maximo ~10 lineas por pagina.
  */
 public class ArcaneGuideBook extends Item {
 
@@ -32,7 +39,7 @@ public class ArcaneGuideBook extends Item {
                 player.drop(book, false);
             }
         }
-        return InteractionResult.SUCCESS; // Corrected return statement
+        return InteractionResult.SUCCESS;
     }
 
     public static ItemStack createGuideBook() {
@@ -41,30 +48,41 @@ public class ArcaneGuideBook extends Item {
         Filterable<String> title = Filterable.passThrough("Guia Arcana");
 
         List<Filterable<Component>> pages = List.of(
-            // Página 1 — Portada
-            page("§6§l✦ ARCANE FORGE ✦§r\n\n§7Guía de Encantamientos\nArcanos\n\nBy Andres\n\n§9Todos los poderes del\nvacío, en tus manos."),
-            // Página 2 — Mesa Arcana
-            page("§6§lMesa de Enc. Arcana§r\nCrafting:\n2 Netherite + 4 Obsidiana\n+ 2 Manzana Dorada Enc.\n+ Nether Star + Bookshelf\n\n§fSin pedestal: §cMax 15\n§fCon Bloque de Poder:\n§aMax 255"),
-            // Página 3 — Bloque de Poder
-            page("§6§lBloque de Poder§r\nCrafting:\n4 End Crystal + 4 Netherite\n+ Nether Star (forma X)\n\n§fActiva la Mesa para:\n§a• Más encantamientos\n§a• Nivel hasta 255\n§a• Efectos especiales"),
-            // Página 4 — Varita
-            page("§6§lVarita de Vinculación§r\nCrafting:\n2 Ender Pearl + 1 Amethyst\n+ 2 Palos (diagonal)\n\nVincula cofres a la Mesa\na distancia para usar\nsus materiales como\ncombustible arcano."),
-            // Página 5 — Juicio Apocalíptico
-            page("§c§lJuicio Apocalíptico§r\n[Arco / Ballesta]\n\nCada flecha invoca rayos\nen el impacto + explosión.\nEl arco §fnunca se rompe§r\ncon este encantamiento.\n\nRequiere Pedestal."),
-            // Página 6 — Anzuelo Etéreo
-            page("§3§lAnzuelo Etéreo§r\n[Caña de Pescar]\n\nCada pesca da drops raros:\n§c5% Netherite\n§b15% Diamantes\n§a30% Esmeraldas\n§e50% Ender Pearls\n§665% Blaze Rods\n(acumula por nivel)"),
-            // Página 7 — Excavación de Almas
-            page("§a§lExcavación de Almas§r\n[Pala / Pico]\n\nAl minar obtienes XP\nextra directamente.\nProbabilidad de duplicar\ndrops basada en nivel."),
-            // Página 8 — Cataclismo Arcano
-            page("§c§lCataclismo Arcano§r\n[Mazo]\n\nKnockback en área\nal golpear + explosión\narcana pequeña.\nDaño escalable por nivel.\nEnvía enemigos volando."),
-            // Página 9 — Alas del Vacío
-            page("§b§lAlas del Vacío§r\n[Élitro / Pecho]\n\nSin daño de caída.\nVelocidad al volar.\nNivel 3: élitro nunca\nse rompe mientras vueles."),
-            // Página 10 — Trueno en Cadena
-            page("§e§lTrueno en Cadena§r\n[Tridente]\n\nAl impactar, rayos en\ncadena entre enemigos\ncercanos (hasta 8).\nMás nivel = más alcance\ny más cadenas."),
-            // Página 11 — Repulsión Arcana
-            page("§9§lRepulsión Arcana§r\n[Escudo]\n\nAl bloquear:\n• Knockback AOE\n• Refleja daño al atacante\n• Reduce daño recibido\n\nNivel 3: 30% reducción\nmás 30% reflejo."),
-            // Página 12 — Festín Eterno
-            page("§6§lFestín Eterno§r\n[Comida]\n\nHambre SIEMPRE llena.\nCada 30s: ruleta de\n10 efectos aleatorios!\n\n§aBuenos: Regen, Fuerza,\nVelocidad, Resistencia,\nJackpot total!\n§cMalos: Náusea, Debilidad")
+            // 1 — Portada
+            page("§1§lARCANE FORGE§r\n\n\nGuia de\nEncantamientos\nArcanos\n\n\nBy Andres"),
+
+            // 2 — Indice
+            page("§1§lINDICE§r\n\n3 - Mesa\n4 - Pedestal\n5 - B. de Poder\n6 - Varita\n7 - Encantar\n8 - Encantos"),
+
+            // 3 — Mesa Arcana
+            page("§1§lMESA ARCANA§r\n\nCrafteo:\n2 Netherite\n4 Obsidiana\n2 Manzana Dor.\n  Encantada\n1 Nether Star\n1 Estanteria"),
+
+            // 4 — Pedestal
+            page("§1§lPEDESTAL§r\n\nCrafteo:\n2 Amatista\n1 Ojo Ender\n4 Obsidiana\n\nPotencia la\nMesa al lado."),
+
+            // 5 — Bloque de Poder
+            page("§1§lB. DE PODER§r\n\nCrafteo:\n4 End Crystal\n4 Netherite\n1 Nether Star\n\nSube el nivel\nmaximo a 255."),
+
+            // 6 — Varita
+            page("§1§lVARITA§r\n\nCrafteo:\n2 Ender Pearl\n1 Amatista\n2 Palos\n\nClic en cofres\npara vincular."),
+
+            // 7 — Como encantar
+            page("§1§lENCANTAR§r\n\n1 Pon la Mesa\n2 Vincula\n  cofres\n3 Llena los\n  cofres\n4 Abre y elige"),
+
+            // 8 — Juicio Apocaliptico
+            page("§4§lJUICIO§r\n§4§lAPOCALIPTICO§r\n\nArco / Ballesta\n\nFlechas con\nrayos. El arco\nno se rompe.\n\nNecesita\nPedestal."),
+
+            // 9 — Anzuelo Etereo
+            page("§4§lANZUELO§r\n§4§lETEREO§r\n\nCana de Pescar\n\nPesca botin\nraro: diamante,\nesmeralda y\nmas. Sube por\nnivel."),
+
+            // 10 — Excavacion de Almas
+            page("§4§lEXCAVACION§r\n§4§lDE ALMAS§r\n\nPala / Pico\n\nMas XP al\nminar. Puede\nduplicar lo\nque sueltan\nlos bloques."),
+
+            // 11 — Cataclismo y Alas
+            page("§4§lCATACLISMO§r\nMazo. Empuje\nen area y\nexplosion.\n\n§4§lALAS VACIO§r\nElitro. Sin\ndano de caida\ny mas rapido."),
+
+            // 12 — Trueno, Repulsion, Festin
+            page("§4§lMAS ENCANTOS§r\n\nTrueno: rayos\nen cadena.\n(Tridente)\n\nRepulsion:\nempuje al\nbloquear.\n(Escudo)\n\nFestin: comida\ninfinita.")
         );
 
         WrittenBookContent content = new WrittenBookContent(title, "ArcaneForge", 0, pages, true);

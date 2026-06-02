@@ -14,5 +14,6 @@
   "result": {
     "id": "arcaneforge:arcane_power_block",
     "count": 1
-  }
+  },
+  "show_notification": true
 }

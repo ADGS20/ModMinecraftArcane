@@ -16,5 +16,6 @@
   "result": {
     "id": "arcaneforge:arcane_forge",
     "count": 1
-  }
+  },
+  "show_notification": true
 }

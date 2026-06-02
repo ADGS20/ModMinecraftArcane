@@ -1,0 +1,27 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "arcaneforge:arcane_power_block"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "arcaneforge:arcane_power_block"
+      }
+    },
+    "get_item": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": ["minecraft:end_crystal"] }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    ["has_the_recipe", "get_item"]
+  ]
+}

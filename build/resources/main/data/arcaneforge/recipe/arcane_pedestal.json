@@ -14,5 +14,6 @@
   "result": {
     "id": "arcaneforge:arcane_pedestal",
     "count": 1
-  }
+  },
+  "show_notification": true
 }
