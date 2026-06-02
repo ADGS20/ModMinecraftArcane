@@ -257,7 +257,9 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
                 enchHolder = optHolder.get();
                 currentLevel = currentEnchants.getLevel(enchHolder);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            ArcaneForge.LOGGER.error("Failed to retrieve enchantment holder for {}: {}", enchantmentId, e.getMessage());
+        }
 
         if (enchHolder == null) return -1;
 

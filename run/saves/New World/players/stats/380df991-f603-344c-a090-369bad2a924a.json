@@ -1,41 +1,42 @@
 {
   "stats": {
-    "minecraft:custom": {
-      "minecraft:time_since_rest": 40476,
-      "minecraft:walk_one_cm": 6574,
-      "minecraft:leave_game": 8,
-      "minecraft:play_time": 20238,
-      "minecraft:jump": 22,
-      "minecraft:time_since_death": 20238,
-      "minecraft:drop": 5,
-      "minecraft:sprint_one_cm": 18,
-      "minecraft:fall_one_cm": 300,
-      "minecraft:total_world_time": 20238,
-      "minecraft:fly_one_cm": 9769,
-      "minecraft:walk_on_water_one_cm": 1090,
-      "minecraft:crouch_one_cm": 56,
-      "minecraft:sneak_time": 110,
-      "minecraft:climb_one_cm": 12
-    },
-    "minecraft:picked_up": {
-      "minecraft:deepslate_diamond_ore": 1975
-    },
-    "minecraft:dropped": {
-      "arcaneforge:arcane_forge": 1,
-      "arcaneforge:arcane_pedestal": 1,
-      "arcaneforge:arcane_pedestal_item": 1,
-      "arcaneforge:arcane_forge_item": 1,
-      "arcaneforge:binding_wand": 1
-    },
     "minecraft:used": {
+      "minecraft:sand": 1,
       "minecraft:diamond_pickaxe": 16,
+      "minecraft:chest": 11,
       "arcaneforge:arcane_forge": 10,
       "arcaneforge:arcane_power_block": 7,
       "arcaneforge:arcane_pedestal": 6,
       "minecraft:deepslate_diamond_ore": 17
     },
+    "minecraft:dropped": {
+      "arcaneforge:arcane_forge": 1,
+      "arcaneforge:arcane_pedestal": 1,
+      "arcaneforge:binding_wand": 2
+    },
+    "minecraft:picked_up": {
+      "minecraft:deepslate_diamond_ore": 1975
+    },
     "minecraft:mined": {
       "minecraft:deepslate_diamond_ore": 16
+    },
+    "minecraft:custom": {
+      "minecraft:time_since_rest": 44218,
+      "minecraft:walk_one_cm": 7719,
+      "minecraft:leave_game": 9,
+      "minecraft:play_time": 22109,
+      "minecraft:jump": 24,
+      "minecraft:time_since_death": 22109,
+      "minecraft:drop": 6,
+      "minecraft:sprint_one_cm": 18,
+      "minecraft:open_chest": 4,
+      "minecraft:fall_one_cm": 300,
+      "minecraft:total_world_time": 22564,
+      "minecraft:fly_one_cm": 9769,
+      "minecraft:walk_on_water_one_cm": 1636,
+      "minecraft:crouch_one_cm": 225,
+      "minecraft:sneak_time": 274,
+      "minecraft:climb_one_cm": 12
     }
   },
   "DataVersion": 4790

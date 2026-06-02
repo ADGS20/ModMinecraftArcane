@@ -9,3 +9,4 @@
 /gamemode survival
 /gamemode creative
 /give @p arcaneforge:arcane_pedestal
+/give @p arcaneforge:binding_wand

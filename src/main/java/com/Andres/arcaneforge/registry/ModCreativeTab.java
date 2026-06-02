@@ -16,9 +16,11 @@ public class ModCreativeTab {
                     .title(Component.translatable("itemGroup.arcaneforge"))
                     .icon(() -> new ItemStack(ModBlocks.ARCANE_FORGE.get().asItem()))
                     .displayItems((params, output) -> {
-                        output.accept(ModItems.ARCANE_FORGE_ITEM.get());
-                        output.accept(ModItems.ARCANE_PEDESTAL_ITEM.get());
+                        output.accept(ModBlocks.ARCANE_FORGE_ITEM.get()); // Changed to BlockItem
+                        output.accept(ModBlocks.ARCANE_PEDESTAL_ITEM.get()); // Changed to BlockItem
                         output.accept(ModItems.BINDING_WAND.get());
+                        output.accept(ModItems.ARCANE_GUIDE_BOOK.get());
+                        output.accept(ModBlocks.ARCANE_POWER_BLOCK_ITEM.get());
                     })
                     .build());
 }
