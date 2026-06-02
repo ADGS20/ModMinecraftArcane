@@ -1,5 +1,31 @@
 {
   "stats": {
+    "minecraft:dropped": {
+      "arcaneforge:arcane_forge": 1,
+      "arcaneforge:arcane_pedestal": 1,
+      "arcaneforge:binding_wand": 2
+    },
+    "minecraft:mined": {
+      "minecraft:deepslate_diamond_ore": 16
+    },
+    "minecraft:custom": {
+      "minecraft:time_since_rest": 49982,
+      "minecraft:walk_one_cm": 8527,
+      "minecraft:leave_game": 10,
+      "minecraft:play_time": 24991,
+      "minecraft:jump": 25,
+      "minecraft:time_since_death": 24991,
+      "minecraft:drop": 6,
+      "minecraft:sprint_one_cm": 18,
+      "minecraft:open_chest": 4,
+      "minecraft:fall_one_cm": 300,
+      "minecraft:total_world_time": 25446,
+      "minecraft:fly_one_cm": 10114,
+      "minecraft:walk_on_water_one_cm": 1718,
+      "minecraft:crouch_one_cm": 552,
+      "minecraft:sneak_time": 394,
+      "minecraft:climb_one_cm": 12
+    },
     "minecraft:used": {
       "minecraft:sand": 1,
       "minecraft:diamond_pickaxe": 16,
@@ -9,34 +35,8 @@
       "arcaneforge:arcane_pedestal": 6,
       "minecraft:deepslate_diamond_ore": 17
     },
-    "minecraft:dropped": {
-      "arcaneforge:arcane_forge": 1,
-      "arcaneforge:arcane_pedestal": 1,
-      "arcaneforge:binding_wand": 2
-    },
     "minecraft:picked_up": {
       "minecraft:deepslate_diamond_ore": 1975
-    },
-    "minecraft:mined": {
-      "minecraft:deepslate_diamond_ore": 16
-    },
-    "minecraft:custom": {
-      "minecraft:time_since_rest": 44218,
-      "minecraft:walk_one_cm": 7719,
-      "minecraft:leave_game": 9,
-      "minecraft:play_time": 22109,
-      "minecraft:jump": 24,
-      "minecraft:time_since_death": 22109,
-      "minecraft:drop": 6,
-      "minecraft:sprint_one_cm": 18,
-      "minecraft:open_chest": 4,
-      "minecraft:fall_one_cm": 300,
-      "minecraft:total_world_time": 22564,
-      "minecraft:fly_one_cm": 9769,
-      "minecraft:walk_on_water_one_cm": 1636,
-      "minecraft:crouch_one_cm": 225,
-      "minecraft:sneak_time": 274,
-      "minecraft:climb_one_cm": 12
     }
   },
   "DataVersion": 4790
