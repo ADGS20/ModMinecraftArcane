@@ -1,22 +1,15 @@
 {
-  "description": {
-    "translate": "enchantment.arcaneforge.soul_harvest"
-  },
-  "supported_items": "#minecraft:enchantable/mining_loot",
-  "primary_items": "#minecraft:enchantable/mining_loot",
-  "weight": 2,
-  "max_level": 3,
-  "min_cost": {
-    "base": 15,
-    "per_level_above_first": 9
-  },
-  "max_cost": {
-    "base": 65,
-    "per_level_above_first": 9
-  },
-  "anvil_cost": 4,
-  "slots": [
-    "mainhand"
+  "description": {"translate": "enchantment.arcaneforge.soul_harvest"},
+  "supported_items": [
+    "minecraft:wooden_hoe", "minecraft:stone_hoe", "minecraft:iron_hoe",
+    "minecraft:golden_hoe", "minecraft:diamond_hoe", "minecraft:netherite_hoe"
   ],
-  "effects": {}
+  "primary_items": [
+    "minecraft:wooden_hoe", "minecraft:stone_hoe", "minecraft:iron_hoe",
+    "minecraft:golden_hoe", "minecraft:diamond_hoe", "minecraft:netherite_hoe"
+  ],
+  "weight": 2, "max_level": 3,
+  "min_cost": {"base": 15, "per_level_above_first": 9},
+  "max_cost": {"base": 65, "per_level_above_first": 9},
+  "anvil_cost": 4, "slots": ["mainhand"], "effects": {}
 }

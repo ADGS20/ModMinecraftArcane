@@ -1,0 +1,12 @@
+{
+  "description": {"translate": "enchantment.arcaneforge.arcane_mending"},
+  "supported_items": "#minecraft:enchantable/durability",
+  "primary_items": "#minecraft:enchantable/durability",
+  "weight": 2,
+  "max_level": 3,
+  "min_cost": {"base": 25, "per_level_above_first": 12},
+  "max_cost": {"base": 75, "per_level_above_first": 12},
+  "anvil_cost": 4,
+  "slots": ["mainhand", "offhand", "head", "chest", "legs", "feet"],
+  "effects": {}
+}

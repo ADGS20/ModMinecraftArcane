@@ -12,7 +12,21 @@ logoFile="logo.png"
 credits="Andres"
 authors="Andres"
 description='''
-Modificacion magica para la forja de armamentos.
+Arcane Forge anade una mesa de encantamientos magica que va mucho mas alla de lo
+que permite Minecraft normal.
+
+Vincula cofres con la Varita de Vinculo para alimentar la mesa con materiales, y
+usa el Pedestal Arcano para superar los limites: hasta nivel 15 sin pedestal y
+hasta 255 con el, gastando experiencia y recursos.
+
+Incluye 13 encantamientos unicos:
+- Juicio Apocaliptico, Cataclismo Arcano, Repulsion Arcana, Trueno Encadenado
+- Festin Eterno (comida infinita), Gancho Etereo, Lanzamiento Etereo
+- Excavacion de Almas, Cosecha de Almas (auto-cultivo que manda todo al cofre)
+- Alas del Vacio, Caminata Eterea, Proteccion del Vacio (totem con 3 cargas)
+- Fundicion Arcana (mina menas ya fundidas) y Reparacion Arcana (repara con tu XP)
+
+Un Libro Guia integrado explica cada encantamiento y como usarlos.
 '''
 
 [[dependencies.arcaneforge]]

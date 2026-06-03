@@ -82,6 +82,19 @@ public class BindingWand extends Item {
 
         // ── Clic derecho en ARCANE FORGE → transferir todos los cofres ──
         if (be instanceof ArcaneForgeBlockEntity forge) {
+            // SHIFT + clic derecho en la mesa → marcarla como "mi mesa de cosecha".
+            // Asi la Cosecha de Almas sabe a que cofres mandar lo recolectado.
+            if (player.isShiftKeyDown()) {
+                CompoundTag pdata = player.getPersistentData();
+                pdata.putInt("arcaneforge_harvest_x", pos.getX());
+                pdata.putInt("arcaneforge_harvest_y", pos.getY());
+                pdata.putInt("arcaneforge_harvest_z", pos.getZ());
+                player.sendSystemMessage(Component.literal(
+                        "§b✔ Mesa de cosecha marcada: " + formatPos(pos)
+                        + ". La Cosecha de Almas enviara aqui lo recolectado."));
+                return InteractionResult.CONSUME;
+            }
+
             List<BlockPos> stored = getStoredChests(wand);
             if (stored.isEmpty()) {
                 player.sendSystemMessage(

@@ -83,6 +83,18 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
     protected void init() {
         super.init();
 
+        // --- GUI ADAPTABLE A CUALQUIER PANTALLA ---
+        // Centra la ventana completa (mesa vanilla + panel del mod) y evita que
+        // se salga por los bordes en pantallas estrechas o con GUI Scale alto.
+        // leftPos/topPos son los campos que usa AbstractContainerScreen para dibujar.
+        int margin = 4;
+        this.leftPos = Math.max(margin, (this.width - TOTAL_W) / 2);
+        // Si aun asi no cabe a lo ancho, lo pegamos al borde izquierdo con margen.
+        if (this.leftPos + TOTAL_W > this.width - margin) {
+            this.leftPos = Math.max(margin, this.width - TOTAL_W - margin);
+        }
+        this.topPos = Math.max(margin, (this.height - VANILLA_H) / 2);
+
         int px   = getLeftPos() + VANILLA_W + GAP;
         int py   = getTopPos();
         int listY = py + 38;
@@ -155,7 +167,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         int currentLevel = opt.currentLevel();
 
         boolean isCreative = Minecraft.getInstance().player != null && Minecraft.getInstance().player.isCreative();
-        int maxLimit = hasActivePedestal ? 1000 : 255;
+        int maxLimit = hasActivePedestal ? 255 : 15;
 
         if (delta == 9999) {
             if (isCreative) {
@@ -210,7 +222,20 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 EnchantOption opt = enchants.get(idx);
                 String prefix = (idx == selectedIndex) ? "► " : "  ";
                 String warn   = opt.isCompatible() ? "" : "⚠ ";
-                btnRows[i].setMessage(Component.literal(prefix + warn + opt.displayName()));
+                // La estrella dorada ✦ marca SOLO los encantamientos del mod que son
+                // naturales para esta herramienta. Los que solo sirven por el pedestal
+                // se muestran normales (sin estrella) aunque sean aplicables.
+                boolean esDelMod = opt.id().getNamespace().equals(ArcaneForge.MODID);
+                String label;
+                if (esDelMod && opt.naturalCompat()) {
+                    label = prefix + "§6✦ " + warn + opt.displayName() + "§r";
+                } else if (esDelMod) {
+                    String color = opt.isCompatible() ? "§7" : "§8";  // gris claro / gris
+                    label = prefix + color + warn + opt.displayName() + "§r";
+                } else {
+                    label = prefix + warn + opt.displayName();
+                }
+                btnRows[i].setMessage(Component.literal(label));
                 btnRows[i].visible = true;
                 btnRows[i].active  = true;
             } else {
@@ -271,7 +296,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 try {
                     if (!h.isBound()) return;
 
-                    net.minecraft.resources.Identifier id = h.key().identifier();
+                    Identifier id = h.key().identifier();
                     boolean isOurTotemEnchant = id.getNamespace().equals(ArcaneForge.MODID) && id.getPath().equals("void_protection");
                     boolean isApocalyptic     = id.getNamespace().equals(ArcaneForge.MODID) && id.getPath().equals("apocalyptic_judgment");
 
@@ -287,18 +312,36 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                     if (isApocalyptic) finalCompat = hasActivePedestal;
 
                     int currentLevel = currentEnchants.getLevel(h);
+                    // naturalCompat = compatible de forma "natural" (su herramienta real),
+                    // sin contar el empujon del pedestal. La estrella dorada solo se pone
+                    // en estos. El totem y el apocaliptico-en-arco cuentan como naturales.
+                    boolean naturalCompat = vanillaCompat
+                            || (isTotem && isOurTotemEnchant)
+                            || (isApocalyptic && isRanged);
                     enchants.add(new EnchantOption(
                             id,
                             Enchantment.getFullname(h, 1).getString(),
-                            h.value().getMaxLevel(), h, finalCompat, currentLevel));
+                            h.value().getMaxLevel(), h, finalCompat, currentLevel, naturalCompat));
                 } catch (Exception e) {}
             });
 
             enchants.sort((a, b) -> {
                 boolean aCustom = a.id().getNamespace().equals(ArcaneForge.MODID);
                 boolean bCustom = b.id().getNamespace().equals(ArcaneForge.MODID);
+                // 1) Los del MOD NATURALES para esta herramienta (estrella dorada)
+                //    van primero del todo.
+                boolean aTop = aCustom && a.naturalCompat();
+                boolean bTop = bCustom && b.naturalCompat();
+                if (aTop != bTop) return aTop ? -1 : 1;
+                // 2) Luego el resto de los del mod que sirven por el pedestal.
+                boolean aMid = aCustom && a.isCompatible();
+                boolean bMid = bCustom && b.isCompatible();
+                if (aMid != bMid) return aMid ? -1 : 1;
+                // 3) Despues, el resto de los del mod (aunque no sean compatibles).
                 if (aCustom != bCustom) return aCustom ? -1 : 1;
+                // 4) Dentro del mismo grupo, los compatibles antes que los que no.
                 if (a.isCompatible() != b.isCompatible()) return a.isCompatible() ? -1 : 1;
+                // 5) Y por nombre, para un orden estable.
                 return a.displayName().compareToIgnoreCase(b.displayName());
             });
         } catch (Exception e) {
@@ -387,9 +430,9 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
 
             // ⚙️ SECCIÓN DINÁMICA DE PEDESTAL REPARADA
             if (hasActivePedestal) {
-                graphics.text(this.font, "✓ Pedestal Activo (Max 1000)", px + 8, yOff, 0xFF55FFFF);
+                graphics.text(this.font, "✓ Pedestal Activo (Max 255)", px + 8, yOff, 0xFF55FFFF);
             } else {
-                graphics.text(this.font, "✗ Sin Pedestal (Max 255)", px + 8, yOff, 0xFFFF5555);
+                graphics.text(this.font, "✗ Sin Pedestal (Max 15)", px + 8, yOff, 0xFFFF5555);
             }
             yOff += 9;
 
@@ -447,5 +490,5 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         return n < 1000 ? String.valueOf(n) : String.format("%,d", n);
     }
 
-    private record EnchantOption(Identifier id, String displayName, int vanillaMaxLevel, Holder<Enchantment> holder, boolean isCompatible, int currentLevel) {}
+    private record EnchantOption(Identifier id, String displayName, int vanillaMaxLevel, Holder<Enchantment> holder, boolean isCompatible, int currentLevel, boolean naturalCompat) {}
 }

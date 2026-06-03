@@ -1,0 +1,45 @@
+{
+  "arcaneforge:recipes/arcane_power_block": {
+    "criteria": {
+      "has_the_recipe": "2026-06-03 21:08:39 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/crafting_table": {
+    "criteria": {
+      "unlock_right_away": "2026-06-03 21:08:39 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:recipes/arcane_guide_book": {
+    "criteria": {
+      "has_the_recipe": "2026-06-03 21:08:39 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:recipes/binding_wand": {
+    "criteria": {
+      "has_the_recipe": "2026-06-03 21:08:39 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:recipes/arcane_forge": {
+    "criteria": {
+      "has_the_recipe": "2026-06-03 21:08:39 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:recipes/arcane_pedestal": {
+    "criteria": {
+      "has_the_recipe": "2026-06-03 21:08:39 +0200"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:plains": "2026-06-03 21:08:40 +0200"
+    },
+    "done": false
+  },
+  "DataVersion": 4790
+}

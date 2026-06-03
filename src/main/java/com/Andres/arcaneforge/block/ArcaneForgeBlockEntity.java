@@ -180,6 +180,41 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     public List<BlockPos> getLinkedChests() { return linkedChests; }
+
+    /**
+     * Intenta meter un ItemStack en los cofres vinculados a esta mesa.
+     * Devuelve lo que NO cupo (vacio si entro todo). Lo usa la Cosecha de Almas
+     * para mandar lo recolectado al cofre del jugador.
+     */
+    public ItemStack insertIntoLinkedChests(ItemStack toInsert) {
+        if (level == null || toInsert.isEmpty()) return toInsert;
+        ItemStack remaining = toInsert.copy();
+
+        for (BlockPos chestPos : linkedChests) {
+            if (remaining.isEmpty()) break;
+            if (!level.isLoaded(chestPos)) continue;
+            BlockEntity be = level.getBlockEntity(chestPos);
+            if (!(be instanceof ChestBlockEntity chest)) continue;
+
+            for (int i = 0; i < chest.getContainerSize() && !remaining.isEmpty(); i++) {
+                ItemStack slot = chest.getItem(i);
+                if (slot.isEmpty()) {
+                    chest.setItem(i, remaining.copy());
+                    remaining.setCount(0);
+                    chest.setChanged();
+                } else if (ItemStack.isSameItemSameComponents(slot, remaining)) {
+                    int space = slot.getMaxStackSize() - slot.getCount();
+                    if (space > 0) {
+                        int moved = Math.min(space, remaining.getCount());
+                        slot.grow(moved);
+                        remaining.shrink(moved);
+                        chest.setChanged();
+                    }
+                }
+            }
+        }
+        return remaining;
+    }
     public int getLinkedChestCount() { return linkedChests.size(); }
 
     public int countNearbyBookshelves() {
@@ -355,7 +390,10 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         if (enchHolder == null) return -1;
 
         boolean hasPedestal = ArcanePedestalBlock.hasActivePedestalNearby(level, worldPosition);
-        int maxAllowedLevel = hasPedestal ? 1000 : 255;
+        // REBALANCE: sin pedestal el tope es 15 (estilo vanilla). Para superar 15
+        // hace falta un Pedestal activo, que sube el maximo hasta 255. El coste de
+        // recursos y XP sube con el nivel, asi que llegar a 255 es caro a proposito.
+        int maxAllowedLevel = hasPedestal ? 255 : 15;
 
         int finalLevel = currentLevel + targetLevel;
         if (finalLevel > maxAllowedLevel) {

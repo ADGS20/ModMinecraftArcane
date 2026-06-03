@@ -1,7 +1,6 @@
 package com.Andres.arcaneforge.network;
 
 import com.Andres.arcaneforge.ArcaneForge;
-import com.Andres.arcaneforge.block.ArcaneForgeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -31,8 +30,8 @@ public record S2CSyncPacket(
         int fuelLegendary   // Tier 5 (manzana dorada, tridente…)      valor >= 750
 ) implements CustomPacketPayload {
 
-    public static final CustomPacketPayload.Type<S2CSyncPacket> TYPE =
-            new CustomPacketPayload.Type<>(
+    public static final Type<S2CSyncPacket> TYPE =
+            new Type<>(
                     Identifier.fromNamespaceAndPath(ArcaneForge.MODID, "sync"));
 
     // ── Serialización ────────────────────────────────────────────────────────
@@ -73,29 +72,14 @@ public record S2CSyncPacket(
     // ── Manejo en el cliente ─────────────────────────────────────────────────
 
     public static void handle(S2CSyncPacket pkt, IPayloadContext ctx) {
-        ctx.enqueueWork(() -> {
-            var mc = net.minecraft.client.Minecraft.getInstance();
-            if (mc.level == null || mc.player == null) return;
-
-            var be = mc.level.getBlockEntity(pkt.forgePos());
-            if (!(be instanceof ArcaneForgeBlockEntity forge)) return;
-
-            // Sincronizar datos básicos
-            forge.setClientSyncData(
-                    pkt.linkedChests(),
-                    pkt.bookshelves(),
-                    pkt.magicFuel(),
-                    pkt.hasActivePedestal()
-            );
-
-            // Sincronizar breakdown por tier
-            forge.setClientFuelBreakdown(
-                    pkt.fuelCommon(),
-                    pkt.fuelUncommon(),
-                    pkt.fuelRare(),
-                    pkt.fuelEpic(),
-                    pkt.fuelLegendary()
-            );
-        });
+        // IMPORTANTE PARA SERVIDOR DEDICADO:
+        // Este paquete se registra con playToClient, asi que NeoForge solo lo
+        // entrega en el cliente. Ademas, el codigo que toca Minecraft.getInstance
+        // vive en una clase aparte (ClientForgeSync) que el servidor nunca carga.
+        // Como precaucion extra, comprobamos que el flujo sea hacia el cliente.
+        if (ctx.flow() == net.minecraft.network.protocol.PacketFlow.CLIENTBOUND) {
+            ctx.enqueueWork(() ->
+                    com.Andres.arcaneforge.client.ClientForgeSync.apply(pkt));
+        }
     }
 }

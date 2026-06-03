@@ -1,29 +1,26 @@
 {
-  "itemGroup.arcaneforge": "Forja Arcana",
-
-  "block.arcaneforge.arcane_forge": "Forja Arcana",
-  "block.arcaneforge.arcane_pedestal": "Pedestal Arcano",
-  "block.arcaneforge.arcane_power_block": "Bloque de Poder Arcano",
-
-  "item.arcaneforge.arcane_forge": "Forja Arcana",
-  "item.arcaneforge.arcane_pedestal": "Pedestal Arcano",
-  "item.arcaneforge.arcane_power_block": "Bloque de Poder Arcano",
-
-  "item.arcaneforge.binding_wand": "Vara de Vinculación",
-  "item.arcaneforge.arcane_guide_book": "Libro Guía Arcano",
-
-  "enchantment.arcaneforge.apocalyptic_judgment": "Juicio Apocalíptico",
-  "enchantment.arcaneforge.arcane_cataclysm": "Cataclismo Arcano",
-  "enchantment.arcaneforge.arcane_repulse": "Repulsión Arcana",
-  "enchantment.arcaneforge.chain_thunder": "Trueno Encadenado",
-  "enchantment.arcaneforge.eternal_feast": "Festín Eterno",
-  "enchantment.arcaneforge.ethereal_hook": "Gancho Etéreo",
-  "enchantment.arcaneforge.ethereal_launch": "Lanzamiento Etéreo",
-  "enchantment.arcaneforge.ethereal_walk": "Caminata Etérea",
-  "enchantment.arcaneforge.soul_delve": "Excavación de Almas",
-  "enchantment.arcaneforge.soul_harvest": "Cosecha de Almas",
-  "enchantment.arcaneforge.void_protection": "Protección del Vacío",
-  "enchantment.arcaneforge.void_wings": "Alas del Vacío",
-
-  "arcaneforge.configuration.title": "Configuración de Arcane Forge"
+    "itemGroup.arcaneforge": "Forja Arcana",
+    "block.arcaneforge.arcane_forge": "Forja Arcana",
+    "block.arcaneforge.arcane_pedestal": "Pedestal Arcano",
+    "block.arcaneforge.arcane_power_block": "Bloque de Poder Arcano",
+    "item.arcaneforge.arcane_forge": "Forja Arcana",
+    "item.arcaneforge.arcane_pedestal": "Pedestal Arcano",
+    "item.arcaneforge.arcane_power_block": "Bloque de Poder Arcano",
+    "item.arcaneforge.binding_wand": "Vara de Vinculación",
+    "item.arcaneforge.arcane_guide_book": "Libro Guía Arcano",
+    "enchantment.arcaneforge.apocalyptic_judgment": "Juicio Apocalíptico",
+    "enchantment.arcaneforge.arcane_cataclysm": "Cataclismo Arcano",
+    "enchantment.arcaneforge.arcane_repulse": "Repulsión Arcana",
+    "enchantment.arcaneforge.chain_thunder": "Trueno Encadenado",
+    "enchantment.arcaneforge.eternal_feast": "Festín Eterno",
+    "enchantment.arcaneforge.ethereal_hook": "Gancho Etéreo",
+    "enchantment.arcaneforge.ethereal_launch": "Lanzamiento Etéreo",
+    "enchantment.arcaneforge.ethereal_walk": "Caminata Etérea",
+    "enchantment.arcaneforge.soul_delve": "Excavación de Almas",
+    "enchantment.arcaneforge.soul_harvest": "Cosecha de Almas",
+    "enchantment.arcaneforge.void_protection": "Protección del Vacío",
+    "enchantment.arcaneforge.void_wings": "Alas del Vacío",
+    "arcaneforge.configuration.title": "Configuración de Arcane Forge",
+    "enchantment.arcaneforge.arcane_smelting": "Fundición Arcana",
+    "enchantment.arcaneforge.arcane_mending": "Reparación Arcana"
 }

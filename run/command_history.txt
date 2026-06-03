@@ -1,7 +1,3 @@
-/give @p
-/give @p arcaneforge:arcane_forge
-/give @p arcaneforge:arcane_power_block
-/give @p arcaneforge:arcane
 /give @p arcaneforge:arcane_forge
 /give @p arcaneforge:arcane_power_block
 /give @p arcaneforge:arcane_guide_book
@@ -14,4 +10,41 @@
 /gamemode creative
 /gamemode survival
 /recipe give @s *
+/gamemode creative
+/tick rate 9999
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/gamemode creative
+/gamemode survival
+/tick rate 9999
+/gamemode survival
+/gamemode creative
+/gamemode survival
 /gamemode creative

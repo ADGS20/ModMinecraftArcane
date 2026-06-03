@@ -1,17 +1,13 @@
 {
     "itemGroup.arcaneforge": "Arcane Forge",
-
     "block.arcaneforge.arcane_forge": "Arcane Forge",
     "block.arcaneforge.arcane_pedestal": "Arcane Pedestal",
     "block.arcaneforge.arcane_power_block": "Arcane Power Block",
-
     "item.arcaneforge.arcane_forge": "Arcane Forge",
     "item.arcaneforge.arcane_pedestal": "Arcane Pedestal",
     "item.arcaneforge.arcane_power_block": "Arcane Power Block",
-
     "item.arcaneforge.binding_wand": "Binding Wand",
     "item.arcaneforge.arcane_guide_book": "Arcane Guide Book",
-
     "enchantment.arcaneforge.apocalyptic_judgment": "Apocalyptic Judgment",
     "enchantment.arcaneforge.arcane_cataclysm": "Arcane Cataclysm",
     "enchantment.arcaneforge.arcane_repulse": "Arcane Repulse",
@@ -23,5 +19,7 @@
     "enchantment.arcaneforge.soul_delve": "Soul Delve",
     "enchantment.arcaneforge.soul_harvest": "Soul Harvest",
     "enchantment.arcaneforge.void_protection": "Void Protection",
-    "enchantment.arcaneforge.void_wings": "Void Wings"
+    "enchantment.arcaneforge.void_wings": "Void Wings",
+    "enchantment.arcaneforge.arcane_smelting": "Arcane Smelting",
+    "enchantment.arcaneforge.arcane_mending": "Arcane Mending"
 }
