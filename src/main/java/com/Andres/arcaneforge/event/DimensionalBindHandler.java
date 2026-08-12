@@ -59,6 +59,16 @@ public class DimensionalBindHandler {
             buf.writeVarInt(currentPage);
         });
 
+        // El sync automatico de "menu recien abierto" tampoco es confiable en
+        // este build (igual que el broadcast ambiental de cambios, que ya
+        // necesito empujar a mano en changePage()/syncStorageToClient()). Sin
+        // esto, el cliente se queda mostrando el ultimo valor que tenia
+        // cacheado de una sesion anterior en vez del contenido recien cargado
+        // desde el NBT de la bolsa.
+        if (player.containerMenu instanceof DimensionalBagMenu bagMenu) {
+            bagMenu.syncStorageToClient(player);
+        }
+
         event.setCanceled(true);
     }
 }
