@@ -15,10 +15,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +101,47 @@ public class ArcaneMagnetHandler {
 
         } catch (Exception e) {
             ArcaneForge.LOGGER.debug("ArcaneMagnet mob drop error: {}", e.getMessage());
+        }
+    }
+
+    // ── Nivel 3: recoge items sueltos del suelo cercano ────────────────────────
+
+    private static final double VACUUM_RADIUS = 8.0;
+
+    @SubscribeEvent
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        try {
+            if (!(event.getEntity() instanceof ServerPlayer sp)) return;
+            if (sp.tickCount % 10 != 0) return; // cada 0.5s, evita escanear cada tick
+
+            int magnetLevel = getMagnetLevel(sp);
+            if (magnetLevel < 3) return;
+
+            ItemStack bag = findBag(sp);
+            if (bag.isEmpty()) return;
+
+            AABB area = sp.getBoundingBox().inflate(VACUUM_RADIUS);
+            List<ItemEntity> nearby = sp.level().getEntitiesOfClass(ItemEntity.class, area, ItemEntity::isAlive);
+            if (nearby.isEmpty()) return;
+
+            BagContainer container = new BagContainer(bag, 0, sp.level().registryAccess());
+            boolean changed = false;
+
+            for (ItemEntity ie : nearby) {
+                ItemStack stack = ie.getItem();
+                boolean fullyAbsorbed = tryInsert(container, stack);
+                if (fullyAbsorbed) {
+                    ie.discard();
+                    changed = true;
+                } else if (stack.getCount() != ie.getItem().getCount()) {
+                    ie.setItem(stack);
+                    changed = true;
+                }
+            }
+            if (changed) container.saveNow();
+
+        } catch (Exception e) {
+            ArcaneForge.LOGGER.debug("ArcaneMagnet ground vacuum error: {}", e.getMessage());
         }
     }
 

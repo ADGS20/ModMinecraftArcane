@@ -1,9 +1,6 @@
 package com.Andres.arcaneforge.menu;
 
-import com.Andres.arcaneforge.network.C2SBagPagePacket;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -23,19 +20,12 @@ public class DimensionalBagScreen extends AbstractContainerScreen<DimensionalBag
     private static final int STORE_Y = 18;
     private static final int INV_Y = 18 + 6 * 18 + 13; // 139
 
-    // Pestañas
-    private static final int TAB_W = 26;
-    private static final int TAB_H = 26;
-    private static final int TAB_GAP = 4;
-    private static final int TAB_PANEL_W = TAB_W + 8;
-
     // Paleta estilo GUI vanilla
     private static final int C_PANEL      = 0xFFC6C6C6; // gris claro del fondo
     private static final int C_LIGHT      = 0xFFFFFFFF; // bisel claro
     private static final int C_DARK       = 0xFF555555; // bisel oscuro
     private static final int C_SLOT       = 0xFF8B8B8B; // borde de slot
     private static final int C_SLOT_HOLE  = 0xFF373737; // hueco del slot
-    private static final int C_TITLE      = 0xFF3E2A66; // texto titulo (morado)
 
     public DimensionalBagScreen(DimensionalBagMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);
@@ -63,25 +53,7 @@ public class DimensionalBagScreen extends AbstractContainerScreen<DimensionalBag
         this.inventoryLabelX = STORE_X;
         this.inventoryLabelY = INV_Y - 12;
 
-        int x = getLeftPos();
-        int y = getTopPos();
-
         // Sin botones de pagina: el saco es siempre 1 pagina de almacenamiento masivo.
-    }
-
-    private void sendPage(int dir) {
-        var conn = Minecraft.getInstance().getConnection();
-        if (conn != null) {
-            conn.send(new C2SBagPagePacket(dir));
-        }
-        // Actualizar el numero mostrado al instante en el cliente (mismo calculo
-        // que el servidor), sin esperar respuesta. Asi el texto "X/Y" es correcto.
-        int total = getMenu().getTotalPages();
-        if (total > 1) {
-            int cur = getMenu().getCurrentPage();
-            int next = (((cur + dir) % total) + total) % total;
-            getMenu().setCurrentPageClient(next);
-        }
     }
 
     // Dibuja un rectangulo con bisel estilo vanilla (claro arriba/izq, oscuro abajo/der).
@@ -119,6 +91,12 @@ public class DimensionalBagScreen extends AbstractContainerScreen<DimensionalBag
                 graphics.fill(sx, sy, sx + 16, sy + 16, C_SLOT_HOLE);
             }
         }
+    }
+
+    @Override
+    public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        extractBackground(graphics, partialTick, mouseX, mouseY);
+        super.extractContents(graphics, mouseX, mouseY, partialTick);
     }
 
     @Override

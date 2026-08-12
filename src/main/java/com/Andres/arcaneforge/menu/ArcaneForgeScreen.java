@@ -455,6 +455,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
 
     @Override
     public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        extractBackground(graphics, partialTick, mouseX, mouseY);
         super.extractContents(graphics, mouseX, mouseY, partialTick);
     }
 
