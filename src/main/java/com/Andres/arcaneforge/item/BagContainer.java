@@ -57,6 +57,12 @@ public class BagContainer extends SimpleContainer {
                 Tag itemTag = entry.get("item");
                 if (itemTag != null) {
                     ItemStack stack = ItemStack.CODEC.parse(ops, itemTag).result().orElse(ItemStack.EMPTY);
+                    if (!stack.isEmpty()) {
+                        // La cantidad real se guarda aparte (ver save()); ItemStack.CODEC
+                        // decodifica "count" siempre con su propio limite de 1..99.
+                        int realCount = entry.getInt("realCount").orElse(stack.getCount());
+                        stack.setCount(Math.max(1, realCount));
+                    }
                     this.getItems().set(globalIndex - pageOffset, stack);
                 }
             }
@@ -117,11 +123,17 @@ public class BagContainer extends SimpleContainer {
         for (int i = 0; i < PAGE_SIZE; i++) {
             ItemStack stack = this.getItem(i);
             if (!stack.isEmpty()) {
-                Tag itemTag = ItemStack.CODEC.encodeStart(ops, stack).result().orElse(null);
+                // IMPORTANTE: ItemStack.CODEC codifica "count" con ExtraCodecs.intRange(1, 99)
+                // (confirmado por bytecode). Cualquier cantidad fuera de ese rango falla al
+                // codificar y el item se pierde en silencio. Para permitir hasta MAX_STACK,
+                // codificamos el stack con cantidad 1 (identidad/componentes) y guardamos la
+                // cantidad real aparte, en un campo NBT propio sin limite.
+                Tag itemTag = ItemStack.CODEC.encodeStart(ops, stack.copyWithCount(1)).result().orElse(null);
                 if (itemTag != null) {
                     CompoundTag entry = new CompoundTag();
                     entry.putInt("s", pageOffset + i);
                     entry.put("item", itemTag);
+                    entry.putInt("realCount", stack.getCount());
                     newList.add(entry);
                 }
             }
