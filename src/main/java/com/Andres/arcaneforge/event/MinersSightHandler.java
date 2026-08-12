@@ -4,15 +4,21 @@ import com.Andres.arcaneforge.ArcaneForge;
 import com.Andres.arcaneforge.miners.MinersSightLogic;
 import com.Andres.arcaneforge.miners.OreFilter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -28,12 +34,15 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * VISION MINERA — mientras esta activada, resalta a traves de las paredes
- * (con el mismo mecanismo que el efecto Brillo de la flecha espectral: una
- * entidad marcador con Brillo permanente, coloreada via equipo de
- * scoreboard) los bloques de mineral cercanos que coincidan con el filtro
- * elegido en el casco. Cuesta experiencia cada ciclo de escaneo mientras
- * este activa; si el jugador se queda sin XP, se apaga sola.
+ * VISION MINERA — mientras esta activada, resalta a traves de las paredes los
+ * bloques de mineral cercanos que coincidan con el filtro elegido en el
+ * casco. Cada mineral se marca con una entidad "block display" (la misma que
+ * usa /summon minecraft:block_display) puesta exactamente encima del bloque
+ * real, mostrando el CUBO tal cual en vez de una silueta rara — y con
+ * Entity.setGlowingTag(true) se ve el contorno a traves de las paredes,
+ * coloreado via equipo de scoreboard segun el mineral. Cuesta experiencia
+ * cada ciclo de escaneo mientras esta activa; si el jugador se queda sin XP,
+ * se apaga sola.
  */
 @EventBusSubscriber(modid = ArcaneForge.MODID)
 public class MinersSightHandler {
@@ -42,7 +51,7 @@ public class MinersSightHandler {
     private static final int MAX_MARKERS = 48;
     private static final String TEAM_PREFIX = "arcaneforge_ore_";
 
-    private static final Map<UUID, List<ArmorStand>> MARKERS = new HashMap<>();
+    private static final Map<UUID, List<Display.BlockDisplay>> MARKERS = new HashMap<>();
     /** Solo para no repetir el mismo log [MINERS-TICK] cada 2s sin razon. */
     private static final Map<UUID, Boolean> LAST_APPLICABLE = new HashMap<>();
 
@@ -119,20 +128,15 @@ public class MinersSightHandler {
         clearMarkers(sp);
 
         Scoreboard scoreboard = serverLevel.getServer().getScoreboard();
-        List<ArmorStand> newMarkers = new ArrayList<>();
+        List<Display.BlockDisplay> newMarkers = new ArrayList<>();
         for (BlockPos pos : matches) {
-            OreFilter classified = OreFilter.classify(serverLevel.getBlockState(pos).getBlock());
+            BlockState state = serverLevel.getBlockState(pos);
+            OreFilter classified = OreFilter.classify(state.getBlock());
             if (classified == null) continue;
             PlayerTeam team = teamFor(scoreboard, classified);
 
-            ArmorStand marker = new ArmorStand(serverLevel, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-            marker.setInvisible(true);
-            marker.setNoGravity(true);
-            marker.setInvulnerable(true);
-            marker.setSilent(true);
-            marker.setNoBasePlate(true);
-            marker.addEffect(new MobEffectInstance(MobEffects.GLOWING,
-                    MobEffectInstance.INFINITE_DURATION, 0, false, false, false));
+            Display.BlockDisplay marker = createBlockMarker(serverLevel, pos, state);
+            if (marker == null) continue;
 
             serverLevel.addFreshEntity(marker);
             scoreboard.addPlayerToTeam(marker.getScoreboardName(), team);
@@ -140,6 +144,34 @@ public class MinersSightHandler {
         }
         if (!newMarkers.isEmpty()) MARKERS.put(sp.getUUID(), newMarkers);
         ArcaneForge.LOGGER.info("[MINERS-SCAN] marcadores creados={}", newMarkers.size());
+    }
+
+    /**
+     * Crea un "block display" (la misma entidad de /summon minecraft:block_display)
+     * en la posicion del bloque, mostrando el CUBO real del mineral en vez de
+     * una figura humanoide. El estado del bloque solo se puede fijar mediante
+     * Entity.load() (el setter propio es privado), asi que se envuelve en un
+     * ValueInput a partir de un CompoundTag con el mismo formato que usa el
+     * propio juego al guardar/cargar la entidad (clave "block_state" con el
+     * codec de BlockState).
+     */
+    private static Display.BlockDisplay createBlockMarker(ServerLevel level, BlockPos pos, BlockState state) {
+        Display.BlockDisplay marker = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level);
+        marker.setPos(pos.getX(), pos.getY(), pos.getZ());
+        marker.setInvulnerable(true);
+        marker.setSilent(true);
+        marker.setNoGravity(true);
+        marker.setGlowingTag(true);
+
+        Tag stateTag = BlockState.CODEC.encodeStart(NbtOps.INSTANCE, state).result().orElse(null);
+        if (stateTag == null) return null;
+
+        CompoundTag tag = new CompoundTag();
+        tag.put("block_state", stateTag);
+        ValueInput input = TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), tag);
+        marker.load(input);
+
+        return marker;
     }
 
     private static PlayerTeam teamFor(Scoreboard scoreboard, OreFilter filter) {
@@ -153,10 +185,10 @@ public class MinersSightHandler {
     }
 
     private static void clearMarkers(ServerPlayer sp) {
-        List<ArmorStand> list = MARKERS.remove(sp.getUUID());
+        List<Display.BlockDisplay> list = MARKERS.remove(sp.getUUID());
         if (list == null) return;
-        for (ArmorStand a : list) {
-            if (a.isAlive()) a.discard();
+        for (Display.BlockDisplay d : list) {
+            if (d.isAlive()) d.discard();
         }
     }
 
