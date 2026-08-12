@@ -52,7 +52,13 @@ public class MinersSightHandler {
 
             ItemStack helmet = sp.getItemBySlot(EquipmentSlot.HEAD);
             int level = MinersSightLogic.getLevel(sp, helmet);
-            boolean applicable = sp.isAlive() && level > 0 && MinersSightLogic.isEnabled(helmet);
+            boolean enabled = MinersSightLogic.isEnabled(helmet);
+            boolean applicable = sp.isAlive() && level > 0 && enabled;
+
+            if (level > 0) {
+                ArcaneForge.LOGGER.info("[MINERS-TICK] helmet={} level={} enabled={} filter={} applicable={}",
+                        helmet.getItem(), level, enabled, MinersSightLogic.getFilter(helmet).id(), applicable);
+            }
 
             if (!applicable) {
                 clearMarkers(sp);
@@ -102,6 +108,9 @@ public class MinersSightHandler {
         matches.sort(Comparator.comparingDouble(p -> p.distSqr(center)));
         if (matches.size() > MAX_MARKERS) matches = matches.subList(0, MAX_MARKERS);
 
+        ArcaneForge.LOGGER.info("[MINERS-SCAN] center={} radius={} filter={} matches={}",
+                center, radius, filter.id(), matches.size());
+
         // Cada escaneo se rehace desde cero: es mas simple y seguro que llevar
         // un diff incremental, y como el intervalo es de 2s no se nota parpadeo.
         clearMarkers(sp);
@@ -127,6 +136,7 @@ public class MinersSightHandler {
             newMarkers.add(marker);
         }
         if (!newMarkers.isEmpty()) MARKERS.put(sp.getUUID(), newMarkers);
+        ArcaneForge.LOGGER.info("[MINERS-SCAN] marcadores creados={}", newMarkers.size());
     }
 
     private static PlayerTeam teamFor(Scoreboard scoreboard, OreFilter filter) {

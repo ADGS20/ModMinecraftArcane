@@ -26,5 +26,6 @@
     "enchantment.arcaneforge.dimensional_bind": "Vínculo Dimensional",
     "enchantment.arcaneforge.arcane_magnet": "Imán Arcano",
     "enchantment.arcaneforge.arcane_loyalty": "Lealtad Arcana",
-    "enchantment.arcaneforge.miners_sight": "Visión Minera"
+    "enchantment.arcaneforge.miners_sight": "Visión Minera",
+    "key.arcaneforge.miners_sight": "Abrir menú de Visión Minera"
 }

@@ -38,7 +38,10 @@ public record C2SMinersSightSettingsPacket(boolean enabled, String filterId) imp
             if (!(ctx.player() instanceof ServerPlayer sp)) return;
 
             ItemStack helmet = sp.getItemBySlot(EquipmentSlot.HEAD);
-            if (helmet.isEmpty() || MinersSightLogic.getLevel(sp, helmet) <= 0) return;
+            int level = helmet.isEmpty() ? 0 : MinersSightLogic.getLevel(sp, helmet);
+            ArcaneForge.LOGGER.info("[MINERS-SETTINGS] recibido enabled={} filter={} helmet={} level={}",
+                    pkt.enabled(), pkt.filterId(), helmet.getItem(), level);
+            if (level <= 0) return;
 
             MinersSightLogic.setEnabled(helmet, pkt.enabled());
             MinersSightLogic.setFilter(helmet, OreFilter.byId(pkt.filterId()));

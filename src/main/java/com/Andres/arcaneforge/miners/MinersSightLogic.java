@@ -29,6 +29,17 @@ public final class MinersSightLogic {
     private static final int BASE_RADIUS = 6;
     private static final int RADIUS_PER_LEVEL = 3;
 
+    /**
+     * Tope real de nivel para esta habilidad. IMPORTANTE: el sistema de la
+     * Forja Arcana (ArcaneForgeBlockEntity.tryEnchant) IGNORA el max_level
+     * del json de cada encantamiento y deja subir cualquiera hasta 15 (o 255
+     * con Pedestal activo). Sin este tope aparte, un jugador podria subir
+     * Vision Minera a nivel 255 y el radio de escaneo (6 + nivel*3) se
+     * volveria gigantesco, congelando el servidor. getLevel() recorta
+     * siempre al nivel real guardado en el item.
+     */
+    private static final int MAX_LEVEL = 3;
+
     /** Cuanta XP (puntos) cuesta cada ciclo de escaneo, por nivel del encantamiento. */
     private static final int XP_COST_PER_LEVEL = 1;
 
@@ -41,14 +52,18 @@ public final class MinersSightLogic {
             Optional<Holder.Reference<Enchantment>> opt = registry.get(MINERS_SIGHT_KEY);
             if (opt.isEmpty()) return 0;
             ItemEnchantments ench = helmet.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
-            return ench.getLevel(opt.get());
+            return Math.min(MAX_LEVEL, ench.getLevel(opt.get()));
         } catch (Exception e) {
             return 0;
         }
     }
 
     public static int radiusForLevel(int level) {
-        return BASE_RADIUS + level * RADIUS_PER_LEVEL;
+        // Segunda capa de seguridad: aunque getLevel() ya recorta a MAX_LEVEL,
+        // esto evita un escaneo descontrolado si algun dia se llama con un
+        // nivel sin pasar por getLevel().
+        int clamped = Math.min(level, MAX_LEVEL);
+        return BASE_RADIUS + clamped * RADIUS_PER_LEVEL;
     }
 
     public static int xpCostForLevel(int level) {
