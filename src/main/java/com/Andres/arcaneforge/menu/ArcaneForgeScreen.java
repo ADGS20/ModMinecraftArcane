@@ -36,13 +36,16 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
     private static final int ROW_H        = 14;
     private static final int LIST_W       = 124;
 
-    // Paleta estilo GUI vanilla (misma que DimensionalBagScreen, para que
-    // todas las pantallas del mod se vean consistentes).
-    private static final int C_PANEL      = 0xFFC6C6C6;
-    private static final int C_LIGHT      = 0xFFFFFFFF;
-    private static final int C_DARK       = 0xFF555555;
-    private static final int C_SLOT       = 0xFF8B8B8B;
-    private static final int C_SLOT_HOLE  = 0xFF373737;
+    // Paleta del panel izquierdo: azul oscuro, ~80% transparente (alpha ~0x33
+    // de 0xFF) para que se vea el mundo detras, pero conservando el relieve
+    // biselado (bordes un poco mas opacos) para que los slots se sigan
+    // distinguiendo con claridad. Los items dibujados encima siempre quedan
+    // nitidos porque se pintan en una capa aparte, sobre este fondo.
+    private static final int C_PANEL      = 0x33001433;
+    private static final int C_LIGHT      = 0x552D5AA8;
+    private static final int C_DARK       = 0x66000A1F;
+    private static final int C_SLOT       = 0x55152A52;
+    private static final int C_SLOT_HOLE  = 0x66000D26;
 
     /** Todos los encantamientos validos para el item actual, sin filtrar. */
     private final List<EnchantOption> allEnchants = new ArrayList<>();
