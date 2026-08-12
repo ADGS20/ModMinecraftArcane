@@ -173,9 +173,17 @@ public class ArcaneMagnetHandler {
                 long space = (long) BagContainer.MAX_STACK - slot.getCount();
                 if (space > 0) {
                     int take = (int) Math.min(space, stack.getCount());
-                    slot.grow(take);
+                    // IMPORTANTE: crear un ItemStack NUEVO en vez de mutar "slot" (la
+                    // referencia que ya vive dentro del container) en el sitio. Si se
+                    // muta en el sitio, el mecanismo de sincronizacion de Minecraft
+                    // (que compara la referencia "antes" contra la "ahora" para decidir
+                    // si avisar al cliente) ve el MISMO objeto y nunca detecta el
+                    // cambio: el numero se queda congelado en el ultimo valor que si
+                    // se sincronizo, aunque el dato real en el servidor haya crecido.
+                    ItemStack grown = slot.copy();
+                    grown.grow(take);
                     stack.shrink(take);
-                    container.setItem(i, slot);
+                    container.setItem(i, grown);
                     if (stack.isEmpty()) return true;
                 }
             }
