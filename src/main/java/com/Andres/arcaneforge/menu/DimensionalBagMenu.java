@@ -97,24 +97,33 @@ public class DimensionalBagMenu extends AbstractContainerMenu {
     public boolean isForBag(ItemStack stack) { return stack == this.bag; }
 
     /**
-     * Reenvia al cliente el contenido actual de los 54 slots de almacen.
+     * Reenvia al cliente el contenido actual de TODOS los slots del menu.
      * IMPORTANTE: en este build, el broadcast ambiental de cambios de menu
      * (el que revisa cada tick si algun slot cambio) no detecta cambios que
      * el iman hace en segundo plano mientras el jugador solo tiene la GUI
      * abierta sin interactuar — el numero se queda "congelado" en pantalla
      * hasta que el jugador hace clic (eso si fuerza una respuesta del
-     * servidor). Por eso, igual que changePage(), hay que empujar el
-     * paquete de slot manualmente cada vez que el iman inserta algo.
+     * servidor).
+     *
+     * Se probo primero reenviando cada slot por separado con
+     * ClientboundContainerSetSlotPacket (igual que changePage()), pero el
+     * cliente seguia mostrando el valor viejo incluso justo despues de
+     * abrir el menu. En vez de eso, se manda UN solo paquete de contenido
+     * completo (ClientboundContainerSetContentPacket) con el stateId
+     * incrementado — el mismo mecanismo "canonico" que usa el motor para
+     * sincronizar un contenedor recien abierto de una vez.
      */
     public void syncStorageToClient(net.minecraft.server.level.ServerPlayer sp) {
-        for (int i = 0; i < STORAGE; i++) {
-            sp.connection.send(new net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket(
-                    this.containerId,
-                    this.incrementStateId(),
-                    i,
-                    this.slots.get(i).getItem()
-            ));
+        java.util.List<ItemStack> allItems = new java.util.ArrayList<>(this.slots.size());
+        for (int i = 0; i < this.slots.size(); i++) {
+            allItems.add(this.slots.get(i).getItem());
         }
+        sp.connection.send(new net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket(
+                this.containerId,
+                this.incrementStateId(),
+                allItems,
+                this.getCarried()
+        ));
     }
 
     private static int readPage(ItemStack bag) {
@@ -141,16 +150,8 @@ public class DimensionalBagMenu extends AbstractContainerMenu {
         // Cargar la nueva pagina en los MISMOS slots (sin cerrar la ventana).
         bagStorage.loadPage(next);
 
-        // Refrescar en el cliente cada slot de almacen con su nuevo contenido,
-        // usando el mismo metodo probado que usa la forja del mod.
-        for (int i = 0; i < STORAGE; i++) {
-            sp.connection.send(new net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket(
-                    this.containerId,
-                    this.incrementStateId(),
-                    i,
-                    this.slots.get(i).getItem()
-            ));
-        }
+        // Refrescar en el cliente todo el contenido del menu.
+        syncStorageToClient(sp);
 
         // Avisar al cliente del nuevo numero de pagina (para el texto "X/Y").
         sp.connection.send(new com.Andres.arcaneforge.network.S2CBagPageSync(next, totalPages));
