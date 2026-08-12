@@ -43,6 +43,8 @@ public class MinersSightHandler {
     private static final String TEAM_PREFIX = "arcaneforge_ore_";
 
     private static final Map<UUID, List<ArmorStand>> MARKERS = new HashMap<>();
+    /** Solo para no repetir el mismo log [MINERS-TICK] cada 2s sin razon. */
+    private static final Map<UUID, Boolean> LAST_APPLICABLE = new HashMap<>();
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
@@ -55,7 +57,8 @@ public class MinersSightHandler {
             boolean enabled = MinersSightLogic.isEnabled(helmet);
             boolean applicable = sp.isAlive() && level > 0 && enabled;
 
-            if (level > 0) {
+            Boolean last = LAST_APPLICABLE.put(sp.getUUID(), applicable);
+            if (level > 0 && !Boolean.valueOf(applicable).equals(last)) {
                 ArcaneForge.LOGGER.info("[MINERS-TICK] helmet={} level={} enabled={} filter={} applicable={}",
                         helmet.getItem(), level, enabled, MinersSightLogic.getFilter(helmet).id(), applicable);
             }

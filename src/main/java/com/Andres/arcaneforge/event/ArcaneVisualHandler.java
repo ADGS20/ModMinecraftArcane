@@ -1,6 +1,7 @@
 package com.Andres.arcaneforge.event;
 
 import com.Andres.arcaneforge.ArcaneForge;
+import com.Andres.arcaneforge.miners.MinersSightLogic;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -57,6 +58,16 @@ public class ArcaneVisualHandler {
             // Añadimos una estrella y teñimos el nombre original del ítem
             Component originalName = event.getToolTip().get(0);
             event.getToolTip().set(0, Component.literal("✦ ").withStyle(textColor).append(originalName.copy().withStyle(textColor)));
+        }
+
+        // B.1) Recordatorio de como abrir el menu de Vision Minera. Sin esto
+        // el jugador no tiene forma de saber que existe la tecla G para
+        // activarla (tiene que estar PUESTO, no en la mano, porque el
+        // escaneo y el guardado de ajustes leen del slot de cabeza).
+        if (MinersSightLogic.getLevel(event.getEntity(), stack) > 0) {
+            event.getToolTip().add(Component.literal(""));
+            event.getToolTip().add(Component.literal("§d✦ Vision Minera"));
+            event.getToolTip().add(Component.literal("§7Con el casco puesto, pulsa §fG§7 para abrir el menu"));
         }
 
         // B) Mostrar cargas místicas si es nuestro Tótem Encantado
