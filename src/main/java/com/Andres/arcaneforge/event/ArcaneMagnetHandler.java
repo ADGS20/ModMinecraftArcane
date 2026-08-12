@@ -69,6 +69,7 @@ public class ArcaneMagnetHandler {
 
             ItemStack bag = findBag(sp);
             if (bag.isEmpty()) return;
+            if (!BagLogic.isMagnetEnabled(bag)) return;
 
             List<ItemEntity> toRemove = new ArrayList<>();
             for (ItemEntity ie : event.getDrops()) {
@@ -96,6 +97,7 @@ public class ArcaneMagnetHandler {
 
             ItemStack bag = findBag(sp);
             if (bag.isEmpty()) return;
+            if (!BagLogic.isMagnetEnabled(bag)) return;
 
             List<ItemEntity> toRemove = new ArrayList<>();
             for (ItemEntity ie : event.getDrops()) {
@@ -125,6 +127,7 @@ public class ArcaneMagnetHandler {
 
             ItemStack bag = findBag(sp);
             if (bag.isEmpty()) return;
+            if (!BagLogic.isMagnetEnabled(bag)) return;
 
             AABB area = sp.getBoundingBox().inflate(VACUUM_RADIUS);
             List<ItemEntity> nearby = sp.level().getEntitiesOfClass(ItemEntity.class, area, ItemEntity::isAlive);

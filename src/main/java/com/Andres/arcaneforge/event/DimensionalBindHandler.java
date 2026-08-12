@@ -54,9 +54,11 @@ public class DimensionalBindHandler {
                 (id, inv, p) -> new DimensionalBagMenu(id, inv, bag),
                 Component.literal("§5Saco Dimensional §7(" + (currentPage + 1) + "/" + totalPages + ")"));
 
+        final boolean magnetEnabled = BagLogic.isMagnetEnabled(bag);
         var openResult = player.openMenu(provider, buf -> {
             buf.writeVarInt(totalPages);
             buf.writeVarInt(currentPage);
+            buf.writeBoolean(magnetEnabled);
         });
         ArcaneForge.LOGGER.info("[BAG-OPEN] openMenu result={} containerMenu={}",
                 openResult, player.containerMenu == null ? "null" : player.containerMenu.getClass().getSimpleName());

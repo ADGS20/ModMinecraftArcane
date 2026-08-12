@@ -1,6 +1,9 @@
 package com.Andres.arcaneforge.menu;
 
+import com.Andres.arcaneforge.network.C2SToggleMagnetPacket;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,6 +32,8 @@ public class DimensionalBagScreen extends AbstractContainerScreen<DimensionalBag
     private static final int C_SLOT       = 0xFF8B8B8B; // borde de slot
     private static final int C_SLOT_HOLE  = 0xFF373737; // hueco del slot
 
+    private Button btnMagnet;
+
     public DimensionalBagScreen(DimensionalBagMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);
     }
@@ -56,6 +61,31 @@ public class DimensionalBagScreen extends AbstractContainerScreen<DimensionalBag
         this.inventoryLabelY = INV_Y - 12;
 
         // Sin botones de pagina: el saco es siempre 1 pagina de almacenamiento masivo.
+
+        // Boton de iman on/off, a la izquierda del panel principal. Sirve para
+        // que el jugador pueda soltar basura o pasar la bolsa a otro jugador
+        // sin que el Iman Arcano se lleve items automaticamente mientras tanto.
+        btnMagnet = addRenderableWidget(Button.builder(magnetLabel(), b -> onToggleMagnet())
+                .bounds(this.leftPos - 118, this.topPos, 110, 20).build());
+    }
+
+    private Component magnetLabel() {
+        boolean on = getMenu().isMagnetEnabled();
+        return Component.literal(on ? "§aIman: ON" : "§cIman: OFF");
+    }
+
+    private void onToggleMagnet() {
+        var conn = Minecraft.getInstance().getConnection();
+        if (conn == null) return;
+        conn.send(new C2SToggleMagnetPacket());
+    }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        if (btnMagnet != null) {
+            btnMagnet.setMessage(magnetLabel());
+        }
     }
 
     // Dibuja un rectangulo con bisel estilo vanilla (claro arriba/izq, oscuro abajo/der).

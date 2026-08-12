@@ -56,6 +56,58 @@ public class ModNetwork {
                 }
             };
 
+    // ── StreamCodec para C2SBagPagePacket ──
+    public static final StreamCodec<RegistryFriendlyByteBuf, C2SBagPagePacket> BAG_PAGE_CODEC =
+            new StreamCodec<>() {
+                @Override
+                public C2SBagPagePacket decode(RegistryFriendlyByteBuf buf) {
+                    return C2SBagPagePacket.read(buf);
+                }
+                @Override
+                public void encode(RegistryFriendlyByteBuf buf, C2SBagPagePacket pkt) {
+                    pkt.write(buf);
+                }
+            };
+
+    // ── StreamCodec para S2CBagPageSync ──
+    public static final StreamCodec<RegistryFriendlyByteBuf, S2CBagPageSync> BAG_PAGE_SYNC_CODEC =
+            new StreamCodec<>() {
+                @Override
+                public S2CBagPageSync decode(RegistryFriendlyByteBuf buf) {
+                    return S2CBagPageSync.read(buf);
+                }
+                @Override
+                public void encode(RegistryFriendlyByteBuf buf, S2CBagPageSync pkt) {
+                    pkt.write(buf);
+                }
+            };
+
+    // ── StreamCodec para C2SToggleMagnetPacket ──
+    public static final StreamCodec<RegistryFriendlyByteBuf, C2SToggleMagnetPacket> TOGGLE_MAGNET_CODEC =
+            new StreamCodec<>() {
+                @Override
+                public C2SToggleMagnetPacket decode(RegistryFriendlyByteBuf buf) {
+                    return C2SToggleMagnetPacket.read(buf);
+                }
+                @Override
+                public void encode(RegistryFriendlyByteBuf buf, C2SToggleMagnetPacket pkt) {
+                    pkt.write(buf);
+                }
+            };
+
+    // ── StreamCodec para S2CBagMagnetSync ──
+    public static final StreamCodec<RegistryFriendlyByteBuf, S2CBagMagnetSync> BAG_MAGNET_SYNC_CODEC =
+            new StreamCodec<>() {
+                @Override
+                public S2CBagMagnetSync decode(RegistryFriendlyByteBuf buf) {
+                    return S2CBagMagnetSync.read(buf);
+                }
+                @Override
+                public void encode(RegistryFriendlyByteBuf buf, S2CBagMagnetSync pkt) {
+                    pkt.write(buf);
+                }
+            };
+
     public static void register(IEventBus modEventBus) {
         modEventBus.addListener(ModNetwork::onRegisterPayloadHandlers);
     }
@@ -83,6 +135,34 @@ public class ModNetwork {
                 S2CResultPacket.TYPE,
                 RESULT_CODEC,
                 S2CResultPacket::handle
+        );
+
+        // Cliente → Servidor: cambiar pagina del Saco Dimensional
+        registrar.playToServer(
+                C2SBagPagePacket.TYPE,
+                BAG_PAGE_CODEC,
+                C2SBagPagePacket::handle
+        );
+
+        // Servidor → Cliente: sincronizar numero de pagina del saco
+        registrar.playToClient(
+                S2CBagPageSync.TYPE,
+                BAG_PAGE_SYNC_CODEC,
+                S2CBagPageSync::handle
+        );
+
+        // Cliente → Servidor: activar/desactivar el iman de la bolsa
+        registrar.playToServer(
+                C2SToggleMagnetPacket.TYPE,
+                TOGGLE_MAGNET_CODEC,
+                C2SToggleMagnetPacket::handle
+        );
+
+        // Servidor → Cliente: sincronizar estado del iman de la bolsa
+        registrar.playToClient(
+                S2CBagMagnetSync.TYPE,
+                BAG_MAGNET_SYNC_CODEC,
+                S2CBagMagnetSync::handle
         );
 
         ArcaneForge.LOGGER.info("Arcane Forge FUSION network packets registered (v2.0).");

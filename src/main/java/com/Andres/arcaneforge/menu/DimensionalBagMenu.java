@@ -30,6 +30,7 @@ public class DimensionalBagMenu extends AbstractContainerMenu {
     private final ItemStack bag;
     private final int totalPages;
     private int currentPage;
+    private boolean magnetEnabled;
 
     // ── Constructor servidor ──
     public DimensionalBagMenu(int id, Inventory playerInv, ItemStack bag) {
@@ -42,6 +43,7 @@ public class DimensionalBagMenu extends AbstractContainerMenu {
         int page = readPage(bag);
         if (page < 0 || page >= totalPages) page = 0;
         this.currentPage = page;
+        this.magnetEnabled = BagLogic.isMagnetEnabled(bag);
 
         this.storage = new BagContainer(bag, currentPage, playerInv.player.level().registryAccess());
 
@@ -54,6 +56,7 @@ public class DimensionalBagMenu extends AbstractContainerMenu {
         this.bag = ItemStack.EMPTY;
         this.totalPages = Math.max(1, buf.readVarInt());
         this.currentPage = buf.readVarInt();
+        this.magnetEnabled = buf.readBoolean();
         // En cliente el contenido real lo sincroniza el servidor; usamos un buffer vacio.
         //
         // BUG RAIZ (el "se queda en 64" de siempre): Slot.set(stack) NO consulta
@@ -107,6 +110,20 @@ public class DimensionalBagMenu extends AbstractContainerMenu {
     public int getTotalPages() { return totalPages; }
     public int getCurrentPage() { return currentPage; }
     public void setCurrentPageClient(int page) { this.currentPage = page; }
+
+    public boolean isMagnetEnabled() { return magnetEnabled; }
+    public void setMagnetEnabledClient(boolean enabled) { this.magnetEnabled = enabled; }
+
+    /** Llamado en el servidor cuando el jugador pulsa el boton de iman on/off. */
+    public void toggleMagnet(Player player) {
+        if (bag.isEmpty()) return;
+        if (!(player instanceof net.minecraft.server.level.ServerPlayer sp)) return;
+
+        this.magnetEnabled = !this.magnetEnabled;
+        BagLogic.setMagnetEnabled(bag, this.magnetEnabled);
+
+        sp.connection.send(new com.Andres.arcaneforge.network.S2CBagMagnetSync(this.magnetEnabled));
+    }
 
     /** El almacen en vivo respaldando este menu (mismo objeto que usan los slots). */
     public Container getStorage() { return storage; }
