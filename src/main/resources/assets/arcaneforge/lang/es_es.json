@@ -23,5 +23,8 @@
     "arcaneforge.configuration.title": "Configuración de Arcane Forge",
     "enchantment.arcaneforge.arcane_smelting": "Fundición Arcana",
     "enchantment.arcaneforge.arcane_mending": "Reparación Arcana",
-    "enchantment.arcaneforge.dimensional_bind": "Vínculo Dimensional"
+    "enchantment.arcaneforge.dimensional_bind": "Vínculo Dimensional",
+    "enchantment.arcaneforge.arcane_magnet": "Imán Arcano",
+    "enchantment.arcaneforge.arcane_loyalty": "Lealtad Arcana",
+    "enchantment.arcaneforge.miners_sight": "Visión Minera"
 }

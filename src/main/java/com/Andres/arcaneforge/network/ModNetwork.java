@@ -108,6 +108,19 @@ public class ModNetwork {
                 }
             };
 
+    // ── StreamCodec para C2SMinersSightSettingsPacket ──
+    public static final StreamCodec<RegistryFriendlyByteBuf, C2SMinersSightSettingsPacket> MINERS_SIGHT_CODEC =
+            new StreamCodec<>() {
+                @Override
+                public C2SMinersSightSettingsPacket decode(RegistryFriendlyByteBuf buf) {
+                    return C2SMinersSightSettingsPacket.read(buf);
+                }
+                @Override
+                public void encode(RegistryFriendlyByteBuf buf, C2SMinersSightSettingsPacket pkt) {
+                    pkt.write(buf);
+                }
+            };
+
     public static void register(IEventBus modEventBus) {
         modEventBus.addListener(ModNetwork::onRegisterPayloadHandlers);
     }
@@ -163,6 +176,13 @@ public class ModNetwork {
                 S2CBagMagnetSync.TYPE,
                 BAG_MAGNET_SYNC_CODEC,
                 S2CBagMagnetSync::handle
+        );
+
+        // Cliente → Servidor: nuevo estado de la Vision Minera
+        registrar.playToServer(
+                C2SMinersSightSettingsPacket.TYPE,
+                MINERS_SIGHT_CODEC,
+                C2SMinersSightSettingsPacket::handle
         );
 
         ArcaneForge.LOGGER.info("Arcane Forge FUSION network packets registered (v2.0).");

@@ -374,7 +374,8 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         String namespace = id.getNamespace();
 
         if (namespace.equals(ArcaneForge.MODID)) {
-            if (path.equals("apocalyptic_judgment") || path.equals("void_protection")) return 5.0f;
+            if (path.equals("apocalyptic_judgment") || path.equals("void_protection") || path.equals("arcane_loyalty")) return 5.0f;
+            if (path.equals("miners_sight")) return 2.0f;
             return 3.0f;
         }
         if (path.equals("mending") || path.equals("infinity") || path.equals("silk_touch")) return 2.5f;
