@@ -112,7 +112,7 @@ public class ArcaneGuideBook extends Item {
             page("§4§lGANCHO§r\n§4§lETEREO§r\n\nCana de Pescar\nNivel max 3\n\nPesca botin\nraro: diamante,\nesmeralda,\nperlas y mas."),
 
             // 15 — Indice 2
-            page("§1§lMAS ENCANTOS§r\n\np16 Excavacion\np17 Cosecha\np18 Alas\np19 Caminata\np20 Lanzamiento\np21 Proteccion\np22 Fundicion"),
+            page("§1§lMAS ENCANTOS§r\n\np16 Excavacion\np17 Cosecha\np18 Alas\np19 Caminata\np20 Lanzamiento\np21 Proteccion\np22 Fundicion\np25 Saco Dim."),
 
             // 16 — Soul Delve
             page("§4§lEXCAVACION§r\n§4§lDE ALMAS§r\n\nPico o Pala\nNivel max 3\n\nAl minar da\nXP extra y\npuede duplicar\nlo que sueltan\nlos bloques."),
@@ -139,7 +139,16 @@ public class ArcaneGuideBook extends Item {
             page("§4§lREPARACION§r\n§4§lARCANA§r\n\nDurabilidad\nNivel max 3\n\nRepara solo el\nobjeto gastando\nTU experiencia.\nMas nivel =\nmas arreglo."),
 
             // 24 — Consejo: mesa de cosecha
-            page("§1§lTIP COSECHA§r\n\nAgachate y haz\nclic con la\nvarita en la\nMesa para que\nla Cosecha\nmande todo a\nsus cofres.")
+            page("§1§lTIP COSECHA§r\n\nAgachate y haz\nclic con la\nvarita en la\nMesa para que\nla Cosecha\nmande todo a\nsus cofres."),
+
+            // 25 — Saco Dimensional
+            page("§4§lVINCULO§r\n§4§lDIMENSIONAL§r\n\nSaco (Bundle)\nNivel max 255\n\nClic derecho\npara abrirlo.\n54 slots.\nCada slot\nacumula hasta\n1 000 000 000\nunidades."),
+
+            // 26 — Iman Arcano
+            page("§4§lIMAAN§r\n§4§lARCANO§r\n\nSaco o cualquier\nobjeto\nNivel max 3\n\nN1: drops de\nbloques van\na la bolsa.\nN2: drops de\nmobs tambien.\nN3: recoge todo\nlo del suelo."),
+
+            // 27 — Iman Arcano: como funciona
+            page("§1§lUSAR IMAN§r\n\n1 Encanta una\n  bolsa con\n  Vinculo Dim.\n2 Encanta la\n  bolsa con\n  Iman Arcano\n3 Lleva la\n  bolsa en\n  el inventario\n4 Todo lo que\n  minas o matas\n  va directo\n  a la bolsa.")
         );
 
         WrittenBookContent content = new WrittenBookContent(title, "ArcaneForge", 0, pages, true);

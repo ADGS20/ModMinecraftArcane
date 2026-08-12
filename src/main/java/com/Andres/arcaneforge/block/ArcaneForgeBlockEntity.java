@@ -217,6 +217,24 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
     }
     public int getLinkedChestCount() { return linkedChests.size(); }
 
+    /**
+     * Recalcula el fuel/cofres/pedestal AHORA mismo y se lo manda al jugador
+     * que acaba de abrir la mesa, para que no vea datos viejos (0) esperando
+     * al siguiente tick de sincronizacion.
+     */
+    public void forceSyncTo(ServerPlayer player) {
+        if (level == null || !(level instanceof ServerLevel serverLevel)) return;
+        validateLinkedChests();
+        cachedBookshelfCount = countNearbyBookshelves();
+        cachedMagicFuel = countMagicFuelInLinkedChests();
+        boolean hasActivePedestal = ArcanePedestalBlock.hasActivePedestalNearby(level, worldPosition);
+        FuelBreakdown breakdown = computeFuelBreakdown();
+        S2CSyncPacket pkt = new S2CSyncPacket(
+                worldPosition, linkedChests.size(), cachedBookshelfCount, cachedMagicFuel, hasActivePedestal,
+                breakdown.common, breakdown.uncommon, breakdown.rare, breakdown.epic, breakdown.legendary);
+        PacketDistributor.sendToPlayer(player, pkt);
+    }
+
     public int countNearbyBookshelves() {
         if (level == null) return 0;
         int count = 0;
