@@ -158,7 +158,11 @@ public class ArcaneMagnetHandler {
         if (sp.containerMenu instanceof DimensionalBagMenu bagMenu && bagMenu.isForBag(bag)) {
             Container live = bagMenu.getStorage();
             boolean absorbed = tryInsert(live, stack);
-            live.setChanged(); // BagContainer.setChanged() guarda y el broadcast de Minecraft sincroniza al cliente
+            live.setChanged(); // guarda en NBT
+            // El broadcast ambiental de Minecraft NO detecta este cambio de fondo
+            // (solo lo hace al procesar un clic del jugador). Empujar el paquete
+            // a mano para que el numero se vea actualizado sin tener que agarrarlo.
+            bagMenu.syncStorageToClient(sp);
             return absorbed;
         }
         BagContainer container = new BagContainer(bag, 0, sp.level().registryAccess());

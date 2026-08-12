@@ -96,6 +96,27 @@ public class DimensionalBagMenu extends AbstractContainerMenu {
     /** True si este menu esta mostrando exactamente esa bolsa (misma referencia). */
     public boolean isForBag(ItemStack stack) { return stack == this.bag; }
 
+    /**
+     * Reenvia al cliente el contenido actual de los 54 slots de almacen.
+     * IMPORTANTE: en este build, el broadcast ambiental de cambios de menu
+     * (el que revisa cada tick si algun slot cambio) no detecta cambios que
+     * el iman hace en segundo plano mientras el jugador solo tiene la GUI
+     * abierta sin interactuar — el numero se queda "congelado" en pantalla
+     * hasta que el jugador hace clic (eso si fuerza una respuesta del
+     * servidor). Por eso, igual que changePage(), hay que empujar el
+     * paquete de slot manualmente cada vez que el iman inserta algo.
+     */
+    public void syncStorageToClient(net.minecraft.server.level.ServerPlayer sp) {
+        for (int i = 0; i < STORAGE; i++) {
+            sp.connection.send(new net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket(
+                    this.containerId,
+                    this.incrementStateId(),
+                    i,
+                    this.slots.get(i).getItem()
+            ));
+        }
+    }
+
     private static int readPage(ItemStack bag) {
         CompoundTag tag = bag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         return tag.getInt("bag_page").orElse(0);
