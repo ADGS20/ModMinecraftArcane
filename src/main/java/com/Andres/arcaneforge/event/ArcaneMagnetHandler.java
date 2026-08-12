@@ -16,6 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
@@ -51,7 +52,14 @@ public class ArcaneMagnetHandler {
 
     // ── Drops de bloque → a la bolsa ──────────────────────────────────────────
 
-    @SubscribeEvent
+    /**
+     * LOWEST: debe correr DESPUES de PickaxeArcaneHandler (Fundicion Arcana,
+     * Fortune+Silk Touch), AxeFortuneHandler, SoulHarvestHoeHandler, etc. Esos
+     * handlers transforman/multiplican los drops (ej. hierro en bruto -> lingote
+     * de hierro). Si el iman corriera primero, se llevaria el mineral CRUDO a la
+     * bolsa antes de que esos encantamientos lo procesen.
+     */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onBlockDrops(BlockDropsEvent event) {
         try {
             if (!(event.getBreaker() instanceof ServerPlayer sp)) return;
@@ -77,7 +85,8 @@ public class ArcaneMagnetHandler {
 
     // ── Drops de mob → a la bolsa ─────────────────────────────────────────────
 
-    @SubscribeEvent
+    /** LOWEST por la misma razon que onBlockDrops: capturar el resultado final. */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onMobDrops(LivingDropsEvent event) {
         try {
             if (!(event.getSource().getEntity() instanceof ServerPlayer sp)) return;
