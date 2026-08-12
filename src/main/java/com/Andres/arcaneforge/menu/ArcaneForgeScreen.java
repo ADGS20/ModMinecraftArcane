@@ -7,6 +7,7 @@ import com.Andres.arcaneforge.network.C2SEnchantPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -21,17 +22,12 @@ import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> {
 
-    private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(
-            ArcaneForge.MOD_ID, "textures/gui/container/arcane_forge.png");
-
-    private static final float TEX_W = 256f;
-    private static final float TEX_H = 256f;
-
     private static final int VANILLA_W  = 176;
-    private static final int VANILLA_H  = 166;
+    private static final int VANILLA_H  = 182;
     private static final int GAP        = 4;
     private static final int PANEL_W    = 156;
     private static final int TOTAL_W    = VANILLA_W + GAP + PANEL_W;
@@ -40,11 +36,24 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
     private static final int ROW_H        = 14;
     private static final int LIST_W       = 124;
 
+    // Paleta estilo GUI vanilla (misma que DimensionalBagScreen, para que
+    // todas las pantallas del mod se vean consistentes).
+    private static final int C_PANEL      = 0xFFC6C6C6;
+    private static final int C_LIGHT      = 0xFFFFFFFF;
+    private static final int C_DARK       = 0xFF555555;
+    private static final int C_SLOT       = 0xFF8B8B8B;
+    private static final int C_SLOT_HOLE  = 0xFF373737;
+
+    /** Todos los encantamientos validos para el item actual, sin filtrar. */
+    private final List<EnchantOption> allEnchants = new ArrayList<>();
+    /** Subconjunto de allEnchants que coincide con la busqueda (lo que se ve). */
     private final List<EnchantOption> enchants = new ArrayList<>();
     private int selectedIndex  = -1;
     private int selectedLevel  = 1;
     private int scrollOffset   = 0;
     private int subMenuMode    = 0;
+    private String searchQuery = "";
+    private EditBox searchBox;
 
     private ItemStack lastItem = ItemStack.EMPTY;
     private boolean lastPedestalCache = false;
@@ -97,9 +106,18 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
 
         int px   = getLeftPos() + VANILLA_W + GAP;
         int py   = getTopPos();
-        int listY = py + 38;
+        int searchY = py + 38;
+        int listY = searchY + 16;
         int listX = px + 6;
         int scrollX = listX + LIST_W + 2;
+
+        searchBox = new EditBox(this.font, listX, searchY, LIST_W, 14, Component.literal("Buscar"));
+        searchBox.setMaxLength(32);
+        searchBox.setBordered(true);
+        searchBox.setHint(Component.literal("§8🔍 Buscar encantamiento..."));
+        searchBox.setValue(searchQuery);
+        searchBox.setResponder(s -> { searchQuery = s; applyFilter(); });
+        addRenderableWidget(searchBox);
 
         btnScrollUp   = addRenderableWidget(Button.builder(Component.literal("▲"), b -> doScrollUp())
                 .bounds(scrollX, listY, 16, ROW_H).build());
@@ -272,19 +290,33 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
             if (!ItemStack.isSameItemSameComponents(cur, lastItem) || pedestalChanged) {
                 lastItem = cur.copy();
                 this.lastPedestalCache = this.hasActivePedestal;
-                int prev = selectedIndex;
                 refreshList();
-                if (prev >= 0 && prev < enchants.size()) selectedIndex = prev;
-                syncButtons();
             }
         } catch (Exception ignored) {}
     }
 
+    /**
+     * Reconstruye allEnchants desde cero (consulta el registro) y luego
+     * reaplica el filtro de busqueda. La seleccion actual y la posicion del
+     * scroll se conservan por IDENTIDAD del encantamiento (no por indice):
+     * antes, cada vez que esto se llamaba (por ejemplo justo despues de
+     * encantar, cuando el item cambia de componentes) el scroll se reseteaba
+     * a 0 sin condicion, obligando al jugador a bajar de nuevo para
+     * encontrar el mismo encantamiento que acababa de subir de nivel.
+     */
     private void refreshList() {
-        enchants.clear(); selectedIndex = -1; selectedLevel = 1; scrollOffset = 0;
+        Identifier prevSelId = (selectedIndex >= 0 && selectedIndex < enchants.size())
+                ? enchants.get(selectedIndex).id() : null;
+
+        allEnchants.clear();
         try {
             var item = getMenu().getSlot(0).getItem();
-            if (item.isEmpty() || Minecraft.getInstance().level == null) return;
+            if (item.isEmpty() || Minecraft.getInstance().level == null) {
+                enchants.clear();
+                selectedIndex = -1; selectedLevel = 1; scrollOffset = 0; subMenuMode = 0;
+                syncButtons();
+                return;
+            }
 
             var reg = Minecraft.getInstance().level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
             ItemEnchantments currentEnchants = item.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
@@ -318,14 +350,14 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                     boolean naturalCompat = vanillaCompat
                             || (isTotem && isOurTotemEnchant)
                             || (isApocalyptic && isRanged);
-                    enchants.add(new EnchantOption(
+                    allEnchants.add(new EnchantOption(
                             id,
                             Enchantment.getFullname(h, 1).getString(),
                             h.value().getMaxLevel(), h, finalCompat, currentLevel, naturalCompat));
                 } catch (Exception e) {}
             });
 
-            enchants.sort((a, b) -> {
+            allEnchants.sort((a, b) -> {
                 boolean aCustom = a.id().getNamespace().equals(ArcaneForge.MODID);
                 boolean bCustom = b.id().getNamespace().equals(ArcaneForge.MODID);
                 // 1) Los del MOD NATURALES para esta herramienta (estrella dorada)
@@ -347,13 +379,76 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         } catch (Exception e) {
             ArcaneForge.LOGGER.error("Error al refrescar la lista de la forja: ", e);
         }
+
+        applyFilter(prevSelId);
+    }
+
+    /** Reconstruye "enchants" (la lista visible) a partir de allEnchants + searchQuery. */
+    private void applyFilter() {
+        applyFilter((selectedIndex >= 0 && selectedIndex < enchants.size())
+                ? enchants.get(selectedIndex).id() : null);
+    }
+
+    private void applyFilter(Identifier prevSelId) {
+        enchants.clear();
+        String q = searchQuery.trim().toLowerCase(Locale.ROOT);
+        for (EnchantOption opt : allEnchants) {
+            if (q.isEmpty() || opt.displayName().toLowerCase(Locale.ROOT).contains(q)) {
+                enchants.add(opt);
+            }
+        }
+
+        selectedIndex = -1;
+        if (prevSelId != null) {
+            for (int i = 0; i < enchants.size(); i++) {
+                if (enchants.get(i).id().equals(prevSelId)) { selectedIndex = i; break; }
+            }
+        }
+        if (selectedIndex < 0) { selectedLevel = 1; subMenuMode = 0; }
+
+        int maxScroll = Math.max(0, enchants.size() - VISIBLE_ROWS);
+        scrollOffset = Math.max(0, Math.min(scrollOffset, maxScroll));
+
+        syncButtons();
+    }
+
+    // Dibuja un rectangulo con bisel estilo vanilla (claro arriba/izq, oscuro abajo/der).
+    // Misma tecnica que DimensionalBagScreen, para que todo el mod comparta un solo estilo.
+    private void beveledPanel(GuiGraphicsExtractor g, int x, int y, int w, int h) {
+        g.fill(x, y, x + w, y + h, C_PANEL);
+        g.fill(x, y, x + w, y + 1, C_LIGHT);
+        g.fill(x, y, x + 1, y + h, C_LIGHT);
+        g.fill(x, y + h - 1, x + w, y + h, C_DARK);
+        g.fill(x + w - 1, y, x + w, y + h, C_DARK);
+    }
+
+    private void drawSlotHole(GuiGraphicsExtractor g, int sx, int sy) {
+        g.fill(sx - 1, sy - 1, sx + 17, sy + 17, C_SLOT);
+        g.fill(sx, sy, sx + 16, sy + 16, C_SLOT_HOLE);
+    }
+
+    private void drawSlots(GuiGraphicsExtractor g, int gx, int gy, int cols, int rows) {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                drawSlotHole(g, gx + col * 18, gy + row * 18);
+            }
+        }
     }
 
     protected void extractBackground(GuiGraphicsExtractor graphics, float partialTick, int mouseX, int mouseY) {
         int x = getLeftPos();
         int y = getTopPos();
 
-        graphics.blit(TEXTURE, x, y, VANILLA_W, VANILLA_H, 0f, 0f, (float) VANILLA_W / TEX_W, (float) VANILLA_H / TEX_H);
+        // Panel izquierdo estilo vanilla: antes se dibujaba con una textura
+        // (arcane_forge.png) que en realidad era el placeholder "textura
+        // faltante" de Minecraft (rombo negro/magenta), por eso salia negro
+        // en el juego. Se reemplaza por el mismo estilo dibujado a mano que
+        // usa el Saco Dimensional, encajando con el slot de encantar (80,35)
+        // y el inventario del jugador definidos en ArcaneForgeMenu.
+        beveledPanel(graphics, x, y, VANILLA_W, VANILLA_H);
+        drawSlotHole(graphics, x + 80, y + 35);   // slot de encantar
+        drawSlots(graphics, x + 8, y + 84, 9, 3);  // inventario del jugador
+        drawSlots(graphics, x + 8, y + 142, 9, 1); // hotbar
 
         int px = x + VANILLA_W + GAP;
         graphics.fill(px, y, px + PANEL_W, y + VANILLA_H, 0xDD111122);
@@ -375,17 +470,15 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         if (!ItemStack.isSameItemSameComponents(cur, lastItem) || this.hasActivePedestal != this.lastPedestalCache) {
             lastItem = cur.copy();
             this.lastPedestalCache = this.hasActivePedestal;
-            int prev = selectedIndex;
             refreshList();
-            if (prev >= 0 && prev < enchants.size()) selectedIndex = prev;
-            syncButtons();
         }
 
         graphics.text(this.font, "Cofres: " + displayedChests + "/" + Config.MAX_LINKED_CHESTS, px + 8, py + 17, 0xFFAAFFAA);
         graphics.text(this.font, "Librerías: " + displayedBookshelves, px + 8, py + 27, 0xFF8888FF);
 
-        int listY = py + 38;
-        graphics.fill(px + 4, listY - 2, px + PANEL_W - 4, listY + VISIBLE_ROWS * ROW_H + 2, 0xBB000022);
+        int searchY = py + 38;
+        int listY = searchY + 16;
+        graphics.fill(px + 4, searchY - 2, px + PANEL_W - 4, listY + VISIBLE_ROWS * ROW_H + 2, 0xBB000022);
 
         if (selectedIndex >= 0 && selectedIndex < enchants.size()) {
             int ctrlY = listY + VISIBLE_ROWS * ROW_H + 6;
