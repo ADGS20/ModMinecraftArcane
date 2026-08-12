@@ -54,10 +54,12 @@ public class DimensionalBindHandler {
                 (id, inv, p) -> new DimensionalBagMenu(id, inv, bag),
                 Component.literal("§5Saco Dimensional §7(" + (currentPage + 1) + "/" + totalPages + ")"));
 
-        player.openMenu(provider, buf -> {
+        var openResult = player.openMenu(provider, buf -> {
             buf.writeVarInt(totalPages);
             buf.writeVarInt(currentPage);
         });
+        ArcaneForge.LOGGER.info("[BAG-OPEN] openMenu result={} containerMenu={}",
+                openResult, player.containerMenu == null ? "null" : player.containerMenu.getClass().getSimpleName());
 
         // El sync automatico de "menu recien abierto" tampoco es confiable en
         // este build (igual que el broadcast ambiental de cambios, que ya
@@ -66,7 +68,21 @@ public class DimensionalBindHandler {
         // cacheado de una sesion anterior en vez del contenido recien cargado
         // desde el NBT de la bolsa.
         if (player.containerMenu instanceof DimensionalBagMenu bagMenu) {
+            ArcaneForge.LOGGER.info("[BAG-OPEN] llamando syncStorageToClient, containerId={}", bagMenu.containerId);
+            // Se envia en el MISMO tick que el paquete de apertura de pantalla.
+            // Por si el cliente todavia no proceso ese paquete y descarta estos
+            // (condicion de carrera), se reenvia una segunda vez un tick despues.
             bagMenu.syncStorageToClient(player);
+            if (player.level() instanceof ServerLevel sl2) {
+                sl2.getServer().execute(() -> {
+                    if (player.containerMenu == bagMenu) {
+                        ArcaneForge.LOGGER.info("[BAG-OPEN] reenvio diferido de syncStorageToClient");
+                        bagMenu.syncStorageToClient(player);
+                    }
+                });
+            }
+        } else {
+            ArcaneForge.LOGGER.info("[BAG-OPEN] player.containerMenu NO es DimensionalBagMenu, no se sincroniza");
         }
 
         event.setCanceled(true);
