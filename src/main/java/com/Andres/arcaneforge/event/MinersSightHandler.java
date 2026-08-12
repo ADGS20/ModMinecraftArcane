@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Brightness;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -141,8 +142,9 @@ public class MinersSightHandler {
         ArcaneForge.LOGGER.info("[MINERS-SCAN] marcadores creados={}", newMarkers.size());
     }
 
-    /** Cache del setter privado Display.BlockDisplay#setBlockState(BlockState), resuelto una sola vez. */
+    /** Cache de los setters privados, resueltos una sola vez. */
     private static Method setBlockStateMethod;
+    private static Method setBrightnessOverrideMethod;
 
     /**
      * Crea un "block display" (la misma entidad de /summon minecraft:block_display)
@@ -155,6 +157,14 @@ public class MinersSightHandler {
      * decodificaba bien el estado y caia en silencio a Blocks.AIR. Llamando
      * al setter tal cual lo hace el propio juego internamente nos ahorramos
      * esa serializacion/deserializacion completa.
+     *
+     * Ademas se fuerza Brightness.FULL_BRIGHT (tambien via reflexion, mismo
+     * motivo): el marcador se coloca en la posicion REAL del mineral, que
+     * casi siempre esta dentro de roca sin luz, y el render usa la luz de
+     * esa posicion para sombrear el modelo — sin esto el cubo sale negro
+     * solido (se ve, pero no se distingue nada) en vez de mostrarse
+     * iluminado como corresponde a un indicador de "vision a traves de
+     * paredes".
      */
     private static Display.BlockDisplay createBlockMarker(ServerLevel level, BlockPos pos, BlockState state) {
         Display.BlockDisplay marker = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level);
@@ -170,8 +180,14 @@ public class MinersSightHandler {
                 setBlockStateMethod.setAccessible(true);
             }
             setBlockStateMethod.invoke(marker, state);
+
+            if (setBrightnessOverrideMethod == null) {
+                setBrightnessOverrideMethod = Display.class.getDeclaredMethod("setBrightnessOverride", Brightness.class);
+                setBrightnessOverrideMethod.setAccessible(true);
+            }
+            setBrightnessOverrideMethod.invoke(marker, Brightness.FULL_BRIGHT);
         } catch (ReflectiveOperationException e) {
-            ArcaneForge.LOGGER.warn("[MINERS-SCAN] no se pudo fijar block_state del marcador via reflexion: {}", e.toString());
+            ArcaneForge.LOGGER.warn("[MINERS-SCAN] no se pudo configurar el marcador via reflexion: {}", e.toString());
             return null;
         }
 
