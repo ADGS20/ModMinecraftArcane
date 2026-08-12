@@ -10,6 +10,7 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
+import com.Andres.arcaneforge.ArcaneForge;
 
 /**
  * Almacen del Saco Dimensional: vista de UNA pagina (54 espacios completos).
@@ -60,7 +61,11 @@ public class BagContainer extends SimpleContainer {
                     if (!stack.isEmpty()) {
                         // La cantidad real se guarda aparte (ver save()); ItemStack.CODEC
                         // decodifica "count" siempre con su propio limite de 1..99.
+                        boolean hasRealCount = entry.getInt("realCount").isPresent();
                         int realCount = entry.getInt("realCount").orElse(stack.getCount());
+                        ArcaneForge.LOGGER.info(
+                                "[BAG-LOAD] slot={} item={} codecCount={} hasRealCount={} realCount={}",
+                                globalIndex - pageOffset, stack.getItem(), stack.getCount(), hasRealCount, realCount);
                         stack.setCount(Math.max(1, realCount));
                     }
                     this.getItems().set(globalIndex - pageOffset, stack);
@@ -135,6 +140,13 @@ public class BagContainer extends SimpleContainer {
                     entry.put("item", itemTag);
                     entry.putInt("realCount", stack.getCount());
                     newList.add(entry);
+                    ArcaneForge.LOGGER.info(
+                            "[BAG-SAVE] slot={} item={} savedRealCount={}",
+                            i, stack.getItem(), stack.getCount());
+                } else {
+                    ArcaneForge.LOGGER.info(
+                            "[BAG-SAVE] slot={} item={} FALLO AL CODIFICAR (itemTag=null) count={}",
+                            i, stack.getItem(), stack.getCount());
                 }
             }
         }
