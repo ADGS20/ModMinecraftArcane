@@ -90,6 +90,12 @@ public class DimensionalBagMenu extends AbstractContainerMenu {
     public int getCurrentPage() { return currentPage; }
     public void setCurrentPageClient(int page) { this.currentPage = page; }
 
+    /** El almacen en vivo respaldando este menu (mismo objeto que usan los slots). */
+    public Container getStorage() { return storage; }
+
+    /** True si este menu esta mostrando exactamente esa bolsa (misma referencia). */
+    public boolean isForBag(ItemStack stack) { return stack == this.bag; }
+
     private static int readPage(ItemStack bag) {
         CompoundTag tag = bag.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         return tag.getInt("bag_page").orElse(0);

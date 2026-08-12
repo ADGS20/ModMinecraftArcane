@@ -3,14 +3,14 @@ package com.Andres.arcaneforge.event;
 import com.Andres.arcaneforge.ArcaneForge;
 import com.Andres.arcaneforge.item.BagContainer;
 import com.Andres.arcaneforge.item.BagLogic;
-import net.minecraft.core.HolderLookup;
+import com.Andres.arcaneforge.menu.DimensionalBagMenu;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -31,11 +31,16 @@ import java.util.Optional;
  * el encantamiento "arcane_magnet", todos los drops de:
  *   • bloques minados con pico/hacha/herramienta
  *   • mobs killed (incluidos drops de cualquier fuente de daño del jugador)
+ *   • items sueltos cercanos en el suelo (nivel 3)
  * se transfieren automáticamente a la bolsa en lugar de caer al suelo.
  *
  * Nivel 1 → solo bloques
  * Nivel 2 → bloques + mobs
  * Nivel 3 → bloques + mobs + items cercanos al suelo (radio 8 bloques)
+ *
+ * Si el jugador tiene la GUI de la bolsa abierta, las inserciones se hacen
+ * directamente sobre el Container en vivo que respalda esa pantalla, para que
+ * se vean al instante y no se pierdan al cerrar la ventana.
  */
 @EventBusSubscriber(modid = ArcaneForge.MODID)
 public class ArcaneMagnetHandler {
@@ -57,17 +62,13 @@ public class ArcaneMagnetHandler {
             ItemStack bag = findBag(sp);
             if (bag.isEmpty()) return;
 
-            BagContainer container = new BagContainer(bag, 0,
-                    sp.level().registryAccess());
-
             List<ItemEntity> toRemove = new ArrayList<>();
             for (ItemEntity ie : event.getDrops()) {
-                if (tryInsert(container, ie.getItem())) {
+                if (insertIntoBag(sp, bag, ie.getItem())) {
                     toRemove.add(ie);
                 }
             }
             event.getDrops().removeAll(toRemove);
-            container.saveNow();
 
         } catch (Exception e) {
             ArcaneForge.LOGGER.debug("ArcaneMagnet block drop error: {}", e.getMessage());
@@ -87,17 +88,13 @@ public class ArcaneMagnetHandler {
             ItemStack bag = findBag(sp);
             if (bag.isEmpty()) return;
 
-            BagContainer container = new BagContainer(bag, 0,
-                    sp.level().registryAccess());
-
             List<ItemEntity> toRemove = new ArrayList<>();
             for (ItemEntity ie : event.getDrops()) {
-                if (tryInsert(container, ie.getItem())) {
+                if (insertIntoBag(sp, bag, ie.getItem())) {
                     toRemove.add(ie);
                 }
             }
             event.getDrops().removeAll(toRemove);
-            container.saveNow();
 
         } catch (Exception e) {
             ArcaneForge.LOGGER.debug("ArcaneMagnet mob drop error: {}", e.getMessage());
@@ -124,21 +121,15 @@ public class ArcaneMagnetHandler {
             List<ItemEntity> nearby = sp.level().getEntitiesOfClass(ItemEntity.class, area, ItemEntity::isAlive);
             if (nearby.isEmpty()) return;
 
-            BagContainer container = new BagContainer(bag, 0, sp.level().registryAccess());
-            boolean changed = false;
-
             for (ItemEntity ie : nearby) {
                 ItemStack stack = ie.getItem();
-                boolean fullyAbsorbed = tryInsert(container, stack);
+                boolean fullyAbsorbed = insertIntoBag(sp, bag, stack);
                 if (fullyAbsorbed) {
                     ie.discard();
-                    changed = true;
                 } else if (stack.getCount() != ie.getItem().getCount()) {
                     ie.setItem(stack);
-                    changed = true;
                 }
             }
-            if (changed) container.saveNow();
 
         } catch (Exception e) {
             ArcaneForge.LOGGER.debug("ArcaneMagnet ground vacuum error: {}", e.getMessage());
@@ -148,11 +139,31 @@ public class ArcaneMagnetHandler {
     // ── Utilidades ────────────────────────────────────────────────────────────
 
     /**
-     * Intenta insertar el stack en el primer slot disponible del BagContainer.
+     * Inserta el stack en la bolsa. Si el jugador tiene la GUI de ESTA bolsa
+     * abierta ahora mismo, escribe directamente en el Container en vivo del
+     * menu (para que se vea al instante y no se sobreescriba al cerrar).
+     * Si no, abre/guarda un BagContainer aparte sobre el NBT de la bolsa.
+     * Devuelve true si el stack quedo COMPLETAMENTE absorbido.
+     */
+    private static boolean insertIntoBag(ServerPlayer sp, ItemStack bag, ItemStack stack) {
+        if (sp.containerMenu instanceof DimensionalBagMenu bagMenu && bagMenu.isForBag(bag)) {
+            Container live = bagMenu.getStorage();
+            boolean absorbed = tryInsert(live, stack);
+            live.setChanged(); // BagContainer.setChanged() guarda y el broadcast de Minecraft sincroniza al cliente
+            return absorbed;
+        }
+        BagContainer container = new BagContainer(bag, 0, sp.level().registryAccess());
+        boolean absorbed = tryInsert(container, stack);
+        container.saveNow();
+        return absorbed;
+    }
+
+    /**
+     * Intenta insertar el stack en el primer slot disponible del Container.
      * Respeta el límite de BagContainer.MAX_STACK por slot.
      * Devuelve true si el stack quedó COMPLETAMENTE absorbido.
      */
-    private static boolean tryInsert(BagContainer container, ItemStack stack) {
+    private static boolean tryInsert(Container container, ItemStack stack) {
         if (stack.isEmpty()) return true;
 
         // Primero intentar apilar sobre items existentes del mismo tipo

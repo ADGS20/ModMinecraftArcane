@@ -4,6 +4,8 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Pantalla del Saco Dimensional. Dibuja un fondo propio con el ESTILO de las GUI
@@ -102,5 +104,29 @@ public class DimensionalBagScreen extends AbstractContainerScreen<DimensionalBag
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+    }
+
+    /**
+     * Los slots de la bolsa aceptan hasta 1 000 000 000 por slot; mostrar ese
+     * numero completo no cabe en el icono. A partir de 1000 se muestra en
+     * formato compacto (1.2K, 3.4M, 1.0B), igual que el resto del juego hace
+     * con textos largos.
+     */
+    @Override
+    protected void renderSlotContents(GuiGraphicsExtractor graphics, ItemStack stack, Slot slot, String countString) {
+        String label = stack.getCount() >= 1000 ? formatCompact(stack.getCount()) : countString;
+        super.renderSlotContents(graphics, stack, slot, label);
+    }
+
+    private static String formatCompact(int count) {
+        if (count < 1_000) return String.valueOf(count);
+        if (count < 1_000_000) return trimZero(count / 1_000.0) + "K";
+        if (count < 1_000_000_000) return trimZero(count / 1_000_000.0) + "M";
+        return trimZero(count / 1_000_000_000.0) + "B";
+    }
+
+    private static String trimZero(double value) {
+        String s = String.format("%.1f", value);
+        return s.endsWith(".0") ? s.substring(0, s.length() - 2) : s;
     }
 }

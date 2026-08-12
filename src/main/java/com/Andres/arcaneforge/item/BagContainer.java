@@ -22,7 +22,7 @@ import net.minecraft.world.item.component.CustomData;
  * Para serializar cada ItemStack usamos ItemStack.CODEC con RegistryOps(NbtOps),
  * que es la forma estable en esta version de Minecraft/NeoForge.
  *
- * Cada espacio apila hasta 99.
+ * Cada espacio apila hasta MAX_STACK (1 000 000 000, practicamente ilimitado).
  */
 public class BagContainer extends SimpleContainer {
 
@@ -72,6 +72,18 @@ public class BagContainer extends SimpleContainer {
 
     @Override
     public int getMaxStackSize() {
+        return MAX_STACK;
+    }
+
+    /**
+     * SimpleContainer.setItem() llama a stack.limitSize(getMaxStackSize(stack)).
+     * La version por defecto de Container.getMaxStackSize(ItemStack) hace
+     * Math.min(getMaxStackSize(), stack.getMaxStackSize()), lo que recorta a 64
+     * (el limite propio del item) sin importar que MAX_STACK sea 1 000 000 000.
+     * Hay que ignorar el limite del item y devolver siempre MAX_STACK.
+     */
+    @Override
+    public int getMaxStackSize(ItemStack stack) {
         return MAX_STACK;
     }
 
