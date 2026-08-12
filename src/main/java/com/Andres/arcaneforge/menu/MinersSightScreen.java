@@ -91,7 +91,12 @@ public class MinersSightScreen extends Screen {
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        this.extractBackground(graphics, mouseX, mouseY, partialTick);
+        // OJO: a diferencia de AbstractContainerScreen (que exige llamar
+        // extractBackground a mano), el Screen base YA la llama solo dentro
+        // de su propio extractRenderState/extractRenderStateWithTooltipAndSubtitles.
+        // Llamarla tambien aqui hacia que el blur del fondo se ejecutara dos
+        // veces en el mismo frame ("Can only blur once per frame") y crasheaba
+        // el juego justo al abrir este menu.
         super.extractRenderState(graphics, mouseX, mouseY, partialTick);
 
         String title = "⚡ Vision Minera ⚡";
