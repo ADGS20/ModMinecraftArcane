@@ -4,21 +4,15 @@ import com.Andres.arcaneforge.ArcaneForge;
 import com.Andres.arcaneforge.miners.MinersSightLogic;
 import com.Andres.arcaneforge.miners.OreFilter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.TagValueInput;
-import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -26,6 +20,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -146,14 +141,20 @@ public class MinersSightHandler {
         ArcaneForge.LOGGER.info("[MINERS-SCAN] marcadores creados={}", newMarkers.size());
     }
 
+    /** Cache del setter privado Display.BlockDisplay#setBlockState(BlockState), resuelto una sola vez. */
+    private static Method setBlockStateMethod;
+
     /**
      * Crea un "block display" (la misma entidad de /summon minecraft:block_display)
      * en la posicion del bloque, mostrando el CUBO real del mineral en vez de
-     * una figura humanoide. El estado del bloque solo se puede fijar mediante
-     * Entity.load() (el setter propio es privado), asi que se envuelve en un
-     * ValueInput a partir de un CompoundTag con el mismo formato que usa el
-     * propio juego al guardar/cargar la entidad (clave "block_state" con el
-     * codec de BlockState).
+     * una figura humanoide. El estado del bloque se fija llamando DIRECTO al
+     * setter privado por reflexion en vez de pasar por un round-trip
+     * NBT/Codec (Entity.load(ValueInput) con "block_state"): ese camino
+     * compilaba y no lanzaba ningun error, pero el bloque salia invisible
+     * (solo se veia el contorno del brillo) — probablemente el codec no
+     * decodificaba bien el estado y caia en silencio a Blocks.AIR. Llamando
+     * al setter tal cual lo hace el propio juego internamente nos ahorramos
+     * esa serializacion/deserializacion completa.
      */
     private static Display.BlockDisplay createBlockMarker(ServerLevel level, BlockPos pos, BlockState state) {
         Display.BlockDisplay marker = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level);
@@ -163,13 +164,16 @@ public class MinersSightHandler {
         marker.setNoGravity(true);
         marker.setGlowingTag(true);
 
-        Tag stateTag = BlockState.CODEC.encodeStart(NbtOps.INSTANCE, state).result().orElse(null);
-        if (stateTag == null) return null;
-
-        CompoundTag tag = new CompoundTag();
-        tag.put("block_state", stateTag);
-        ValueInput input = TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), tag);
-        marker.load(input);
+        try {
+            if (setBlockStateMethod == null) {
+                setBlockStateMethod = Display.BlockDisplay.class.getDeclaredMethod("setBlockState", BlockState.class);
+                setBlockStateMethod.setAccessible(true);
+            }
+            setBlockStateMethod.invoke(marker, state);
+        } catch (ReflectiveOperationException e) {
+            ArcaneForge.LOGGER.warn("[MINERS-SCAN] no se pudo fijar block_state del marcador via reflexion: {}", e.toString());
+            return null;
+        }
 
         return marker;
     }
