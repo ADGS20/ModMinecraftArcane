@@ -126,4 +126,31 @@ public class DimensionalBagScreen extends AbstractContainerScreen<DimensionalBag
         if (count < 1_000_000_000) return (count / 1_000_000) + "M";
         return (count / 1_000_000_000) + "B";
     }
+
+    /**
+     * El item "agarrado" con el mouse (pegado al cursor) NO pasa por
+     * renderSlotContents: el motor lo dibuja con extractFloatingItem, un
+     * metodo privado que no se puede interceptar, y ahi el numero se
+     * calcula siempre en crudo (sin abreviar). Por eso se veia "40447" en
+     * vez de "40K" al agarrar el stack. Reimplementamos el dibujo del item
+     * agarrado para el caso normal (getCarried()), aplicando el mismo
+     * formato compacto.
+     */
+    @Override
+    public void extractCarriedItem(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        ItemStack carried = getMenu().getCarried();
+        if (carried.isEmpty()) {
+            super.extractCarriedItem(graphics, mouseX, mouseY);
+            return;
+        }
+        graphics.nextStratum();
+        int x = mouseX - 8;
+        int y = mouseY - 8;
+        graphics.item(carried, x, y);
+        if (carried.getCount() >= 1000) {
+            graphics.itemDecorations(this.font, carried, x, y, formatCompact(carried.getCount()));
+        } else {
+            graphics.itemDecorations(this.font, carried, x, y);
+        }
+    }
 }
