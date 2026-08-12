@@ -107,10 +107,12 @@ public class DimensionalBagScreen extends AbstractContainerScreen<DimensionalBag
     }
 
     /**
-     * Los slots de la bolsa aceptan hasta 1 000 000 000 por slot; mostrar ese
-     * numero completo no cabe en el icono. A partir de 1000 se muestra en
-     * formato compacto (1.2K, 3.4M, 1.0B), igual que el resto del juego hace
-     * con textos largos.
+     * Los slots de la bolsa aceptan hasta 1 000 000 000 (1B) por slot; mostrar
+     * ese numero completo no cabe en el icono. Debajo de 1000 se muestra el
+     * numero tal cual (hasta 3 digitos: 999). Desde 1000 se abrevia con letra
+     * (K = mil, M = millon, B = billon/1000M) y siempre con maximo 3 digitos
+     * antes de la letra: "1K"… "999K", "1M"… "999M", "1B" (el tope exacto).
+     * Sin decimales.
      */
     @Override
     protected void renderSlotContents(GuiGraphicsExtractor graphics, ItemStack stack, Slot slot, String countString) {
@@ -120,13 +122,8 @@ public class DimensionalBagScreen extends AbstractContainerScreen<DimensionalBag
 
     private static String formatCompact(int count) {
         if (count < 1_000) return String.valueOf(count);
-        if (count < 1_000_000) return trimZero(count / 1_000.0) + "K";
-        if (count < 1_000_000_000) return trimZero(count / 1_000_000.0) + "M";
-        return trimZero(count / 1_000_000_000.0) + "B";
-    }
-
-    private static String trimZero(double value) {
-        String s = String.format("%.1f", value);
-        return s.endsWith(".0") ? s.substring(0, s.length() - 2) : s;
+        if (count < 1_000_000) return (count / 1_000) + "K";
+        if (count < 1_000_000_000) return (count / 1_000_000) + "M";
+        return (count / 1_000_000_000) + "B";
     }
 }
