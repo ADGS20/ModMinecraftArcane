@@ -55,7 +55,25 @@ public class DimensionalBagMenu extends AbstractContainerMenu {
         this.totalPages = Math.max(1, buf.readVarInt());
         this.currentPage = buf.readVarInt();
         // En cliente el contenido real lo sincroniza el servidor; usamos un buffer vacio.
-        this.storage = new SimpleContainer(STORAGE);
+        //
+        // BUG RAIZ (el "se queda en 64" de siempre): Slot.set(stack) NO consulta
+        // el limite del propio Slot (el override de UnlimitedSlot.getMaxStackSize
+        // es invisible aqui); llama directo a container.setItem(index, stack), y
+        // SimpleContainer.setItem() hace stack.limitSize(this.getMaxStackSize(stack))
+        // usando el limite del CONTENEDOR. Un SimpleContainer sin override devuelve
+        // Math.min(99, stack.getMaxStackSize()) = 64 para hierro. Como el servidor
+        // ya arreglo esto en BagContainer pero el cliente seguia usando un
+        // SimpleContainer normal, CADA paquete de sincronizacion completo
+        // (ClientboundContainerSetContentPacket -> initializeContents -> Slot.set)
+        // recortaba el numero a 64 en el momento mismo de aplicarse, antes de que
+        // se dibujara nada. Por eso "agarrar" (que usa el campo carried, sin pasar
+        // por setItem) siempre mostraba el valor real, pero el slot estatico no.
+        this.storage = new SimpleContainer(STORAGE) {
+            @Override
+            public int getMaxStackSize(ItemStack stack) {
+                return BagContainer.MAX_STACK;
+            }
+        };
         layoutSlots(playerInv);
     }
 
