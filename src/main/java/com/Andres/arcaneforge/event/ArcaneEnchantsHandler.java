@@ -351,18 +351,18 @@ public class ArcaneEnchantsHandler {
             if (player.level().isClientSide()) return;
             if (!(player instanceof ServerPlayer sp)) return;
 
-            // Verificar si algún item en inventario tiene Eternal Feast (cualquier item encantable con comida)
-            boolean hasEternalFeast = false;
+            // Nivel MAS ALTO de Eternal Feast entre todo lo que lleve el jugador
+            // (cualquier item de comida encantable en el inventario). Cuanto mas
+            // alto, mas segura se vuelve la ruleta — ver applyRoulette().
+            int feastLevel = 0;
             for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
                 ItemStack item = player.getInventory().getItem(i);
                 if (item.isEmpty()) continue;
-                if (lvl(player.level(), item, ETERNAL_FEAST) > 0) {
-                    hasEternalFeast = true;
-                    break;
-                }
+                int l = lvl(player.level(), item, ETERNAL_FEAST);
+                if (l > feastLevel) feastLevel = l;
             }
 
-            if (!hasEternalFeast) return;
+            if (feastLevel <= 0) return;
 
             // Mantener hambre siempre llena
             net.minecraft.world.food.FoodData foodData = player.getFoodData();
@@ -375,16 +375,60 @@ public class ArcaneEnchantsHandler {
             long time = player.level().getGameTime();
             if (time % 600 != 0) return; // cada 30 segundos
 
-            applyRoulette(sp);
+            applyRoulette(sp, feastLevel);
 
         } catch (Exception e) {
             ArcaneForge.LOGGER.debug("EternalFeast error: {}", e.getMessage());
         }
     }
 
-    /** 10 efectos posibles: 8 buenos, 2 malos (ruleta rusa!) */
-    private static void applyRoulette(ServerPlayer player) {
-        int roll = RNG.nextInt(10);
+    /**
+     * Nivel maximo real alcanzable en la Forja Arcana con Pedestal activo
+     * (ver ArcaneForgeBlockEntity: 15 sin Pedestal, 255 con Pedestal). La
+     * ruleta usa este techo como referencia para decidir cuando ya no debe
+     * quedar NINGUN efecto malo.
+     */
+    private static final int MAX_FORGE_LEVEL = 255;
+
+    /**
+     * Probabilidad (0-100) de caer en un efecto MALO segun el nivel de
+     * Eternal Feast. Cuatro tramos que van reduciendo el riesgo a medida
+     * que se invierte mas en subirlo de nivel en la Forja, hasta llegar a
+     * CERO exactamente en el nivel maximo (255): a partir de ahi la ruleta
+     * es 100% segura, solo efectos buenos.
+     */
+    private static int badChancePercent(int level) {
+        if (level >= MAX_FORGE_LEVEL) return 0;  // 255: ningun efecto malo, nunca
+        if (level >= 200) return 2;              // 200-254: casi nunca
+        if (level >= 100) return 5;              // 100-199: poco frecuente
+        if (level >= 50)  return 10;             // 50-99: menos comun, y ya no el peor de los dos
+        return 20;                               // 1-49: riesgo completo (los 2 efectos malos)
+    }
+
+    /** El efecto malo mas duro (Debilidad + Hambre) solo puede salir en niveles bajos. */
+    private static boolean severeBadAllowed(int level) {
+        return level < 50;
+    }
+
+    /** 8 efectos buenos siempre disponibles; 2 efectos malos que se van reduciendo con el nivel (ver arriba). */
+    private static void applyRoulette(ServerPlayer player, int level) {
+        int badChance = badChancePercent(level);
+        if (badChance > 0 && RNG.nextInt(100) < badChance) {
+            if (severeBadAllowed(level) && RNG.nextBoolean()) {
+                // ¡PELIGRO! Debilidad + hambre severa temporal
+                player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 300, 2));
+                player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 100, 4));
+                ArcaneForge.LOGGER.debug("EternalFeast DANGER for {} (level {})", player.getName().getString(), level);
+            } else {
+                // ¡RULETA RUSA! Náusea + Ceguera
+                player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 200, 1));
+                player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 200, 0));
+                ArcaneForge.LOGGER.debug("EternalFeast BAD LUCK for {} (level {})", player.getName().getString(), level);
+            }
+            return;
+        }
+
+        int roll = RNG.nextInt(8);
         switch (roll) {
             case 0 -> // Regeneración potente
                 player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 600, 2));
@@ -409,16 +453,6 @@ public class ArcaneEnchantsHandler {
             }
             case 7 -> // Invisibilidad (neutro/bueno)
                 player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 400, 0));
-            case 8 -> { // ¡RULETA RUSA! Náusea + Ceguera
-                player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 200, 1));
-                player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 200, 0));
-                ArcaneForge.LOGGER.debug("EternalFeast BAD LUCK for {}", player.getName().getString());
-            }
-            case 9 -> { // ¡PELIGRO! Debilidad + hambre severa temporal
-                player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 300, 2));
-                player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 100, 4));
-                ArcaneForge.LOGGER.debug("EternalFeast DANGER for {}", player.getName().getString());
-            }
         }
     }
 }
