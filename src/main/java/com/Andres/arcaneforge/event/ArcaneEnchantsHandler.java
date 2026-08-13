@@ -351,15 +351,21 @@ public class ArcaneEnchantsHandler {
             if (player.level().isClientSide()) return;
             if (!(player instanceof ServerPlayer sp)) return;
 
-            // Nivel MAS ALTO de Eternal Feast entre todo lo que lleve el jugador
-            // (cualquier item de comida encantable en el inventario). Cuanto mas
-            // alto, mas segura se vuelve la ruleta — ver applyRoulette().
+            // Nivel MAS ALTO de Eternal Feast entre todo lo que lleve el jugador,
+            // y la lista de TODOS los alimentos encantados que tiene encima
+            // (cualquiera con el encantamiento, no hace falta comerselos). El
+            // nivel mas alto decide que tan segura es la ruleta — ver
+            // applyRoulette(); la lista se usa para darle ademas el efecto
+            // "de comerselo" propio de cada alimento — ver applyFoodOwnEffects().
             int feastLevel = 0;
+            List<ItemStack> feastItems = new ArrayList<>();
             for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
                 ItemStack item = player.getInventory().getItem(i);
                 if (item.isEmpty()) continue;
                 int l = lvl(player.level(), item, ETERNAL_FEAST);
+                if (l <= 0) continue;
                 if (l > feastLevel) feastLevel = l;
+                feastItems.add(item);
             }
 
             if (feastLevel <= 0) return;
@@ -375,10 +381,41 @@ public class ArcaneEnchantsHandler {
             long time = player.level().getGameTime();
             if (time % 600 != 0) return; // cada 30 segundos
 
+            applyFoodOwnEffects(sp, feastItems);
             applyRoulette(sp, feastLevel);
 
         } catch (Exception e) {
             ArcaneForge.LOGGER.debug("EternalFeast error: {}", e.getMessage());
+        }
+    }
+
+    /**
+     * Ademas de la ruleta, cada alimento encantado tambien concede su propio
+     * efecto "al comerlo" — el mismo que le daria al jugador si de verdad se
+     * lo comiera (ej. Regeneracion + Absorcion de una Manzana Dorada, o los
+     * cuatro efectos de una Manzana Encantada/Notch) — sin necesidad de
+     * comerselo, solo por llevarlo encima. Se lee directamente del propio
+     * componente "Consumable" del item (el mismo dato que usa el juego para
+     * decidir que pasa cuando lo comes), asi que funciona automaticamente
+     * con CUALQUIER comida que tenga efectos al comer, incluidos los stews
+     * sospechosos y comidas de otros mods — no hay nada hardcodeado aqui.
+     * Los alimentos sin efecto propio (pan, carne cocida, etc.) simplemente
+     * no aportan nada extra, igual que si te los comieras de verdad.
+     */
+    private static void applyFoodOwnEffects(ServerPlayer player, List<ItemStack> feastItems) {
+        Level level = player.level();
+        java.util.Set<net.minecraft.world.item.Item> applied = new java.util.HashSet<>();
+        for (ItemStack stack : feastItems) {
+            if (!applied.add(stack.getItem())) continue; // no repetir el mismo alimento varias veces
+            net.minecraft.world.item.component.Consumable consumable = stack.get(DataComponents.CONSUMABLE);
+            if (consumable == null) continue;
+            for (net.minecraft.world.item.consume_effects.ConsumeEffect effect : consumable.onConsumeEffects()) {
+                try {
+                    effect.apply(level, stack, player);
+                } catch (Exception e) {
+                    ArcaneForge.LOGGER.debug("EternalFeast food-effect error: {}", e.getMessage());
+                }
+            }
         }
     }
 
