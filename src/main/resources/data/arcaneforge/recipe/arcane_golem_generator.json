@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "IPI",
+    "DND",
+    "IPI"
+  ],
+  "key": {
+    "I": "minecraft:iron_block",
+    "P": "minecraft:carved_pumpkin",
+    "D": "minecraft:diamond_block",
+    "N": "minecraft:netherite_ingot"
+  },
+  "result": {
+    "id": "arcaneforge:arcane_golem_generator",
+    "count": 1
+  },
+  "show_notification": true
+}

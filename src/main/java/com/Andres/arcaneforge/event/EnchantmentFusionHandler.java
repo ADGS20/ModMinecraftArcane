@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -27,6 +28,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * La Forja Arcana no revisa exclusividad de encantamientos al aplicarlos (ni
+ * tampoco vanilla la revisa al calcular sus efectos — exclusiveSet solo
+ * existe para bloquear combinaciones en la mesa de encantar/yunque, nunca al
+ * usar el item), asi que combos como Toque de Seda+Fortuna, Filo+Cortante+
+ * Aspecto Artropodos o los cuatro tipos de Proteccion ya se pueden llevar
+ * juntos sin ningun truco. Esta clase premia esa fusion con un bono extra
+ * (mas drops al minar, daño combinado, proteccion combinada) — y las TRES
+ * bonificaciones exigen tener un Pedestal o un Bloque de Poder cerca
+ * (hasFusionBlockNearby, radio 5), para que esos bloques valgan la pena
+ * construirse en vez de ser decorativos.
+ */
 @EventBusSubscriber(modid = ArcaneForge.MODID)
 public class EnchantmentFusionHandler {
 
@@ -57,20 +70,7 @@ public class EnchantmentFusionHandler {
 
             if (silkTouchLevel <= 0 || fortuneLevel <= 0) return;
 
-            BlockPos blockPos = event.getPos();
-
-            // Verificar la presencia del bloque de poder o el pedestal cerca
-            boolean hasRequiredBlock = false;
-            int radius = 5;
-            for (BlockPos p : BlockPos.betweenClosed(blockPos.offset(-radius, -radius, -radius), blockPos.offset(radius, radius, radius))) {
-                BlockState checkState = player.level().getBlockState(p);
-                if (checkState.is(ModBlocks.ARCANE_POWER_BLOCK.get()) || checkState.is(ModBlocks.ARCANE_PEDESTAL.get())) {
-                    hasRequiredBlock = true;
-                    break;
-                }
-            }
-
-            if (!hasRequiredBlock) return;
+            if (!hasFusionBlockNearby(player.level(), event.getPos())) return;
 
             int extraDrops = RANDOM.nextInt(fortuneLevel + 1);
 
@@ -121,14 +121,17 @@ public class EnchantmentFusionHandler {
             DamageSource source = event.getSource();
             float originalDamage = event.getOriginalDamage();
 
-            float protectionReduction = calculateFusedProtection(target, source);
-            if (protectionReduction > 0) {
-                float newDamage = Math.max(0, originalDamage * (1.0f - protectionReduction));
-                event.setNewDamage(newDamage);
+            if (hasFusionBlockNearby(target.level(), target.blockPosition())) {
+                float protectionReduction = calculateFusedProtection(target, source);
+                if (protectionReduction > 0) {
+                    float newDamage = Math.max(0, originalDamage * (1.0f - protectionReduction));
+                    event.setNewDamage(newDamage);
+                }
             }
 
             Entity attacker = source.getEntity();
-            if (attacker instanceof LivingEntity livingAttacker) {
+            if (attacker instanceof LivingEntity livingAttacker
+                    && hasFusionBlockNearby(livingAttacker.level(), livingAttacker.blockPosition())) {
                 float extraDamage = calculateFusedDamage(livingAttacker, target);
                 if (extraDamage > 0) {
                     float current = event.getNewDamage();
@@ -193,7 +196,11 @@ public class EnchantmentFusionHandler {
         if (sharpnessLevel > 0) damageEnchantCount++;
         if (smiteLevel > 0)     damageEnchantCount++;
         if (baneLevel > 0)      damageEnchantCount++;
-        if (damageEnchantCount <= 1) return 0;
+        // Las 3 ramas de bono de abajo exigen Sharpness ademas del segundo
+        // encantamiento — sin este chequeo, Smite+Bane sin Sharpness pasaba
+        // esta puerta (cuenta 2) pero las 3 ramas fallaban igual, dando
+        // siempre 0 de bono en silencio pese a "cumplir" la fusion.
+        if (sharpnessLevel <= 0 || damageEnchantCount <= 1) return 0;
 
         float extraDamage = 0;
         boolean isUndead     = isUndeadMob(target);
@@ -209,7 +216,10 @@ public class EnchantmentFusionHandler {
             extraDamage += 2.5f * baneLevel;
         }
 
-        return extraDamage;
+        // Topado: sharpness/smite/bane tambien se pueden subir hasta nivel 255
+        // via la Arcane Forge (que ignora el max_level=5 vanilla), y sin tope
+        // esta fusion pasaba de 600+ de daño extra por golpe.
+        return Math.min(extraDamage, 50.0f);
     }
 
     private static boolean isUndeadMob(LivingEntity entity) {
@@ -252,6 +262,23 @@ public class EnchantmentFusionHandler {
             } catch (Exception ignored) {}
         }
         return result;
+    }
+
+    /**
+     * Radio 5 alrededor de centerPos: hay que tener un Pedestal o un Bloque de
+     * Poder cerca para cobrar CUALQUIERA de los tres bonos de fusion (drops de
+     * mineria, proteccion combinada, daño combinado) — antes solo la fusion
+     * de mineria lo exigia, y las otras dos eran gratis sin invertir nada.
+     */
+    private static boolean hasFusionBlockNearby(Level level, BlockPos centerPos) {
+        int radius = 5;
+        for (BlockPos p : BlockPos.betweenClosed(centerPos.offset(-radius, -radius, -radius), centerPos.offset(radius, radius, radius))) {
+            BlockState checkState = level.getBlockState(p);
+            if (checkState.is(ModBlocks.ARCANE_POWER_BLOCK.get()) || checkState.is(ModBlocks.ARCANE_PEDESTAL.get())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean isDamageType(DamageSource source, String... typeNames) {

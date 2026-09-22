@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " CA",
+    " SA",
+    "S  "
+  ],
+  "key": {
+    "C": "arcaneforge:arcane_golem_core",
+    "A": "minecraft:blue_ice",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "arcaneforge:snow_golem_binding_rod",
+    "count": 1
+  },
+  "show_notification": true
+}

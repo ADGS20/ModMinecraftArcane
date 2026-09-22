@@ -1,0 +1,19 @@
+{
+  "parent": "arcaneforge:get_wand",
+  "display": {
+    "icon": { "id": "arcaneforge:arcane_pedestal" },
+    "title": { "translate": "advancements.arcaneforge.craft_pedestal.title" },
+    "description": { "translate": "advancements.arcaneforge.craft_pedestal.description" },
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "got_pedestal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [ { "items": "arcaneforge:arcane_pedestal" } ]
+      }
+    }
+  },
+  "requirements": [ [ "got_pedestal" ] ]
+}

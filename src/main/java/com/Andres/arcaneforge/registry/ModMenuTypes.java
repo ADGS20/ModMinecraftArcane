@@ -2,6 +2,7 @@ package com.Andres.arcaneforge.registry;
 
 import com.Andres.arcaneforge.ArcaneForge;
 import com.Andres.arcaneforge.menu.ArcaneForgeMenu;
+import com.Andres.arcaneforge.menu.DimensionalBagMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -17,5 +18,11 @@ public class ModMenuTypes {
             MENUS.register(
                     "arcane_forge_menu",
                     () -> IMenuTypeExtension.create(ArcaneForgeMenu::new)
+            );
+
+    public static final DeferredHolder<MenuType<?>, MenuType<DimensionalBagMenu>> DIMENSIONAL_BAG_MENU =
+            MENUS.register(
+                    "dimensional_bag_menu",
+                    () -> IMenuTypeExtension.create(DimensionalBagMenu::new)
             );
 }

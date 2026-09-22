@@ -1,0 +1,37 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.Andres.arcaneforge.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "SpearWeaponMixin",
+    "EnchantmentDisplayMixin",
+    "ArcaneNitwitTradeMixin",
+    "InfiniteBucketMixin",
+    "InfiniteFuelBucketMixin",
+    "SnowWalkMixin",
+    "SnowGolemImmunityMixin",
+    "ArcaneGolemCreeperTargetMixin",
+    "ItemEntityRealCountMixin",
+    "InfiniteChestBlockEntityMixin",
+    "InfiniteChestCapacityMixin",
+    "InfiniteChestPlaceMixin",
+    "CompoundContainerCapacityMixin",
+    "InfiniteChestSlotMixin",
+    "SimpleContainerCapacityMixin",
+    "InfiniteChestMenuOpenMixin",
+    "InfiniteChestHopperMixin",
+    "GhostStrideBlockTriggerMixin",
+    "GhostStrideEmissionMixin"
+  ],
+  "client": [
+    "ArcaneMerchantScreenMixin",
+    "ScreenAccessor",
+    "AbstractContainerScreenAccessor",
+    "ArcaneVillagerNameTagMixin",
+    "InfiniteChestScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

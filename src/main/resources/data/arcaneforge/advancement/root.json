@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": { "id": "arcaneforge:arcane_guide_book" },
+    "title": { "translate": "advancements.arcaneforge.root.title" },
+    "description": { "translate": "advancements.arcaneforge.root.description" },
+    "background": "minecraft:gui/advancements/backgrounds/end",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "got_guide": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [ { "items": "arcaneforge:arcane_guide_book" } ]
+      }
+    }
+  },
+  "requirements": [ [ "got_guide" ] ]
+}

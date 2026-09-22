@@ -1,6 +1,7 @@
 package com.Andres.arcaneforge.event;
 
 import com.Andres.arcaneforge.ArcaneForge;
+import com.Andres.arcaneforge.util.ArcaneGolemUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -12,10 +13,13 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.golem.AbstractGolem;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -23,6 +27,7 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
@@ -64,6 +69,7 @@ public class ArcaneEnchantsHandler {
     private static final ResourceKey<Enchantment> CHAIN_THUNDER     = key("chain_thunder");
     private static final ResourceKey<Enchantment> ARCANE_REPULSE    = key("arcane_repulse");
     private static final ResourceKey<Enchantment> ETERNAL_FEAST     = key("eternal_feast");
+    private static final ResourceKey<Enchantment> CORAZA_ARCANA     = key("coraza_arcana");
 
     // ── Utilidad ──────────────────────────────────────────────────────────────
     private static int lvl(Level level, ItemStack stack, ResourceKey<Enchantment> key) {
@@ -90,7 +96,7 @@ public class ArcaneEnchantsHandler {
             if (level <= 0) return;
 
             List<ItemStack> bonusDrops = new ArrayList<>();
-            int rolls = Math.min(level, 10);
+            int rolls = Math.min(level, 30); // techo re-escalado, antes 10
             for (int i = 0; i < rolls; i++) {
                 int roll = RNG.nextInt(100);
                 if (roll < 5)            bonusDrops.add(new ItemStack(Items.NETHERITE_INGOT));
@@ -123,8 +129,11 @@ public class ArcaneEnchantsHandler {
             int level = lvl(player.level(), tool, SOUL_DELVE);
             if (level <= 0) return;
 
-            // XP bonus: spawn XP orbs
-            int xpBonus = 2 + level * 3 + RNG.nextInt(level * 2 + 1);
+            // XP bonus (topado: sin esto, a nivel 255 via la Arcane Forge esto
+            // daba miles de puntos de XP por bloque roto). Techo re-escalado de
+            // 30 a 100 para que invertir mas en la Forja siga dando mas XP.
+            int cappedLevel = Math.min(level, 100);
+            int xpBonus = 2 + cappedLevel * 3 + RNG.nextInt(cappedLevel * 2 + 1);
             if (player.level() instanceof ServerLevel serverLevel) {
                 serverLevel.levelEvent(1001, event.getPos(), 0); // sound
                 player.giveExperiencePoints(xpBonus);
@@ -167,22 +176,30 @@ public class ArcaneEnchantsHandler {
 
             Vec3 pos = target.position();
 
-            // Knockback AOE a todos en radio
-            double radius = 3.0 + level * 2.0;
+            // Knockback AOE a todos en radio (radio y empuje topados: la Arcane
+            // Forge permite subir esto hasta nivel 255 con Pedestal, asi que el
+            // radio de busqueda de entidades y el empuje necesitan un techo para
+            // no dispararse). Pendientes mas suaves que antes para que sigan
+            // creciendo en vez de aplanarse ya a nivel ~9-14.
+            double radius = Math.min(3.0 + level * 0.15, 25.0);
+            double push = Math.min(1.5 + level * 0.05, 15.0);
             AABB area = new AABB(pos.x - radius, pos.y - 1, pos.z - radius,
                                  pos.x + radius, pos.y + 3, pos.z + radius);
             for (LivingEntity nearby : serverLevel.getEntitiesOfClass(LivingEntity.class, area)) {
                 if (nearby == livingAttacker) continue;
                 Vec3 dir = nearby.position().subtract(pos).normalize();
-                nearby.push(dir.x * (1.5 + level), 0.5 + level * 0.3, dir.z * (1.5 + level));
+                nearby.push(dir.x * push, Math.min(0.5 + level * 0.05, 3.0), dir.z * push);
             }
 
-            // Bonus damage escalable
-            float bonus = event.getOriginalDamage() * (0.5f + level * 0.5f);
+            // Bonus damage escalable, re-topado en x20 el daño original (era x5,
+            // que se alcanzaba ya a nivel 9). Sigue siendo un instakill a niveles
+            // muy altos — es intencional, invertir hasta el techo real (250) debe
+            // premiar de verdad.
+            float bonus = event.getOriginalDamage() * Math.min(0.5f + level * 0.06f, 20.0f);
             event.setNewDamage(event.getNewDamage() + bonus);
 
             // Pequeña explosión sin daño de bloques
-            float expRadius = Math.min(1.5f + level * 0.8f, 5.0f);
+            float expRadius = Math.min(1.5f + level * 0.02f, 8.0f);
             serverLevel.explode(null, pos.x, pos.y, pos.z, expRadius,
                     false, ServerLevel.ExplosionInteraction.NONE);
 
@@ -255,17 +272,38 @@ public class ArcaneEnchantsHandler {
             String msgId = event.getSource().type().msgId();
             if (!msgId.contains("trident")) return;
 
-            ItemStack weapon = livingAttacker.getMainHandItem();
-            if (!weapon.is(Items.TRIDENT)) weapon = livingAttacker.getOffhandItem();
-            if (weapon.isEmpty()) return;
+            // En supervivencia, TridentItem.releaseUsing() ya CONSUMIO el
+            // tridente de la mano del jugador antes de que el proyectil golpee
+            // (itemStack.consumeAndReturn(1, player)), asi que para un golpe
+            // LANZADO getMainHandItem() ya esta vacio/con otra cosa y el rayo
+            // nunca se activaba — por eso "solo funcionaba en creativo"
+            // (hasInfiniteMaterials() evita esa consumicion). El proyectil
+            // (ThrownTrident extends AbstractArrow) siempre guarda su propia
+            // copia del item lanzado via getPickupItemStackOrigin(), con
+            // encantamientos incluidos, sin importar el modo de juego.
+            ItemStack weapon = ItemStack.EMPTY;
+            Entity directEntity = event.getSource().getDirectEntity();
+            if (directEntity instanceof AbstractArrow arrow) {
+                weapon = arrow.getPickupItemStackOrigin();
+            }
+            if (weapon.isEmpty()) {
+                // Golpe cuerpo a cuerpo con el tridente en mano (no fue lanzado).
+                weapon = livingAttacker.getMainHandItem();
+                if (!weapon.is(Items.TRIDENT)) weapon = livingAttacker.getOffhandItem();
+            }
+            if (weapon.isEmpty() || !weapon.is(Items.TRIDENT)) return;
 
             int level = lvl(livingAttacker.level(), weapon, CHAIN_THUNDER);
             if (level <= 0) return;
             if (!(livingAttacker.level() instanceof ServerLevel serverLevel)) return;
 
-            // Rayos en cadena: buscar enemigos cercanos al impacto
-            int chains = Math.min(level * 2 + 1, 8);
-            double radius = 5.0 + level * 2.0;
+            // Rayos en cadena: buscar enemigos cercanos al impacto (radio topado:
+            // sin esto, a nivel 255 la busqueda de entidades escanea un area
+            // gigante en cada golpe). Techos re-escalados (antes se aplanaban en
+            // nivel ~3.5/17.5) para que invertir mas siga dando mas rayos y mas
+            // alcance.
+            int chains = Math.min(level / 4 + 1, 20);
+            double radius = Math.min(5.0 + level * 0.5, 60.0);
             AABB area = target.getBoundingBox().inflate(radius);
 
             List<LivingEntity> nearby = serverLevel.getEntitiesOfClass(LivingEntity.class, area);
@@ -312,14 +350,17 @@ public class ArcaneEnchantsHandler {
             Entity attacker = event.getSource().getEntity();
             Vec3 defPos = defender.position();
 
-            // Knockback AOE en área
-            double radius = 3.0 + level * 1.5;
+            // Knockback AOE en área (radio y empuje topados por la misma razon
+            // que en Arcane Cataclysm; pendientes suavizadas para no aplanarse
+            // ya a nivel ~10-15 como antes).
+            double radius = Math.min(3.0 + level * 0.15, 40.0);
+            double push = Math.min(2.0 + level * 0.06, 18.0);
             AABB area = new AABB(defPos.x - radius, defPos.y - 1, defPos.z - radius,
                                  defPos.x + radius, defPos.y + 3, defPos.z + radius);
             for (LivingEntity nearby : serverLevel.getEntitiesOfClass(LivingEntity.class, area)) {
                 if (nearby == defender) continue;
                 Vec3 dir = nearby.position().subtract(defPos).normalize();
-                nearby.push(dir.x * (2.0 + level), 0.4 + level * 0.2, dir.z * (2.0 + level));
+                nearby.push(dir.x * push, Math.min(0.4 + level * 0.2, 3.0), dir.z * push);
             }
 
             // Reflejar % del daño bloqueado de vuelta al atacante
@@ -329,8 +370,12 @@ public class ArcaneEnchantsHandler {
                         Math.min(reflect, 20.0f));
             }
 
-            // Reducir el daño recibido mientras se bloquea
-            event.setNewDamage(event.getNewDamage() * Math.max(0.0f, 1.0f - level * 0.3f));
+            // Reducir el daño recibido mientras se bloquea, PERO nunca a cero:
+            // con la formula original, desde nivel 4 (facil de superar via la
+            // Arcane Forge, que ignora el max_level=3 del JSON) el multiplicador
+            // llegaba a 0 y el jugador quedaba invencible mientras bloquea. Se
+            // topa en 10% de daño minimo, siempre pasa algo.
+            event.setNewDamage(event.getNewDamage() * Math.max(0.10f, 1.0f - level * 0.3f));
 
         } catch (Exception e) {
             ArcaneForge.LOGGER.debug("ArcaneRepulse error: {}", e.getMessage());
@@ -341,8 +386,7 @@ public class ArcaneEnchantsHandler {
     // 7. ETERNAL FEAST — Comida que nunca acaba + ruleta de efectos
     // ═══════════════════════════════════════════════════════════════════════════
 
-    private static final long EFFECT_COOLDOWN_TICKS = 100L; // 5 segundos entre efectos
-    // Map simple usando timestamp del jugador para evitar spam
+    private static final long EFFECT_COOLDOWN_TICKS = 600L; // 30 segundos entre tiradas de ruleta
 
     @SubscribeEvent
     public static void onEternalFeastTick(PlayerTickEvent.Post event) {
@@ -379,7 +423,7 @@ public class ArcaneEnchantsHandler {
 
             // Ruleta de efectos aleatorios cada N ticks
             long time = player.level().getGameTime();
-            if (time % 600 != 0) return; // cada 30 segundos
+            if (time % EFFECT_COOLDOWN_TICKS != 0) return;
 
             applyFoodOwnEffects(sp, feastItems);
             applyRoulette(sp, feastLevel);
@@ -490,6 +534,40 @@ public class ArcaneEnchantsHandler {
             }
             case 7 -> // Invisibilidad (neutro/bueno)
                 player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 400, 0));
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 8. CORAZA ARCANA — reduce TODO el daño, sin pasar por el sistema de
+    //    Proteccion vanilla (asi tambien protege contra golpes que ignoran
+    //    armadura por diseño, como el grito del Warden — sonic_boom esta en
+    //    la etiqueta minecraft:bypasses_armor, asi que ni el mejor casco de
+    //    netherita ni Proteccion V hacen nada contra el).
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onCorazaArcana(LivingDamageEvent.Pre event) {
+        try {
+            LivingEntity defender = event.getEntity();
+            if (defender.level().isClientSide()) return;
+
+            int level;
+            if (defender instanceof AbstractGolem golem && ArcaneGolemUtil.isArcaneGolem(golem)) {
+                // El golem no tiene slot de pecho: su nivel es el vinculado con el cetro.
+                level = ArcaneGolemUtil.golemEnchantLevel(golem, CORAZA_ARCANA);
+            } else {
+                ItemStack chest = defender.getItemBySlot(EquipmentSlot.CHEST);
+                level = lvl(defender.level(), chest, CORAZA_ARCANA);
+            }
+            if (level <= 0) return;
+
+            // "De bandera": escala suave hasta el tope real de 250, con techo
+            // firme en 60% de reduccion — nunca invencible, pero subir de nivel
+            // en la Forja sigue dando algo hasta cerca del final de la escala.
+            float reduction = Math.min(0.10f + 0.002f * level, 0.60f);
+            event.setNewDamage(event.getNewDamage() * (1.0f - reduction));
+        } catch (Exception e) {
+            ArcaneForge.LOGGER.debug("CorazaArcana error: {}", e.getMessage());
         }
     }
 }

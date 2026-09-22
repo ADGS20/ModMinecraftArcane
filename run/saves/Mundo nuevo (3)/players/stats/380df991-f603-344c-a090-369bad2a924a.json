@@ -1,0 +1,67 @@
+{
+  "stats": {
+    "minecraft:used": {
+      "minecraft:glass": 67,
+      "arcaneforge:arcane_forge": 1,
+      "arcaneforge:arcane_power_block": 1,
+      "arcaneforge:arcane_pedestal": 1,
+      "minecraft:dark_oak_log": 16,
+      "minecraft:written_book": 1,
+      "minecraft:obsidian": 15,
+      "minecraft:acacia_log": 54
+    },
+    "minecraft:custom": {
+      "minecraft:damage_resisted": 3349,
+      "minecraft:time_since_rest": 114958,
+      "minecraft:walk_one_cm": 32610,
+      "minecraft:leave_game": 2,
+      "minecraft:mob_kills": 3,
+      "minecraft:damage_taken": 1546,
+      "minecraft:damage_dealt": 520,
+      "minecraft:play_time": 218644,
+      "minecraft:damage_absorbed": 3596,
+      "minecraft:jump": 207,
+      "minecraft:time_since_death": 35259,
+      "minecraft:drop": 2,
+      "minecraft:sprint_one_cm": 3930,
+      "minecraft:fall_one_cm": 789,
+      "minecraft:total_world_time": 234196,
+      "minecraft:fly_one_cm": 34138,
+      "minecraft:crouch_one_cm": 190,
+      "minecraft:sneak_time": 471,
+      "minecraft:climb_one_cm": 159,
+      "minecraft:deaths": 3
+    },
+    "minecraft:dropped": {
+      "minecraft:rotten_flesh": 1,
+      "minecraft:obsidian": 1
+    },
+    "minecraft:killed": {
+      "minecraft:enderman": 1,
+      "minecraft:spider": 2
+    },
+    "minecraft:picked_up": {
+      "minecraft:enchanted_golden_apple": 1,
+      "minecraft:string": 6,
+      "minecraft:acacia_log": 2,
+      "minecraft:sand": 58,
+      "minecraft:sandstone": 9,
+      "minecraft:gunpowder": 1,
+      "minecraft:arrow": 2,
+      "arcaneforge:arcane_guide_book": 1,
+      "minecraft:dark_oak_log": 6,
+      "arcaneforge:lunar_fragment": 15,
+      "minecraft:written_book": 1,
+      "minecraft:rotten_flesh": 2
+    },
+    "minecraft:killed_by": {
+      "minecraft:creeper": 1,
+      "minecraft:zombie": 2
+    },
+    "minecraft:mined": {
+      "minecraft:dark_oak_log": 2,
+      "minecraft:glass": 2
+    }
+  },
+  "DataVersion": 4790
+}

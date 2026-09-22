@@ -1,0 +1,24 @@
+{
+  "stats": {
+    "minecraft:used": {
+      "arcaneforge:arcane_forge": 3,
+      "arcaneforge:arcane_golem_generator": 2,
+      "arcaneforge:arcane_power_block": 3,
+      "arcaneforge:arcane_pedestal": 1
+    },
+    "minecraft:custom": {
+      "minecraft:sprint_one_cm": 298,
+      "minecraft:time_since_rest": 4946,
+      "minecraft:walk_one_cm": 9511,
+      "minecraft:total_world_time": 3572,
+      "minecraft:leave_game": 8,
+      "minecraft:fly_one_cm": 27,
+      "minecraft:crouch_one_cm": 1664,
+      "minecraft:sneak_time": 365,
+      "minecraft:play_time": 2473,
+      "minecraft:jump": 15,
+      "minecraft:time_since_death": 2473
+    }
+  },
+  "DataVersion": 4790
+}

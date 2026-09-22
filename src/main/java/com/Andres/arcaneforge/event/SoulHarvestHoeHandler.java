@@ -54,8 +54,10 @@ public class SoulHarvestHoeHandler {
 
             int level = enchants.getLevel(harvestOpt.get());
 
-            // Radio: +1 por cada 10 niveles, capado a 6 (13x13) para evitar lag.
-            int radius = Math.min(6, 1 + (level / 10));
+            // Radio: +1 por cada 10 niveles, capado a 10 (21x21) para evitar lag.
+            // Techo re-escalado de 6 a 10 para que invertir mas siga cosechando
+            // mas area.
+            int radius = Math.min(10, 1 + (level / 10));
 
             // Nivel de Fortuna de la azada: multiplica MUCHO el cultivo principal.
             int fortune = getFortuneLevel(registry, enchants);

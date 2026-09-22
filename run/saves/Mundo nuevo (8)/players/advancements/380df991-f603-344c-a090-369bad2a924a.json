@@ -1,0 +1,75 @@
+{
+  "arcaneforge:recipes/snow_golem_binding_rod": {
+    "criteria": {
+      "has_the_recipe": "2026-09-20 17:39:21 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:recipes/arcane_power_block": {
+    "criteria": {
+      "has_the_recipe": "2026-09-20 17:39:21 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/crafting_table": {
+    "criteria": {
+      "unlock_right_away": "2026-09-20 17:39:21 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:recipes/arcane_guide_book": {
+    "criteria": {
+      "has_the_recipe": "2026-09-20 17:39:21 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:recipes/binding_wand": {
+    "criteria": {
+      "has_the_recipe": "2026-09-20 17:39:21 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:recipes/arcane_forge": {
+    "criteria": {
+      "has_the_recipe": "2026-09-20 17:39:21 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:root": {
+    "criteria": {
+      "got_guide": "2026-09-20 17:39:21 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:recipes/arcane_pedestal": {
+    "criteria": {
+      "has_the_recipe": "2026-09-20 17:39:21 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:recipes/golem_binding_rod": {
+    "criteria": {
+      "has_the_recipe": "2026-09-20 17:39:21 +0200"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:plains": "2026-09-20 17:39:22 +0200"
+    },
+    "done": false
+  },
+  "arcaneforge:craft_forge": {
+    "criteria": {
+      "got_forge": "2026-09-20 21:43:56 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:craft_pedestal": {
+    "criteria": {
+      "got_pedestal": "2026-09-20 21:43:58 +0200"
+    },
+    "done": true
+  },
+  "DataVersion": 4790
+}

@@ -1,0 +1,9 @@
+{
+  "description": {"translate": "enchantment.arcaneforge.almacen_infinito"},
+  "supported_items": "#arcaneforge:chests",
+  "primary_items": "#arcaneforge:chests",
+  "weight": 1, "max_level": 1,
+  "min_cost": {"base": 40, "per_level_above_first": 0},
+  "max_cost": {"base": 120, "per_level_above_first": 0},
+  "anvil_cost": 10, "slots": ["mainhand"], "effects": {}
+}

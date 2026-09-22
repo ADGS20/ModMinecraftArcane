@@ -1,0 +1,13 @@
+{
+  "gives": {
+    "count": 1,
+    "id": "minecraft:diamond"
+  },
+  "max_uses": 64,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": 64,
+    "id": "minecraft:cooked_beef"
+  },
+  "xp": 20.0
+}

@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": { "layer0": "arcaneforge:item/golem_binding_rod" }
+}

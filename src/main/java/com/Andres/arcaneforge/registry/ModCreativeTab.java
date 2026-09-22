@@ -19,8 +19,14 @@ public class ModCreativeTab {
                         output.accept(ModBlocks.ARCANE_FORGE_ITEM.get()); // Changed to BlockItem
                         output.accept(ModBlocks.ARCANE_PEDESTAL_ITEM.get()); // Changed to BlockItem
                         output.accept(ModItems.BINDING_WAND.get());
+                        output.accept(ModItems.GOLEM_BINDING_ROD.get());
+                        output.accept(ModItems.SNOW_GOLEM_BINDING_ROD.get());
+                        output.accept(ModItems.ARCANE_GOLEM_CORE.get());
                         output.accept(ModItems.ARCANE_GUIDE_BOOK.get());
                         output.accept(ModBlocks.ARCANE_POWER_BLOCK_ITEM.get());
+                        output.accept(ModItems.LUNAR_FRAGMENT.get());
+                        output.accept(ModItems.GENERATOR_CORE.get());
+                        output.accept(ModBlocks.ARCANE_GOLEM_GENERATOR_ITEM.get());
                     })
                     .build());
 }

@@ -40,10 +40,21 @@ public abstract class SpearWeaponMixin {
         if (projectile.getType().getDescriptionId().equals("entity.minecraft.trident")) {
 
             if (shooter instanceof Player player) {
-                // Obtenemos de forma limpia el ítem que el jugador está usando/soltando para disparar
-                ItemStack itemEnMano = player.getUseItem();
+                // ANTES leiamos player.getUseItem()/getMainHandItem() para sacar el nivel
+                // del encantamiento. En SUPERVIVENCIA, TridentItem.releaseUsing() ya
+                // consumio el triente de la mano (itemStack.consumeAndReturn(1, player))
+                // ANTES de que este inject se ejecute, asi que ambas llamadas devolvian
+                // vacio y el bloque entero se saltaba en silencio — por eso "solo
+                // funcionaba en creativo" (hasInfiniteMaterials() evita que se consuma).
+                // El proyectil (ThrownTrident extends AbstractArrow) siempre guarda su
+                // propia copia del item lanzado via getPickupItemStackOrigin(), con
+                // encantamientos incluidos, sin importar el modo de juego — es la fuente
+                // fiable.
+                ItemStack itemEnMano = ItemStack.EMPTY;
+                if (projectile instanceof net.minecraft.world.entity.projectile.arrow.AbstractArrow arrow) {
+                    itemEnMano = arrow.getPickupItemStackOrigin();
+                }
 
-                // Si por algún motivo el useItem ya se vació en ese tick, usamos la mano principal como respaldo
                 if (itemEnMano.isEmpty()) {
                     itemEnMano = player.getMainHandItem();
                 }
@@ -57,23 +68,43 @@ public abstract class SpearWeaponMixin {
                         if (launchOpt.isPresent() && enchantments.getLevel(launchOpt.get()) > 0) {
                             int nivel = enchantments.getLevel(launchOpt.get());
 
-                            // Capturamos el vector de movimiento horizontal del jugador en este tick
-                            Vec3 velJugador = player.getDeltaMovement();
-                            double velocidadHorizontal = Math.sqrt(velJugador.x * velJugador.x + velJugador.z * velJugador.z);
+                            // ANTES usabamos 1.5^nivel (exponencial). Aun topando el nivel
+                            // usado en la formula a 10, el multiplicador resultante (~x57.7)
+                            // llevaba la velocidad base del tridente (~2.5 bloques/tick) a
+                            // ~145 bloques/tick — unos 2900 bloques/segundo. A esa velocidad
+                            // el tridente prácticamente desaparece en el mismo tick en que se
+                            // lanza: no se ve volar, y si tiene Lealtad puede salir del área
+                            // cargada antes de que la Lealtad logre traerlo de vuelta. Por
+                            // eso "no hacia nada" y "no regresaba a la mano" — el efecto SI
+                            // se aplicaba (confirmado por los logs), pero era demasiado
+                            // extremo para ser jugable. Cambiamos a escala lineal con techo
+                            // real en nivel 10: hasta x3.0 de velocidad extra, que en la
+                            // practica ya es un tridente brutalmente rapido (~7.5 bloques/tick,
+                            // ~150 bloques/seg) pero todavia visible y compatible con Lealtad.
+                            int nivelTopado = Math.min(nivel, 10);
+                            float multiplicadorContinuo = Math.min(1.0f + 0.2f * nivelTopado, 3.0f);
 
-                            // Si el jugador se está moviendo en cualquier dirección (carrera, saltos, strafe...)
-                            if (velocidadHorizontal > 0.01) {
-                                // Tu fórmula: multiplicación continua (1.5 ^ Nivel)
-                                float multiplicadorContinuo = (float) Math.pow(1.5, nivel);
-                                double impulsoExtra = velocidadHorizontal * multiplicadorContinuo;
-
-                                Vec3 movimientoOriginal = projectile.getDeltaMovement();
+                            Vec3 movimientoOriginal = projectile.getDeltaMovement();
+                            // ANTES: el impulso extra se calculaba a partir de la velocidad
+                            // HORIZONTAL DEL JUGADOR (velJugador), no del tridente. Si el jugador
+                            // esta quieto apuntando (lo normal al cargar un lanzamiento en
+                            // supervivencia), esa velocidad es ~0 y el bono tambien, asi que el
+                            // encantamiento no se notaba — solo funcionaba "por accidente" si
+                            // ademas te estabas moviendo/volando al soltar el tiro (como en
+                            // creativo). Ahora escalamos la velocidad PROPIA del tridente ya
+                            // lanzado, asi el bono es siempre fiable sin importar si te moviste.
+                            double velocidadTridente = movimientoOriginal.length();
+                            if (velocidadTridente > 0.01) {
+                                double impulsoExtra = velocidadTridente * (multiplicadorContinuo - 1.0f);
                                 Vec3 direccionTiro = movimientoOriginal.normalize();
                                 Vec3 nuevoMovimiento = movimientoOriginal.add(direccionTiro.scale(impulsoExtra));
 
                                 // Aplicamos el nuevo vector físico ultraveloz al proyectil
                                 projectile.setDeltaMovement(nuevoMovimiento);
                                 projectile.hurtMarked = true; // Sincroniza la velocidad de inmediato con los clientes
+
+                                ArcaneForge.LOGGER.debug("[ETHEREAL-LAUNCH] nivel={} multiplicador={} velAntes={} velDespues={}",
+                                        nivel, multiplicadorContinuo, velocidadTridente, nuevoMovimiento.length());
                             }
                         }
                     } catch (Exception e) {

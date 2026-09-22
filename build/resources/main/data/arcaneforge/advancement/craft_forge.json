@@ -1,0 +1,19 @@
+{
+  "parent": "arcaneforge:root",
+  "display": {
+    "icon": { "id": "arcaneforge:arcane_forge" },
+    "title": { "translate": "advancements.arcaneforge.craft_forge.title" },
+    "description": { "translate": "advancements.arcaneforge.craft_forge.description" },
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "got_forge": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [ { "items": "arcaneforge:arcane_forge" } ]
+      }
+    }
+  },
+  "requirements": [ [ "got_forge" ] ]
+}

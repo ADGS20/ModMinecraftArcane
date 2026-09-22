@@ -55,14 +55,14 @@ public class PickaxeArcaneHandler {
             int fortuneLevel    = getEnchantLevel(registry, enchants, Enchantments.FORTUNE);
             int silkTouchLevel  = getEnchantLevel(registry, enchants, Enchantments.SILK_TOUCH);
             Optional<Holder.Reference<Enchantment>> smeltOpt = registry.get(ARCANE_SMELT_KEY);
-            boolean hasArcaneSmelting = smeltOpt.isPresent() && enchants.getLevel(smeltOpt.get()) > 0;
+            int smeltLevel = smeltOpt.map(enchants::getLevel).orElse(0);
 
             RandomSource random = event.getLevel().getRandom();
 
             // ── Caso 1: Arcane Smelting activo ──────────────────────────────────
             // Prioridad máxima: convierte minerales a lingotes + multiplica por Fortune
-            if (hasArcaneSmelting) {
-                smeltDrops(event, fortuneLevel, random);
+            if (smeltLevel > 0) {
+                smeltDrops(event, fortuneLevel, smeltLevel, random);
                 return; // arcane smelting ya aplicó fortune internamente
             }
 
@@ -83,11 +83,26 @@ public class PickaxeArcaneHandler {
 
     // ─── Arcane Smelting: convierte minerales a lingotes + Fortune multiplier ───
 
-    private static void smeltDrops(BlockDropsEvent event, int fortuneLevel, RandomSource random) {
+    /**
+     * Probabilidad (0-1) de un lingote extra "de fundicion", independiente
+     * de Fortuna: antes el propio nivel de Arcane Smelting no hacia nada mas
+     * alla de activar la conversion. Techo 50% en nivel ~25 (ver
+     * ArcaneForgeBlockEntity.getRealMaxLevel "arcane_smelting" = 175, con
+     * bastante margen sobrante para quien quiera acumular mas de todos
+     * modos via Fortuna).
+     */
+    private static float bonusIngotChance(int smeltLevel) {
+        return Math.min(0.02f * smeltLevel, 0.50f);
+    }
+
+    private static void smeltDrops(BlockDropsEvent event, int fortuneLevel, int smeltLevel, RandomSource random) {
         event.getDrops().forEach(itemEntity -> {
             ItemStack drop = itemEntity.getItem();
             ItemStack smelted = getSmeltingResult(drop, random, fortuneLevel);
             if (!smelted.isEmpty()) {
+                if (random.nextFloat() < bonusIngotChance(smeltLevel)) {
+                    smelted.grow(1);
+                }
                 itemEntity.setItem(smelted);
             }
         });
@@ -119,7 +134,12 @@ public class PickaxeArcaneHandler {
         if (!result.isEmpty()) {
             int count = original.getCount();
             if (fortuneLevel > 0) {
-                count *= (1 + random.nextInt(fortuneLevel + 1));
+                // Fortuna vanilla tambien se puede subir hasta 250 via la Arcane
+                // Forge (ver ArcaneForgeBlockEntity.getRealMaxLevel); el nivel
+                // real ya viene topado ahi, asi que aqui solo protegemos contra
+                // NBT/comandos externos fuera de ese camino.
+                int safeFortune = Math.min(fortuneLevel, 250);
+                count *= (1 + random.nextInt(safeFortune + 1));
             }
             result.setCount(Math.min(count, result.getMaxStackSize()));
         }
@@ -140,7 +160,8 @@ public class PickaxeArcaneHandler {
             ItemStack stack = entity.getItem();
             if (stack.isEmpty()) continue;
 
-            int extraCount = random.nextInt(fortuneLevel + 1); // 0 … fortuneLevel
+            int safeFortune = Math.min(fortuneLevel, 250);
+            int extraCount = random.nextInt(safeFortune + 1); // 0 … fortuneLevel (topado)
             if (extraCount <= 0) continue;
 
             int remaining = extraCount * stack.getCount();

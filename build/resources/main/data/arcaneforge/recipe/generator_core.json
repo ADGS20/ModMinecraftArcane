@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "IAI",
+    " C "
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "A": "minecraft:amethyst_shard",
+    "C": "arcaneforge:arcane_golem_core"
+  },
+  "result": {
+    "id": "arcaneforge:generator_core",
+    "count": 1
+  },
+  "show_notification": true
+}

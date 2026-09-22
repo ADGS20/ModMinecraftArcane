@@ -5,6 +5,7 @@ import com.Andres.arcaneforge.Config;
 import com.Andres.arcaneforge.menu.ArcaneForgeMenu;
 import com.Andres.arcaneforge.network.S2CSyncPacket;
 import com.Andres.arcaneforge.registry.ModBlockEntities;
+import com.Andres.arcaneforge.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -30,6 +31,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -117,8 +119,6 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
     }
 
     public static int getMaterialFuelValue(Item item) {
-        if (item == Items.LAPIS_LAZULI) return 15;
-        if (item == Items.LAPIS_BLOCK) return 135;
         if (MATERIAL_FUEL_VALUES.containsKey(item)) return MATERIAL_FUEL_VALUES.get(item);
         int configVal = Config.getFuelValue(item);
         if (configVal > 0) return configVal;
@@ -375,12 +375,129 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
 
         if (namespace.equals(ArcaneForge.MODID)) {
             if (path.equals("apocalyptic_judgment") || path.equals("void_protection") || path.equals("arcane_loyalty")) return 5.0f;
+            if (path.equals("corte_del_vacio") || path.equals("filo_insaciable") || path.equals("alma_perdurable")) return 5.0f;
+            if (path.equals("coraza_arcana")) return 5.0f;
             if (path.equals("night_vision")) return 4.0f;
             if (path.equals("miners_sight")) return 2.0f;
+            if (path.equals("infinite_bucket")) return 1.0f;
             return 3.0f;
         }
         if (path.equals("mending") || path.equals("infinity") || path.equals("silk_touch")) return 2.5f;
         return 1.0f;
+    }
+
+    /**
+     * Nivel real maximo de CADA encantamiento — mas alla de esto, subir de
+     * nivel en la Forja no cambia absolutamente nada (la formula del efecto
+     * ya se aplano ahi), asi que directamente no dejamos gastar mas recursos.
+     *
+     * PASADA "REWARD 255": casi todo encantamiento con una formula continua
+     * (daño, radio, probabilidad, duracion...) ahora escala suave hasta cerca
+     * de 250, como los "de bandera" originales — invertir hasta el techo real
+     * de la Forja (255 con Pedestal) siempre da ALGO mas, aunque sea caro.
+     * Solo se quedan bajos los que son genuinamente binarios (el efecto es
+     * "activado/no activado", sin ninguna variable continua que escalar —
+     * ej. un cofre ya infinito no puede ser "mas infinito") o los que tienen
+     * una restriccion tecnica real de vainilla (Lealtad, ver mas abajo).
+     */
+    public static int getRealMaxLevel(Identifier id) {
+        String path = id.getPath();
+        String namespace = id.getNamespace();
+
+        if (namespace.equals(ArcaneForge.MODID)) {
+            // "De bandera": escalado suave, aprovechan casi todo el rango 1-255.
+            switch (path) {
+                case "apocalyptic_judgment", "corte_del_vacio", "filo_insaciable", "coraza_arcana",
+                     "golpe_partidor", "floracion_fertil", "carga_instantanea" -> {
+                    return 250;
+                }
+                case "eternal_feast" -> {
+                    // Ya tenia su propia curva de rareza pensada para llegar hasta 255.
+                    return 255;
+                }
+                default -> { }
+            }
+            // Genuinamente binarios: el efecto es todo-o-nada y no hay ninguna
+            // variable continua que un nivel mas alto pueda seguir mejorando
+            // (un cofre/cubo ya infinito no puede ser "mas infinito", etc.).
+            switch (path) {
+                case "dimensional_bind", "night_vision",
+                     "infinite_bucket", "alma_perdurable",
+                     "paso_nevado", "almacen_infinito",
+                     "paso_acuatico", "zancada_fantasma" -> {
+                    return 1;
+                }
+                default -> { }
+            }
+            // El resto: formulas propias re-escaladas para seguir dando algo
+            // hasta bien entrado el rango alto, en vez de aplanarse en nivel 3.
+            return switch (path) {
+                case "arcane_magnet" -> 60;
+                case "miners_sight" -> 15;
+                case "cadena_arcana", "golpe_dimensional", "filo_eterno",
+                     "marca_del_cazador", "golpe_sismico", "sangria_espectral", "vampiro",
+                     "ataque_veloz" -> 60;
+                case "void_wings" -> 4;
+                case "arcane_cataclysm", "chain_thunder", "arcane_repulse" -> 250;
+                case "ethereal_hook" -> 30;
+                case "ethereal_launch" -> 10;
+                case "soul_delve" -> 100;
+                case "arcane_mending" -> 200;
+                case "soul_harvest" -> 150;
+                case "ethereal_walk", "arcane_loyalty" -> 1;
+                case "void_protection", "arcane_smelting" -> 175;
+                case "paso_infernal" -> 60;
+                default -> 3; // por si se anade uno nuevo y se nos olvida registrarlo aqui
+            };
+        }
+
+        // Vanilla, pero empujados via la Forja: sus efectos en nuestras fusiones
+        // (EnchantmentFusionHandler, ArcaneBowFusionHandler, PickaxeArcaneHandler,
+        // AxeFortuneHandler) tambien estan topados, asi que no tiene sentido
+        // dejar subirlos mas alla de eso.
+        return switch (path) {
+            // Sharpness/Smite/Bane/Fortune usan la formula lineal propia de
+            // vainilla (sin techo natural): dejarlas subir hasta 250 SI premia
+            // la inversion, en vez de aplanarlas en nivel 30 como antes.
+            case "sharpness", "smite", "bane_of_arthropods", "fortune" -> 250;
+            // Carga Rapida vinculada a un Golem de Nieve (ver ArcaneSnowGolemHandler):
+            // el intervalo entre bolas de nieve extra ya toca su piso (2 ticks) en
+            // nivel 30, seguir subiendo no acelera mas el disparo.
+            case "quick_charge" -> 30;
+            // Mending/Infinity/Silk Touch son binarios de verdad en vainilla:
+            // el nivel no cambia su efecto en absoluto (Mending repara igual,
+            // Infinity no gasta flechas igual, Silk Touch conserva el bloque
+            // igual), asi que subirlos de nivel 1 es gastar recursos por nada.
+            case "mending", "infinity", "silk_touch" -> 1;
+            // Lealtad empuja al tridente hacia el dueno con velocidad de regimen
+            // permanente = nivel bloques/tick (ThrownTrident.tick: accel=0.05*nivel,
+            // decay=0.95 => v_estable = accel/0.05 = nivel). A nivel 255 (topado a
+            // byte 127 por vanilla) eso son ~127 bloques/tick: el tridente vuela mas
+            // alla del jugador en cada tick, nunca entra en rango de recogida, y
+            // queda "flotando" en una orbita/rebote que parece congelado. Vainilla
+            // nunca prueba mas alla de nivel 3, asi que topamos ahi para que la
+            // mecanica de retorno funcione como fue disenada — es la UNICA
+            // restriccion de esta lista que es tecnica y no de balance.
+            case "loyalty" -> 3;
+            default -> Integer.MAX_VALUE; // no tocamos otros encantamientos vanilla
+        };
+    }
+
+    /** Nivel actual de un encantamiento en el item que hay en la Forja ahora mismo, o 0. */
+    public int getCurrentEnchantLevel(Identifier enchantmentId) {
+        if (level == null) return 0;
+        ItemStack stack = items.getFirst();
+        if (stack.isEmpty()) return 0;
+        try {
+            var registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+            ResourceKey<Enchantment> key = ResourceKey.create(Registries.ENCHANTMENT, enchantmentId);
+            Optional<Holder.Reference<Enchantment>> opt = registry.get(key);
+            if (opt.isEmpty()) return 0;
+            ItemEnchantments enchants = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+            return enchants.getLevel(opt.get());
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     public int tryEnchant(Identifier enchantmentId, int targetLevel, ServerPlayer player) {
@@ -409,6 +526,21 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
 
         if (enchHolder == null) return -1;
 
+        // FUSION: aplicar un encantamiento naturalmente incompatible con otro
+        // que el item YA tiene (Toque de Seda+Fortuna, Filo+Smite/Perdicion,
+        // dos Protecciones distintas, etc. — cualquier exclusive_set real de
+        // vanilla, via Enchantment.areCompatible) exige tener un Pedestal o un
+        // Bloque de Poder Arcano cerca. Sin bloque, la Forja se comporta como
+        // una mesa de encantar normal: no deja combinar exclusivos entre si.
+        List<Holder<Enchantment>> otherEnchants = new ArrayList<>();
+        for (var entry : currentEnchants.entrySet()) {
+            if (!entry.getKey().equals(enchHolder)) otherEnchants.add(entry.getKey());
+        }
+        if (!EnchantmentHelper.isEnchantmentCompatible(otherEnchants, enchHolder)
+                && !hasFusionBlockNearby(level, worldPosition)) {
+            return -2;
+        }
+
         boolean hasPedestal = ArcanePedestalBlock.hasActivePedestalNearby(level, worldPosition);
         // REBALANCE: sin pedestal el tope es 15 (estilo vanilla). Para superar 15
         // hace falta un Pedestal activo, que sube el maximo hasta 255. El coste de
@@ -425,6 +557,12 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         int baseCost = calculateProgressiveCost(currentLevel, targetLevel, cachedBookshelfCount, hasPedestal);
         int totalCost = Math.max(1, Math.round(baseCost * getEnchantmentMultiplier(enchantmentId)));
 
+        // Rama MATERIAL de los bloques de descuento del aldeano: abarata el magic fuel.
+        // (El coste en EXP ya existe aparte, en C2SEnchantPacket.handle() — la rama XP
+        // de los bloques de descuento se aplica ahi, no aqui, para no cobrar EXP dos veces.)
+        float materialDiscount = ArcaneDiscountBlock.getBestDiscount(level, worldPosition, ArcaneDiscountBlock.Branch.MATERIAL);
+        if (materialDiscount > 0f) totalCost = Math.max(1, Math.round(totalCost * (1.0f - materialDiscount)));
+
         if (player.isCreative()) totalCost = 0;
         if (cachedMagicFuel < totalCost) return -1;
         if (totalCost > 0 && !extractMagicFuel(totalCost)) return -1;
@@ -433,6 +571,58 @@ public class ArcaneForgeBlockEntity extends BlockEntity implements MenuProvider 
         setChanged();
         cachedMagicFuel = countMagicFuelInLinkedChests();
         return finalLevel;
+    }
+
+    /**
+     * Baja el nivel de un encantamiento que el item ya tiene. No toca el magic
+     * fuel (ya se pago al subirlo la primera vez); el reembolso de EXP se
+     * calcula y se entrega en C2SEnchantPacket, aqui solo se reescribe el
+     * componente de encantamientos del item. Si finalLevel llega a 0,
+     * ItemEnchantments.Mutable.set() ya lo quita del item por su cuenta.
+     */
+    public int tryLowerEnchant(Identifier enchantmentId, int levelsToRemove, ServerPlayer player) {
+        if (level == null || level.isClientSide()) return -1;
+
+        ItemStack itemToEnchant = items.getFirst();
+        if (itemToEnchant.isEmpty()) return -1;
+
+        ItemEnchantments currentEnchants = itemToEnchant.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        Holder<Enchantment> enchHolder = null;
+        int currentLevel = 0;
+
+        try {
+            var registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+            ResourceKey<Enchantment> key = ResourceKey.create(Registries.ENCHANTMENT, enchantmentId);
+            Optional<Holder.Reference<Enchantment>> optHolder = registry.get(key);
+            if (optHolder.isPresent()) {
+                enchHolder = optHolder.get();
+                currentLevel = currentEnchants.getLevel(enchHolder);
+            }
+        } catch (Exception ignored) {
+        }
+
+        if (enchHolder == null || currentLevel <= 0) return -1;
+        levelsToRemove = Math.min(levelsToRemove, currentLevel);
+        if (levelsToRemove <= 0) return -1;
+
+        int finalLevel = currentLevel - levelsToRemove;
+        boolean hasPedestal = ArcanePedestalBlock.hasActivePedestalNearby(level, worldPosition);
+
+        forceApplyEnchantment(itemToEnchant, enchHolder, finalLevel, hasPedestal);
+        setChanged();
+        return finalLevel;
+    }
+
+    /** Mismo radio/bloques que EnchantmentFusionHandler.hasFusionBlockNearby. */
+    private static boolean hasFusionBlockNearby(Level level, BlockPos centerPos) {
+        int radius = 5;
+        for (BlockPos p : BlockPos.betweenClosed(centerPos.offset(-radius, -radius, -radius), centerPos.offset(radius, radius, radius))) {
+            BlockState checkState = level.getBlockState(p);
+            if (checkState.is(ModBlocks.ARCANE_POWER_BLOCK.get()) || checkState.is(ModBlocks.ARCANE_PEDESTAL.get())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void forceApplyEnchantment(ItemStack stack, Holder<Enchantment> holder, int level, boolean hasPedestal) {

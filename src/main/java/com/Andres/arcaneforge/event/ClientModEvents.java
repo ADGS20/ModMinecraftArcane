@@ -1,11 +1,15 @@
 package com.Andres.arcaneforge.event;
 
 import com.Andres.arcaneforge.ArcaneForge;
+import com.Andres.arcaneforge.block.ArcanePowerBlockEntity;
+import com.Andres.arcaneforge.block.ArcanePowerBlockGeoModel;
 import com.Andres.arcaneforge.menu.ArcaneForgeScreen;
 import com.Andres.arcaneforge.menu.DimensionalBagScreen;
 import com.Andres.arcaneforge.menu.MinersSightScreen;
 import com.Andres.arcaneforge.miners.MinersSightLogic;
+import com.Andres.arcaneforge.registry.ModBlockEntities;
 import com.Andres.arcaneforge.registry.ModMenuTypes;
+import com.geckolib.renderer.GeoBlockRenderer;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -16,6 +20,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -44,11 +49,22 @@ public class ClientModEvents {
     public static void onRegisterMenuScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenuTypes.ARCANE_FORGE_MENU.get(), ArcaneForgeScreen::new);
         event.register(ModMenuTypes.DIMENSIONAL_BAG_MENU.get(), DimensionalBagScreen::new);
+        // El trade del Aldeano Arcano NO se registra aqui: NeoForge no deja
+        // registrar dos veces la pantalla de un mismo MenuType, y vanilla ya
+        // registro la suya para MenuType.MERCHANT. En vez de eso, se reviste
+        // con un Mixin (ArcaneMerchantScreenMixin) que parcha MerchantScreen
+        // directamente solo cuando el trade es el nuestro.
     }
 
     @SubscribeEvent
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(MINERS_SIGHT_KEY);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(ModBlockEntities.ARCANE_POWER_BLOCK_BE.get(),
+                context -> new GeoBlockRenderer<>(context, new ArcanePowerBlockGeoModel()));
     }
 
     @SubscribeEvent

@@ -108,6 +108,19 @@ public class ModNetwork {
                 }
             };
 
+    // ── StreamCodec para S2CInfiniteChestSync ──
+    public static final StreamCodec<RegistryFriendlyByteBuf, S2CInfiniteChestSync> INFINITE_CHEST_SYNC_CODEC =
+            new StreamCodec<>() {
+                @Override
+                public S2CInfiniteChestSync decode(RegistryFriendlyByteBuf buf) {
+                    return S2CInfiniteChestSync.read(buf);
+                }
+                @Override
+                public void encode(RegistryFriendlyByteBuf buf, S2CInfiniteChestSync pkt) {
+                    pkt.write(buf);
+                }
+            };
+
     // ── StreamCodec para C2SMinersSightSettingsPacket ──
     public static final StreamCodec<RegistryFriendlyByteBuf, C2SMinersSightSettingsPacket> MINERS_SIGHT_CODEC =
             new StreamCodec<>() {
@@ -117,6 +130,19 @@ public class ModNetwork {
                 }
                 @Override
                 public void encode(RegistryFriendlyByteBuf buf, C2SMinersSightSettingsPacket pkt) {
+                    pkt.write(buf);
+                }
+            };
+
+    // ── StreamCodec para S2CMoonStateSync ──
+    public static final StreamCodec<RegistryFriendlyByteBuf, S2CMoonStateSync> MOON_STATE_SYNC_CODEC =
+            new StreamCodec<>() {
+                @Override
+                public S2CMoonStateSync decode(RegistryFriendlyByteBuf buf) {
+                    return S2CMoonStateSync.read(buf);
+                }
+                @Override
+                public void encode(RegistryFriendlyByteBuf buf, S2CMoonStateSync pkt) {
                     pkt.write(buf);
                 }
             };
@@ -183,6 +209,20 @@ public class ModNetwork {
                 C2SMinersSightSettingsPacket.TYPE,
                 MINERS_SIGHT_CODEC,
                 C2SMinersSightSettingsPacket::handle
+        );
+
+        // Servidor → Cliente: avisa que el ChestMenu abierto es un Cofre Infinito
+        registrar.playToClient(
+                S2CInfiniteChestSync.TYPE,
+                INFINITE_CHEST_SYNC_CODEC,
+                S2CInfiniteChestSync::handle
+        );
+
+        // Servidor → Cliente: estado de la Luna Oscura/Roja (para teñir el cielo)
+        registrar.playToClient(
+                S2CMoonStateSync.TYPE,
+                MOON_STATE_SYNC_CODEC,
+                S2CMoonStateSync::handle
         );
 
         ArcaneForge.LOGGER.info("Arcane Forge FUSION network packets registered (v2.0).");

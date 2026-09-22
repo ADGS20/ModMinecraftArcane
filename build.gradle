@@ -21,6 +21,15 @@ sourceSets.main.resources {
 repositories {
     mavenLocal()
     mavenCentral()
+    // Maven de Modrinth: evita los problemas de certificado del repo oficial
+    // de GeckoLib (dl.cloudsmith.io) que ya fallaron en el intento anterior.
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content {
+            includeGroup 'maven.modrinth'
+        }
+    }
 }
 
 base {
@@ -70,7 +79,12 @@ configurations {
 
 dependencies {
     // ¡VACÍO DE NEOFORGE! El plugin ModDev lo inyecta automáticamente.
-    // Como pediste, no hay GeckoLib. Todo es modelo nativo.
+
+    // GeckoLib 5.5.1, para Minecraft 26.1.2 + NeoForge, via el maven de
+    // Modrinth (coordenada confirmada: maven.modrinth:8BmcQJ2H:VukyYOGN).
+    // Se usa el maven de Modrinth en vez del oficial de GeckoLib porque
+    // ese fallaba por certificado en el intento anterior.
+    implementation "maven.modrinth:8BmcQJ2H:VukyYOGN"
 }
 
 

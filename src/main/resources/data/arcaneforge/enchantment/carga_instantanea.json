@@ -1,0 +1,20 @@
+{
+  "description": {"translate": "enchantment.arcaneforge.carga_instantanea"},
+  "supported_items": "#minecraft:enchantable/crossbow",
+  "primary_items": "#minecraft:enchantable/crossbow",
+  "weight": 1, "max_level": 3,
+  "min_cost": {"base": 15, "per_level_above_first": 8},
+  "max_cost": {"base": 55, "per_level_above_first": 8},
+  "anvil_cost": 5, "slots": ["mainhand", "offhand"],
+  "effects": {
+    "minecraft:crossbow_charge_time": {
+      "type": "minecraft:add",
+      "value": {
+        "type": "minecraft:clamped",
+        "value": {"type": "minecraft:linear", "base": -0.05, "per_level_above_first": -0.005},
+        "min": -1.10,
+        "max": 0.0
+      }
+    }
+  }
+}

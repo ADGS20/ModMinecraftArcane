@@ -11,8 +11,8 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 /** Servidor -> Cliente: actualiza el numero de pagina mostrado en el saco. */
 public record S2CBagPageSync(int currentPage, int totalPages) implements CustomPacketPayload {
 
-    public static final CustomPacketPayload.Type<S2CBagPageSync> TYPE =
-            new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(ArcaneForge.MODID, "bag_page_sync"));
+    public static final Type<S2CBagPageSync> TYPE =
+            new Type<>(Identifier.fromNamespaceAndPath(ArcaneForge.MODID, "bag_page_sync"));
 
     public void write(FriendlyByteBuf buf) {
         buf.writeVarInt(currentPage);

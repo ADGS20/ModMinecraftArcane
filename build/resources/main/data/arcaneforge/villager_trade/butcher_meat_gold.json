@@ -1,0 +1,13 @@
+{
+  "gives": {
+    "count": 2,
+    "id": "minecraft:gold_ingot"
+  },
+  "max_uses": 64,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": 64,
+    "id": "minecraft:cooked_beef"
+  },
+  "xp": 5.0
+}

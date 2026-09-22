@@ -1,0 +1,19 @@
+{
+  "parent": "arcaneforge:craft_forge",
+  "display": {
+    "icon": { "id": "arcaneforge:binding_wand" },
+    "title": { "translate": "advancements.arcaneforge.get_wand.title" },
+    "description": { "translate": "advancements.arcaneforge.get_wand.description" },
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "got_wand": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [ { "items": "arcaneforge:binding_wand" } ]
+      }
+    }
+  },
+  "requirements": [ [ "got_wand" ] ]
+}

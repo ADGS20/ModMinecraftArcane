@@ -53,13 +53,18 @@ public class ArcaneTotemKey {
                     var registry = player.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
                     Optional<net.minecraft.core.Holder.Reference<Enchantment>> enchantOpt = registry.get(VOID_PROTECTION_KEY);
 
-                    if (enchantOpt.isPresent() && enchants.getLevel(enchantOpt.get()) > 0) {
+                    int voidLevel = enchantOpt.isPresent() ? enchants.getLevel(enchantOpt.get()) : 0;
+                    if (voidLevel > 0) {
                         CustomData customData = totemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
                         CompoundTag tag = customData.copyTag();
 
-                        // Si es la primera vez que se activa, le asignamos las 3 cargas
+                        // Cargas base 3, +1 cada 25 niveles invertidos en la Forja,
+                        // hasta 10 cargas totales en nivel ~175 (ver getRealMaxLevel
+                        // "void_protection"). Antes el nivel del encantamiento no
+                        // hacia nada mas alla de activar la habilidad.
                         if (!tag.contains("TotemCharges")) {
-                            tag.putInt("TotemCharges", 3);
+                            int baseCharges = Math.min(3 + voidLevel / 25, 10);
+                            tag.putInt("TotemCharges", baseCharges);
                         }
 
                         int charges = tag.getInt("TotemCharges").orElse(0);
@@ -75,9 +80,10 @@ public class ArcaneTotemKey {
                             player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
                             player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 200, 0));
 
-                            double range = 5.0;
-                            if (charges == 3) range = 20.0;
-                            else if (charges == 2) range = 10.0;
+                            // Onda mas grande cuanta mas carga le queda (antes solo
+                            // distinguia 3/2/1 cargas fijas; ahora escala con las
+                            // cargas reales, que pueden llegar a 10 con nivel alto).
+                            double range = Math.min(5.0 * charges, 45.0);
 
                             AABB area = player.getBoundingBox().inflate(range, range, range);
                             for (Entity target : player.level().getEntities(player, area)) {

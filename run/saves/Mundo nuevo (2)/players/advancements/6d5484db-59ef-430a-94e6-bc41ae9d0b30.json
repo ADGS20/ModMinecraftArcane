@@ -1,0 +1,75 @@
+{
+  "arcaneforge:recipes/arcane_power_block": {
+    "criteria": {
+      "has_the_recipe": "2026-08-23 18:25:50 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/crafting_table": {
+    "criteria": {
+      "unlock_right_away": "2026-08-23 18:25:50 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:recipes/arcane_guide_book": {
+    "criteria": {
+      "has_the_recipe": "2026-08-23 18:25:50 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:recipes/binding_wand": {
+    "criteria": {
+      "has_the_recipe": "2026-08-23 18:25:50 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:recipes/arcane_forge": {
+    "criteria": {
+      "has_the_recipe": "2026-08-23 18:25:50 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:root": {
+    "criteria": {
+      "got_guide": "2026-08-23 18:25:50 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:recipes/arcane_pedestal": {
+    "criteria": {
+      "has_the_recipe": "2026-08-23 18:25:50 +0200"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:desert": "2026-08-23 18:25:51 +0200"
+    },
+    "done": false
+  },
+  "minecraft:adventure/root": {
+    "criteria": {
+      "killed_by_something": "2026-08-23 18:27:05 +0200"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/bone_meal": {
+    "criteria": {
+      "has_bone": "2026-08-23 18:27:44 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:enchant_level_max": {
+    "criteria": {
+      "max_level": "2026-08-23 18:34:27 +0200"
+    },
+    "done": true
+  },
+  "arcaneforge:enchant_level_100": {
+    "criteria": {
+      "high_level": "2026-08-23 18:34:27 +0200"
+    },
+    "done": true
+  },
+  "DataVersion": 4790
+}

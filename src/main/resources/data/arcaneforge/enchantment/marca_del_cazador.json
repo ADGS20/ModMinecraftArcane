@@ -1,0 +1,9 @@
+{
+  "description": {"translate": "enchantment.arcaneforge.marca_del_cazador"},
+  "supported_items": "#minecraft:enchantable/sweeping",
+  "primary_items": "#minecraft:enchantable/sweeping",
+  "weight": 2, "max_level": 3,
+  "min_cost": {"base": 15, "per_level_above_first": 8},
+  "max_cost": {"base": 60, "per_level_above_first": 8},
+  "anvil_cost": 5, "slots": ["mainhand"], "effects": {}
+}

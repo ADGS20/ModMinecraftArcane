@@ -1,6 +1,8 @@
 package com.Andres.arcaneforge.event;
 
 import com.Andres.arcaneforge.ArcaneForge;
+import com.Andres.arcaneforge.moon.ArcaneMoonData;
+import com.Andres.arcaneforge.network.S2CMoonStateSync;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -10,6 +12,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,10 @@ public class ArcaneStartupHandler {
 
         // Siempre aseguramos que las recetas del mod esten desbloqueadas.
         unlockArcaneRecipes(player);
+
+        // Si la Luna Oscura/Roja ya esta activa, que el cliente lo sepa de inmediato (cielo rojo).
+        ArcaneMoonData moonData = ArcaneMoonData.get((ServerLevel) player.level());
+        PacketDistributor.sendToPlayer(player, new S2CMoonStateSync(moonData.isMoonActive()));
 
         if (!alreadyGiven) {
             ItemStack book = new ItemStack(com.Andres.arcaneforge.registry.ModItems.ARCANE_GUIDE_BOOK.get());

@@ -77,8 +77,12 @@ public class ArcaneMendingHandler {
                         .getLevel(mendHolder);
                 if (level <= 0) continue;
 
-                // Cada punto de XP repara (2 * nivel) de durabilidad.
-                int durabilityPerXp = 2 * level;
+                // Cada punto de XP repara (2 * nivel) de durabilidad, topado: sin
+                // esto, a nivel 255 via la Arcane Forge un solo punto de XP
+                // reparaba 510 de durabilidad (reparacion practicamente gratis).
+                // Techo re-escalado de 60 a 200 para que invertir mas siga dando
+                // reparaciones mas baratas.
+                int durabilityPerXp = Math.min(2 * level, 200);
 
                 // Cuanta XP podemos gastar este ciclo: hasta 5 puntos, pero sin pasarnos
                 // de lo que necesita el objeto ni de lo que tiene el jugador.

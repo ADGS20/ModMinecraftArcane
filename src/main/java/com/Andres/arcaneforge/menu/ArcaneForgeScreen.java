@@ -2,12 +2,16 @@ package com.Andres.arcaneforge.menu;
 
 import com.Andres.arcaneforge.ArcaneForge;
 import com.Andres.arcaneforge.Config;
+import com.Andres.arcaneforge.block.ArcaneDiscountBlock;
 import com.Andres.arcaneforge.block.ArcaneForgeBlockEntity;
 import com.Andres.arcaneforge.network.C2SEnchantPacket;
+import com.Andres.arcaneforge.registry.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -23,6 +27,7 @@ import net.minecraft.world.item.Items;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> {
 
@@ -31,6 +36,13 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
     private static final int GAP        = 4;
     private static final int PANEL_W    = 156;
     private static final int TOTAL_W    = VANILLA_W + GAP + PANEL_W;
+    // El panel de la izquierda (inventario vanilla) se queda en VANILLA_H fijo,
+    // porque sus slots estan a coordenadas fijas. Pero el panel de la derecha
+    // (estadisticas: fuel, EXP, rareza, lista de materiales por cofre) puede
+    // necesitar bastante mas alto que eso cuando hay varias categorias de
+    // material a la vez, asi que la ventana completa usa esta altura mayor
+    // para que nunca se salga del fondo y quede tapado por la hotbar/chat.
+    private static final int WINDOW_H   = 300;
 
     private static final int VISIBLE_ROWS = 6;
     private static final int ROW_H        = 14;
@@ -47,6 +59,44 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
     private static final int C_SLOT       = 0x55152A52;
     private static final int C_SLOT_HOLE  = 0x66000D26;
 
+    /**
+     * Lista curada para el Cetro Arcano del Golem (hierro): solo lo que tiene
+     * sentido para un brazo cuerpo a cuerpo — encantamientos de combate
+     * melee del mod + defensa/utilidad de golem (Vampiro y Coraza Arcana
+     * funcionan de verdad sobre cualquier AbstractGolem, ver VampireHandler/
+     * ArcaneEnchantsHandler.onCorazaArcana) + los 3 de daño vanilla. Nada de
+     * pesca, mineria, agricultura, viaje ni utilidades de jugador: un golem
+     * no pesca ni mina, y esos encantamientos no le sirven de nada puesto en
+     * su cetro mas alla de sumar numeros sueltos a sus estadisticas sin
+     * ningun sentido tematico. Lealtad (vainilla) tambien tiene gancho propio
+     * aqui: hace que el golem siga a quien lo vinculo como un perro (ver
+     * ArcaneGolemHandler.onGolemFollowOwner) y lo encoge a la mitad para que
+     * quepa siguiendolo por huecos de 2 bloques.
+     */
+    private static final Set<String> GOLEM_MELEE_ENCHANTS = Set.of(
+            "arcaneforge:corte_del_vacio", "arcaneforge:filo_insaciable", "arcaneforge:golpe_partidor",
+            "arcaneforge:cadena_arcana", "arcaneforge:golpe_dimensional", "arcaneforge:filo_eterno",
+            "arcaneforge:marca_del_cazador", "arcaneforge:golpe_sismico", "arcaneforge:sangria_espectral",
+            "arcaneforge:ataque_veloz", "arcaneforge:arcane_cataclysm", "arcaneforge:arcane_repulse",
+            "arcaneforge:vampiro", "arcaneforge:coraza_arcana",
+            "minecraft:sharpness", "minecraft:smite", "minecraft:bane_of_arthropods", "minecraft:loyalty"
+    );
+
+    /**
+     * Lista curada para el Cetro Arcano del Golem de Nieve: lo equivalente
+     * pero de distancia/daño — Carga Rapida es el unico que de verdad tiene
+     * un gancho propio en el golem de nieve (ver ArcaneSnowGolemHandler),
+     * el resto son encantamientos de daño a distancia del mod (rayo/lanza/
+     * arco) que aportan a su mismo pozo de nivel total igual que cualquier
+     * otro — mas Vampiro/Coraza Arcana, compartidos con el de hierro. Lealtad
+     * (vainilla) aqui hace lo mismo que en el de hierro (seguir al dueño,
+     * ver ArcaneGolemHandler.onGolemFollowOwner).
+     */
+    private static final Set<String> GOLEM_RANGED_ENCHANTS = Set.of(
+            "minecraft:quick_charge", "arcaneforge:chain_thunder", "arcaneforge:apocalyptic_judgment",
+            "arcaneforge:ethereal_launch", "arcaneforge:vampiro", "arcaneforge:coraza_arcana", "minecraft:loyalty"
+    );
+
     /** Todos los encantamientos validos para el item actual, sin filtrar. */
     private final List<EnchantOption> allEnchants = new ArrayList<>();
     /** Subconjunto de allEnchants que coincide con la busqueda (lo que se ve). */
@@ -55,6 +105,8 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
     private int selectedLevel  = 1;
     private int scrollOffset   = 0;
     private int subMenuMode    = 0;
+    /** true = selectedLevel representa niveles a QUITAR (reembolsa EXP), false = a AÑADIR. */
+    private boolean removeMode = false;
     private String searchQuery = "";
     private EditBox searchBox;
 
@@ -88,7 +140,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
 
     @Override
     public int getImageHeight() {
-        return VANILLA_H;
+        return WINDOW_H;
     }
 
     @Override
@@ -105,7 +157,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         if (this.leftPos + TOTAL_W > this.width - margin) {
             this.leftPos = Math.max(margin, this.width - TOTAL_W - margin);
         }
-        this.topPos = Math.max(margin, (this.height - VANILLA_H) / 2);
+        this.topPos = Math.max(margin, (this.height - WINDOW_H) / 2);
 
         int px   = getLeftPos() + VANILLA_W + GAP;
         int py   = getTopPos();
@@ -142,9 +194,11 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
 
         int bw = 36, gap2 = 2;
         int[] upD    = {  1,   5,   10,   9999};
-        int[] downD  = { -1,  -5,  -10,   0};
+        // downD son magnitudes POSITIVAS (niveles a quitar); 0 = "Todo" (quita el
+        // encantamiento por completo). adjustLevelDown() es quien resta.
+        int[] downD  = {  1,   5,   10,   0};
         String[] upL   = {"+1", "+5", "+10", "Max"};
-        String[] downL = {"-1", "-5", "-10", "Reset"};
+        String[] downL = {"-1", "-5", "-10", "Todo"};
 
         btnLvlUp   = new Button[4];
         btnLvlDown = new Button[4];
@@ -154,7 +208,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                     b -> adjustLevel(d)).bounds(px + 4 + i * (bw + gap2), ctrlY, bw, 14).build());
             final int dd = downD[i];
             btnLvlDown[i] = addRenderableWidget(Button.builder(Component.literal(downL[i]),
-                    b -> adjustLevel(dd)).bounds(px + 4 + i * (bw + gap2), ctrlY, bw, 14).build());
+                    b -> adjustLevelDown(dd)).bounds(px + 4 + i * (bw + gap2), ctrlY, bw, 14).build());
         }
 
         btnEnchant = addRenderableWidget(Button.builder(Component.literal("⚡ ENCHANT"), b -> doEnchant())
@@ -162,6 +216,19 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
 
         refreshList();
         syncButtons();
+    }
+
+    @Override
+    public boolean keyPressed(KeyEvent event) {
+        // EditBox no consume las teclas de letra normal en su keyPressed (esas
+        // llegan aparte via charTyped), asi que sin este parche, escribir "E"
+        // en el buscador se interpreta como el atajo de abrir/cerrar
+        // inventario y cierra toda la ventana de la Forja a mitad de escribir.
+        if (searchBox != null && searchBox.isFocused() && !event.isEscape()) {
+            if (searchBox.keyPressed(event)) return true;
+            return true; // se traga cualquier otra tecla para que no llegue al atajo de inventario
+        }
+        return super.keyPressed(event);
     }
 
     private void doScrollUp()   { if (scrollOffset > 0) { scrollOffset--; syncButtons(); } }
@@ -173,12 +240,23 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
             selectedIndex = idx;
             selectedLevel = 1;
             subMenuMode   = 0;
+            removeMode    = false;
             syncButtons();
         }
     }
 
     private void toggleSub(int mode) {
         subMenuMode = (subMenuMode == mode) ? 0 : mode;
+        // Al abrir un panel se fija el modo (subir/bajar) y se reinicia
+        // selectedLevel, para que no arrastre un valor del otro modo.
+        if (subMenuMode == 2 && selectedIndex >= 0 && selectedIndex < enchants.size()) {
+            int curLevel = enchants.get(selectedIndex).currentLevel();
+            selectedLevel = curLevel > 0 ? 1 : 0;
+            removeMode = true;
+        } else if (subMenuMode == 1) {
+            selectedLevel = Math.max(1, selectedLevel);
+            removeMode = false;
+        }
         syncButtons();
     }
 
@@ -195,6 +273,18 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 selectedLevel = maxLimit - currentLevel;
             } else {
                 float enchMult = ArcaneForgeBlockEntity.getEnchantmentMultiplier(opt.id());
+
+                // Mismo descuento del aldeano (rama MATERIAL) que ya se aplica
+                // al costo real en el servidor y al texto "Fuel material" de
+                // abajo — sin esto, "Max" subestimaba cuantos niveles alcanzan
+                // de verdad cerca de un bloque de descuento.
+                float materialDiscount = 0f;
+                if (Minecraft.getInstance().level != null) {
+                    var forgePos = getMenu().getBlockEntity().getBlockPos();
+                    materialDiscount = ArcaneDiscountBlock.getBestDiscount(
+                            Minecraft.getInstance().level, forgePos, ArcaneDiscountBlock.Branch.MATERIAL);
+                }
+
                 int maxPossibleToAdd = 0;
                 int fuel = displayedMagicFuel;
                 int testLevel = currentLevel;
@@ -203,6 +293,9 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                     int baseCostForOne = ArcaneForgeBlockEntity.calculateProgressiveCost(
                             testLevel, 1, displayedBookshelves, hasActivePedestal);
                     int realCostForOne = Math.max(1, Math.round(baseCostForOne * enchMult));
+                    if (materialDiscount > 0f) {
+                        realCostForOne = Math.max(1, Math.round(realCostForOne * (1.0f - materialDiscount)));
+                    }
                     if (fuel >= realCostForOne) {
                         fuel -= realCostForOne;
                         maxPossibleToAdd++;
@@ -218,19 +311,45 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         } else {
             selectedLevel = Math.max(1, Math.min(selectedLevel + delta, maxLimit - currentLevel));
         }
+        removeMode = false;
+        subMenuMode = 0;
+        syncButtons();
+    }
+
+    /** Version "bajar" de adjustLevel: recorta contra el nivel ACTUAL, no contra el tope. */
+    private void adjustLevelDown(int delta) {
+        if (selectedIndex < 0) return;
+        EnchantOption opt = enchants.get(selectedIndex);
+        int currentLevel = opt.currentLevel();
+
+        if (currentLevel <= 0) {
+            // Nada que quitar en este encantamiento; no hay panel que abrir de verdad.
+            subMenuMode = 0;
+            syncButtons();
+            return;
+        }
+
+        if (delta == 0) {
+            selectedLevel = currentLevel; // "Todo": quita el encantamiento por completo
+        } else {
+            selectedLevel = Math.max(1, Math.min(selectedLevel + delta, currentLevel));
+        }
+        removeMode = true;
         subMenuMode = 0;
         syncButtons();
     }
 
     private void doEnchant() {
         if (selectedIndex < 0 || selectedIndex >= enchants.size()) return;
+        if (removeMode && selectedLevel <= 0) return;
         var conn = Minecraft.getInstance().getConnection();
         if (conn == null) return;
         EnchantOption opt = enchants.get(selectedIndex);
+        int delta = removeMode ? -selectedLevel : selectedLevel;
         conn.send(new C2SEnchantPacket(
                 getMenu().getBlockEntity().getBlockPos(),
                 opt.id(),
-                selectedLevel
+                delta
         ));
     }
 
@@ -259,28 +378,44 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 btnRows[i].setMessage(Component.literal(label));
                 btnRows[i].visible = true;
                 btnRows[i].active  = true;
+                // Mini ventana con la explicacion del encantamiento al pasar el mouse.
+                // Tenemos texto ".desc" escrito a mano en los lang tanto para los
+                // encantamientos del mod como para todos los vanilla (namespace
+                // "minecraft"); si algun otro mod externo aportara encantamientos
+                // sin traduccion propia, no ponemos tooltip para evitar mostrar la
+                // clave cruda sin traducir.
+                String ns = opt.id().getNamespace();
+                btnRows[i].setTooltip((esDelMod || ns.equals("minecraft"))
+                        ? Tooltip.create(Component.translatable("enchantment." + ns + "." + opt.id().getPath() + ".desc"))
+                        : null);
             } else {
                 btnRows[i].visible = false;
+                btnRows[i].setTooltip(null);
             }
         }
 
         btnScrollUp.active   = scrollOffset > 0;
         btnScrollDown.active = scrollOffset < Math.max(0, enchants.size() - VISIBLE_ROWS);
 
+        int curLevelForSel = hasSel ? enchants.get(selectedIndex).currentLevel() : 0;
+
         boolean masterVisible = hasSel && subMenuMode == 0;
         btnModePlus.visible  = masterVisible || !hasSel;
         btnModeMinus.visible = masterVisible || !hasSel;
         btnModePlus.active   = hasSel;
-        btnModeMinus.active  = hasSel;
+        // Sin nivel actual no hay nada que bajar.
+        btnModeMinus.active  = hasSel && curLevelForSel > 0;
 
         for (int i = 0; i < 4; i++) {
             btnLvlUp[i].visible   = hasSel && subMenuMode == 1;
             btnLvlDown[i].visible = hasSel && subMenuMode == 2;
         }
 
-        btnEnchant.active = hasSel;
+        btnEnchant.active = hasSel && (!removeMode || selectedLevel > 0);
         btnEnchant.setMessage(Component.literal(
-                hasSel ? "⚡ ENCHANT +" + fmtNum(selectedLevel) : "⚡ ENCHANT"));
+                !hasSel ? "⚡ ENCHANT"
+                        : removeMode ? "♦ QUITAR -" + fmtNum(selectedLevel) + " (+EXP)"
+                                     : "⚡ ENCHANT +" + fmtNum(selectedLevel)));
     }
 
     @Override
@@ -326,6 +461,25 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
 
             boolean isTotem  = item.is(Items.TOTEM_OF_UNDYING);
             boolean isRanged = item.is(Items.BOW) || item.is(Items.CROSSBOW);
+            boolean isGolemRod     = item.is(ModItems.GOLEM_BINDING_ROD.get());
+            boolean isSnowGolemRod = item.is(ModItems.SNOW_GOLEM_BINDING_ROD.get());
+            boolean isGeneratorCore = item.is(ModItems.GENERATOR_CORE.get());
+
+            // Items "especiales" (varas/libros custom: Cetro del Golem, Vara de
+            // Vinculacion, Guia Arcana, etc.) no encajan en NINGUNA categoria de
+            // encantamiento de vainilla (canEnchant() da false para todos), asi
+            // que "lo natural para su herramienta" no significa nada para ellos
+            // — filtrarlos igual que una espada dejaba la lista vacia por
+            // defecto (el bug: nada pasaba el filtro, ENCHANT quedaba sin nada
+            // que aplicar). Si el item no tiene NINGUN encantamiento vanillaCompat,
+            // se trata como universal: se ve la lista completa sin buscar.
+            boolean anyVanillaCompat = false;
+            for (var h0 : reg.listElements().toList()) {
+                try {
+                    if (h0.isBound() && h0.value().canEnchant(item)) { anyVanillaCompat = true; break; }
+                } catch (Exception ignored) {}
+            }
+            boolean universalItem = !anyVanillaCompat && !isTotem;
 
             reg.listElements().forEach(h -> {
                 try {
@@ -337,20 +491,26 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
 
                     if (isTotem  && !isOurTotemEnchant) return;
                     if (!isTotem && isOurTotemEnchant)  return;
-                    if (isApocalyptic && !isRanged)     return;
+                    // Apocaliptico solo cuenta como "ranged real" con un arco/ballesta
+                    // puesto; con el cetro del golem de nieve pasa igual por la lista
+                    // curada de abajo, no por este chequeo de item vanilla.
+                    if (isApocalyptic && !isRanged && !isSnowGolemRod) return;
+                    if ((isGolemRod || isGeneratorCore) && !GOLEM_MELEE_ENCHANTS.contains(id.toString())) return;
+                    if (isSnowGolemRod && !GOLEM_RANGED_ENCHANTS.contains(id.toString())) return;
 
                     boolean vanillaCompat = false;
                     try { vanillaCompat = h.value().canEnchant(item); }
                     catch (Exception ignored) {}
 
-                    boolean finalCompat = vanillaCompat || (hasActivePedestal && (isTotem || !vanillaCompat));
+                    boolean finalCompat = vanillaCompat || universalItem || (hasActivePedestal && (isTotem || !vanillaCompat));
                     if (isApocalyptic) finalCompat = hasActivePedestal;
 
                     int currentLevel = currentEnchants.getLevel(h);
                     // naturalCompat = compatible de forma "natural" (su herramienta real),
                     // sin contar el empujon del pedestal. La estrella dorada solo se pone
                     // en estos. El totem y el apocaliptico-en-arco cuentan como naturales.
-                    boolean naturalCompat = vanillaCompat
+                    boolean naturalCompat = universalItem
+                            || vanillaCompat
                             || (isTotem && isOurTotemEnchant)
                             || (isApocalyptic && isRanged);
                     allEnchants.add(new EnchantOption(
@@ -396,9 +556,16 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         enchants.clear();
         String q = searchQuery.trim().toLowerCase(Locale.ROOT);
         for (EnchantOption opt : allEnchants) {
-            if (q.isEmpty() || opt.displayName().toLowerCase(Locale.ROOT).contains(q)) {
-                enchants.add(opt);
-            }
+            boolean matchesQuery = q.isEmpty() || opt.displayName().toLowerCase(Locale.ROOT).contains(q);
+            if (!matchesQuery) continue;
+            // Sin busqueda escrita, solo se ve lo naturalmente compatible con el
+            // item puesto (o lo que ya sirve para "cualquier cosa", que siempre
+            // cuenta como natural). Escribir en el buscador SI revela el resto
+            // (por ejemplo "fortuna" con una espada puesta) — asi el jugador
+            // sigue pudiendo llegar a ellos a proposito, solo que ya no le
+            // aparecen sin pedirlo.
+            if (q.isEmpty() && !opt.naturalCompat()) continue;
+            enchants.add(opt);
         }
 
         selectedIndex = -1;
@@ -407,7 +574,7 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
                 if (enchants.get(i).id().equals(prevSelId)) { selectedIndex = i; break; }
             }
         }
-        if (selectedIndex < 0) { selectedLevel = 1; subMenuMode = 0; }
+        if (selectedIndex < 0) { selectedLevel = 1; subMenuMode = 0; removeMode = false; }
 
         int maxScroll = Math.max(0, enchants.size() - VISIBLE_ROWS);
         scrollOffset = Math.max(0, Math.min(scrollOffset, maxScroll));
@@ -454,6 +621,10 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
         drawSlots(graphics, x + 8, y + 142, 9, 1); // hotbar
 
         int px = x + VANILLA_W + GAP;
+        // Solo la zona de arriba (titulo, lista, botones) lleva fondo solido.
+        // La zona de abajo (fuel/EXP/rareza/materiales) se queda transparente
+        // a proposito -- WINDOW_H solo le da espacio de sobra para no
+        // encimarse con la hotbar, no dibuja una caja detras.
         graphics.fill(px, y, px + PANEL_W, y + VANILLA_H, 0xDD111122);
         graphics.fill(px, y, px + PANEL_W, y + 2, 0xFFFFAA00);
     }
@@ -487,31 +658,74 @@ public class ArcaneForgeScreen extends AbstractContainerScreen<ArcaneForgeMenu> 
             int ctrlY = listY + VISIBLE_ROWS * ROW_H + 6;
             EnchantOption opt = enchants.get(selectedIndex);
 
-            int baseCost  = ArcaneForgeBlockEntity.calculateProgressiveCost(opt.currentLevel(), selectedLevel, displayedBookshelves, hasActivePedestal);
             float enchMult = ArcaneForgeBlockEntity.getEnchantmentMultiplier(opt.id());
-            int totalCost  = Math.max(1, Math.round(baseCost * enchMult));
 
+            // Descuentos activos por los bloques del aldeano cerca de la Forja
+            // (se muestran igual en ambos modos, aunque solo afecten al costo
+            // de subir; se calculan una sola vez aqui).
+            float materialDiscount = 0f, xpDiscount = 0f;
+            if (Minecraft.getInstance().level != null) {
+                var forgePos = getMenu().getBlockEntity().getBlockPos();
+                materialDiscount = ArcaneDiscountBlock.getBestDiscount(Minecraft.getInstance().level, forgePos, ArcaneDiscountBlock.Branch.MATERIAL);
+                xpDiscount       = ArcaneDiscountBlock.getBestDiscount(Minecraft.getInstance().level, forgePos, ArcaneDiscountBlock.Branch.XP);
+            }
             boolean isCreative = Minecraft.getInstance().player != null && Minecraft.getInstance().player.isCreative();
-            if (isCreative) totalCost = 0;
 
-            boolean canAfford = isCreative || (displayedMagicFuel >= totalCost);
+            if (removeMode) {
+                // Modo "bajar nivel": sin costo de fuel, reembolsa EXP (misma
+                // formula que costaria volver a subir esos niveles).
+                int xpRefund = Math.max(1, (int) (selectedLevel * 3 * enchMult));
+                int nuevoNivel = Math.max(0, opt.currentLevel() - selectedLevel);
+                graphics.text(this.font, "♦ Quitar " + fmtNum(selectedLevel) + " nivel(es) → nivel " + nuevoNivel, px + 8, ctrlY + 36, 0xFFFF8888);
+                graphics.text(this.font, "Reembolso: §a+" + xpRefund + " EXP§r", px + 8, ctrlY + 46, 0xFF55FF55);
+            } else {
+                int baseCost  = ArcaneForgeBlockEntity.calculateProgressiveCost(opt.currentLevel(), selectedLevel, displayedBookshelves, hasActivePedestal);
+                int totalCost  = Math.max(1, Math.round(baseCost * enchMult));
 
-            graphics.text(this.font, "Fuel material: " + fmtNum(totalCost), px + 8, ctrlY + 36, canAfford ? 0xFF55FF55 : 0xFFFF5555);
+                if (materialDiscount > 0f) totalCost = Math.max(1, Math.round(totalCost * (1.0f - materialDiscount)));
+                if (isCreative) totalCost = 0;
 
-            if (!isCreative && Minecraft.getInstance().player != null) {
-                int xpCost = Math.max(1, (int)(selectedLevel * 3 * enchMult));
-                int playerXP = Minecraft.getInstance().player.experienceLevel;
-                boolean canAffordXP = playerXP >= xpCost;
-                graphics.text(this.font, "EXP: -" + xpCost + " lvl (tienes " + playerXP + ")", px + 8, ctrlY + 46, canAffordXP ? 0xFFFFFF55 : 0xFFFF5555);
-            } else if (isCreative) {
-                graphics.text(this.font, "EXP: Gratis (Creativo)", px + 8, ctrlY + 46, 0xFF55FF55);
+                boolean canAfford = isCreative || (displayedMagicFuel >= totalCost);
+
+                graphics.text(this.font, "Fuel material: " + fmtNum(totalCost), px + 8, ctrlY + 36, canAfford ? 0xFF55FF55 : 0xFFFF5555);
+
+                if (!isCreative && Minecraft.getInstance().player != null) {
+                    int xpCost = Math.max(1, (int)(selectedLevel * 3 * enchMult));
+                    if (xpDiscount > 0f) xpCost = Math.max(1, Math.round(xpCost * (1.0f - xpDiscount)));
+                    int playerXP = Minecraft.getInstance().player.experienceLevel;
+                    boolean canAffordXP = playerXP >= xpCost;
+                    graphics.text(this.font, "EXP: -" + xpCost + " lvl (tienes " + playerXP + ")", px + 8, ctrlY + 46, canAffordXP ? 0xFFFFFF55 : 0xFFFF5555);
+                } else if (isCreative) {
+                    graphics.text(this.font, "EXP: Gratis (Creativo)", px + 8, ctrlY + 46, 0xFF55FF55);
+                }
             }
 
-            String multStr = enchMult == 1.0f ? "x1 (Común)" : enchMult == 2.5f ? "x2.5 (Raro vanilla)" : enchMult == 3.0f ? "x3 (Mod Arcano)" : "x5 (LEGENDARIO)";
+            // Umbrales en vez de igualdad exacta: la vieja version solo cubria
+            // 1.0/2.5/3.0 y caia a "x5 LEGENDARIO" para cualquier otro valor,
+            // asi que night_vision (x4) y miners_sight (x2) — ver
+            // ArcaneForgeBlockEntity.getEnchantmentMultiplier — se mostraban
+            // mal en la GUI (etiqueta y color no coincidian con el multiplicador
+            // real que de hecho se cobra).
+            String multStr = enchMult >= 5.0f ? "x5 (LEGENDARIO)"
+                    : enchMult >= 4.0f ? "x4 (Especial)"
+                    : enchMult >= 3.0f ? "x3 (Mod Arcano)"
+                    : enchMult >= 2.5f ? "x2.5 (Raro vanilla)"
+                    : enchMult >= 2.0f ? "x2 (Utilidad)"
+                    : "x1 (Común)";
             int multColor  = enchMult >= 5.0f ? 0xFFFF00FF : enchMult >= 3.0f ? 0xFF8800FF : enchMult >= 2.5f ? 0xFF00FFFF : 0xFFFFFFFF;
             graphics.text(this.font, "Rareza: " + multStr, px + 8, ctrlY + 56, multColor);
 
-            int yOff = ctrlY + 66;
+            int statsYOff = ctrlY + 56;
+            if (materialDiscount > 0f || xpDiscount > 0f) {
+                statsYOff += 10;
+                StringBuilder discLine = new StringBuilder("Descuento aldeano: ");
+                if (materialDiscount > 0f) discLine.append("-").append(Math.round(materialDiscount * 100)).append("% mat");
+                if (materialDiscount > 0f && xpDiscount > 0f) discLine.append("  ");
+                if (xpDiscount > 0f) discLine.append("-").append(Math.round(xpDiscount * 100)).append("% exp");
+                graphics.text(this.font, discLine.toString(), px + 8, statsYOff, 0xFF55FFAA);
+            }
+
+            int yOff = statsYOff + 10;
             graphics.text(this.font, "— Materiales en cofres —", px + 8, yOff, 0xFFCCCCCC);
             yOff += 9;
 

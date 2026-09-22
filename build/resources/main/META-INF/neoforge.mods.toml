@@ -42,3 +42,13 @@ type="required"
 versionRange="[1.21.4,)"
 ordering="NONE"
 side="BOTH"
+
+[[dependencies.arcaneforge]]
+modId="geckolib"
+type="required"
+versionRange="[5.5.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[mixins]]
+config="Arcaneforge.mixins.json"

@@ -1,0 +1,9 @@
+{
+  "description": {"translate": "enchantment.arcaneforge.filo_eterno"},
+  "supported_items": "#minecraft:enchantable/sweeping",
+  "primary_items": "#minecraft:enchantable/sweeping",
+  "weight": 1, "max_level": 3,
+  "min_cost": {"base": 20, "per_level_above_first": 8},
+  "max_cost": {"base": 65, "per_level_above_first": 8},
+  "anvil_cost": 6, "slots": ["mainhand"], "effects": {}
+}

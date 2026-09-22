@@ -5,6 +5,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -30,6 +31,12 @@ public class AxeFortuneHandler {
         ItemStack tool = player.getMainHandItem();
         if (tool.isEmpty()) return;
 
+        // 0. Tiene que ser un hacha de verdad: la marca "ArcaneAwakened" la pone
+        // el Pedestal sobre CUALQUIER item (espadas, picos, tridentes...), asi
+        // que sin este chequeo un pico o espada Despierta con Fortuna tambien
+        // duplicaba drops de madera al talar, como si fuera un hacha.
+        if (!tool.is(ItemTags.AXES)) return;
+
         // 1. RESTRICCIÓN DE MOD: ¿Tiene el sello "ArcaneAwakened" otorgado por el Pedestal?
         CustomData customData = tool.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
         if (!customData.contains("ArcaneAwakened")) {
@@ -48,11 +55,15 @@ public class AxeFortuneHandler {
                     int fortuneLevel = enchantments.getLevel(fortuneOpt.get());
 
                     if (fortuneLevel > 0) {
+                        // Fortuna tambien se puede subir hasta 250 via la Arcane
+                        // Forge (ver ArcaneForgeBlockEntity.getRealMaxLevel); el
+                        // techo aqui abajo es solo un segundo seguro.
+                        int safeFortune = Math.min(fortuneLevel, 250);
                         for (ItemEntity drop : event.getDrops()) {
                             ItemStack dropStack = drop.getItem();
 
                             // 3. Aplicamos el efecto de poder: Añadimos un tronco extra por cada nivel de fortuna
-                            dropStack.setCount(dropStack.getCount() + fortuneLevel);
+                            dropStack.setCount(dropStack.getCount() + safeFortune);
                             drop.setItem(dropStack);
                         }
                     }

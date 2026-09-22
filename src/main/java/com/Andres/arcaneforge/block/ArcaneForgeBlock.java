@@ -43,6 +43,11 @@ public class ArcaneForgeBlock extends BaseEntityBlock {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof ArcaneForgeBlockEntity forgeBE) {
                 player.openMenu(forgeBE, buf -> buf.writeBlockPos(pos));
+                // Forzamos un calculo y envio inmediato del fuel/cofres para que la
+                // GUI muestre los datos reales al instante (no 0 hasta el siguiente tick).
+                if (player instanceof ServerPlayer sp) {
+                    forgeBE.forceSyncTo(sp);
+                }
             }
         }
         return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
@@ -56,7 +61,7 @@ public class ArcaneForgeBlock extends BaseEntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        // En 1.21/NeoForge 20.6 se usa MODEL para bloques animados por entidades de GeckoLib
+        // MODEL se usa para bloques animados por entidades de GeckoLib
         return RenderShape.MODEL;
     }
 }

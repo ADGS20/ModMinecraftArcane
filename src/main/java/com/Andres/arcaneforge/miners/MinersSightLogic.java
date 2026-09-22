@@ -25,7 +25,7 @@ public final class MinersSightLogic {
     private static final String ENABLED_KEY = "miners_sight_enabled";
     private static final String FILTER_KEY  = "miners_sight_filter";
 
-    /** Radio base + por nivel del escaneo. Nivel 1 = 9, nivel 2 = 12, nivel 3 = 15. */
+    /** Radio base + por nivel del escaneo. Nivel 1 = 9, nivel 2 = 12, nivel 3 = 15... */
     private static final int BASE_RADIUS = 6;
     private static final int RADIUS_PER_LEVEL = 3;
 
@@ -33,12 +33,15 @@ public final class MinersSightLogic {
      * Tope real de nivel para esta habilidad. IMPORTANTE: el sistema de la
      * Forja Arcana (ArcaneForgeBlockEntity.tryEnchant) IGNORA el max_level
      * del json de cada encantamiento y deja subir cualquiera hasta 15 (o 255
-     * con Pedestal activo). Sin este tope aparte, un jugador podria subir
-     * Vision Minera a nivel 255 y el radio de escaneo (6 + nivel*3) se
-     * volveria gigantesco, congelando el servidor. getLevel() recorta
-     * siempre al nivel real guardado en el item.
+     * con Pedestal activo). Sin este tope aparte, el radio de escaneo
+     * (6 + nivel*3) se volveria gigantesco y congelaria el servidor.
+     * Re-escalado de 3 a 15 (radio maximo 51 bloques) para que invertir mas
+     * en la Forja siga dando un escaneo mas amplio, sin dejar que se dispare
+     * sin limite. getLevel() recorta siempre al nivel real guardado en el
+     * item — debe coincidir con ArcaneForgeBlockEntity.getRealMaxLevel para
+     * "miners_sight".
      */
-    private static final int MAX_LEVEL = 3;
+    private static final int MAX_LEVEL = 15;
 
     /** Cuanta XP (puntos) cuesta cada ciclo de escaneo, por nivel del encantamiento. */
     private static final int XP_COST_PER_LEVEL = 1;

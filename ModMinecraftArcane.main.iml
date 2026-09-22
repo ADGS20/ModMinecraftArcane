@@ -39,6 +39,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Gradle: maven.modrinth:8BmcQJ2H:VukyYOGN" level="project" />
     <orderEntry type="library" name="Gradle: net.neoforged:neoforge:universal:26.1.2.65-beta" level="project" />
     <orderEntry type="library" name="Gradle: net.neoforged.fancymodloader:loader:11.0.13" level="project" />
     <orderEntry type="library" name="Gradle: net.neoforged:accesstransformers:11.0.2" level="project" />

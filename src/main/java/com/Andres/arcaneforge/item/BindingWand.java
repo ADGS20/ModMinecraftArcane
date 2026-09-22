@@ -2,6 +2,7 @@ package com.Andres.arcaneforge.item;
 
 import com.Andres.arcaneforge.Config;
 import com.Andres.arcaneforge.block.ArcaneForgeBlockEntity;
+import com.Andres.arcaneforge.block.ArcaneGolemGeneratorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -80,25 +81,26 @@ public class BindingWand extends Item {
             return InteractionResult.CONSUME;
         }
 
-        // ── Clic derecho en ARCANE FORGE → transferir todos los cofres ──
+        // ── Clic derecho en ARCANE FORGE ──
         if (be instanceof ArcaneForgeBlockEntity forge) {
-            // SHIFT + clic derecho en la mesa → marcarla como "mi mesa de cosecha".
-            // Asi la Cosecha de Almas sabe a que cofres mandar lo recolectado.
-            if (player.isShiftKeyDown()) {
-                CompoundTag pdata = player.getPersistentData();
-                pdata.putInt("arcaneforge_harvest_x", pos.getX());
-                pdata.putInt("arcaneforge_harvest_y", pos.getY());
-                pdata.putInt("arcaneforge_harvest_z", pos.getZ());
-                player.sendSystemMessage(Component.literal(
-                        "§b✔ Mesa de cosecha marcada: " + formatPos(pos)
-                        + ". La Cosecha de Almas enviara aqui lo recolectado."));
-                return InteractionResult.CONSUME;
-            }
-
+            // CLIC en la mesa (con o sin agacharse): transfiere los cofres guardados
+            // en la varita a la mesa Y marca esta mesa como destino de la Cosecha de
+            // Almas. Asi NO hay confusion: una sola accion hace ambas cosas.
             List<BlockPos> stored = getStoredChests(wand);
+
+            // Marcamos SIEMPRE esta mesa como mesa de cosecha (para Soul Harvest).
+            CompoundTag pdata = player.getPersistentData();
+            pdata.putInt("arcaneforge_harvest_x", pos.getX());
+            pdata.putInt("arcaneforge_harvest_y", pos.getY());
+            pdata.putInt("arcaneforge_harvest_z", pos.getZ());
+
             if (stored.isEmpty()) {
-                player.sendSystemMessage(
-                        Component.literal("§eSin cofres almacenados! Clic derecho en cofres primero."));
+                player.sendSystemMessage(Component.literal(
+                        "§b✔ Mesa marcada para la Cosecha de Almas."));
+                player.sendSystemMessage(Component.literal(
+                        "§ePara vincular cofres: primero clic derecho en los COFRES, luego clic aqui."));
+                player.sendSystemMessage(Component.literal(
+                        "§7(La mesa ya tiene " + forge.getLinkedChestCount() + " cofre(s) vinculado(s).)"));
                 return InteractionResult.CONSUME;
             }
 
@@ -112,13 +114,50 @@ public class BindingWand extends Item {
             clearStoredChests(wand);
 
             if (linked > 0) {
-                player.sendSystemMessage(
-                        Component.literal("§a✔ " + linked + " cofre(s) vinculado(s) a Arcane Forge! "
-                                + "(" + forge.getLinkedChestCount() + "/" + Config.MAX_LINKED_CHESTS + ")"));
+                player.sendSystemMessage(Component.literal(
+                        "§a✔ " + linked + " cofre(s) vinculado(s) a la mesa! "
+                        + "Total: " + forge.getLinkedChestCount() + "/" + Config.MAX_LINKED_CHESTS));
+                player.sendSystemMessage(Component.literal(
+                        "§7Abre la mesa: el fuel deberia aparecer en 1-2 segundos."));
                 wand.hurtAndBreak(2, player, context.getHand());
             } else {
-                player.sendSystemMessage(
-                        Component.literal("§eTodos los cofres ya estaban vinculados o forja llena."));
+                player.sendSystemMessage(Component.literal(
+                        "§eEsos cofres ya estaban vinculados, o la mesa esta llena. "
+                        + "Total: " + forge.getLinkedChestCount() + "/" + Config.MAX_LINKED_CHESTS));
+            }
+            return InteractionResult.CONSUME;
+        }
+
+        // ── Clic derecho en GENERADOR DE GOLEMS → vincular cofres (mismo flujo que la Forja) ──
+        if (be instanceof ArcaneGolemGeneratorBlockEntity generator) {
+            List<BlockPos> stored = getStoredChests(wand);
+
+            if (stored.isEmpty()) {
+                player.sendSystemMessage(Component.literal(
+                        "§ePara vincular cofres: primero clic derecho en los COFRES, luego clic aqui."));
+                player.sendSystemMessage(Component.literal(
+                        "§7(El generador ya tiene " + generator.getLinkedChestCount() + " cofre(s) vinculado(s).)"));
+                return InteractionResult.CONSUME;
+            }
+
+            int linked = 0;
+            for (BlockPos chestPos : stored) {
+                if (generator.addLinkedChest(chestPos)) {
+                    linked++;
+                }
+            }
+
+            clearStoredChests(wand);
+
+            if (linked > 0) {
+                player.sendSystemMessage(Component.literal(
+                        "§a✔ " + linked + " cofre(s) vinculado(s) al generador! "
+                        + "Total: " + generator.getLinkedChestCount() + "/" + Config.MAX_LINKED_CHESTS));
+                wand.hurtAndBreak(2, player, context.getHand());
+            } else {
+                player.sendSystemMessage(Component.literal(
+                        "§eEsos cofres ya estaban vinculados, o el generador esta lleno. "
+                        + "Total: " + generator.getLinkedChestCount() + "/" + Config.MAX_LINKED_CHESTS));
             }
             return InteractionResult.CONSUME;
         }

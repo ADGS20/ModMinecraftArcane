@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GEG",
+    "ENE",
+    "GEG"
+  ],
+  "key": {
+    "G": "minecraft:glowstone_dust",
+    "E": "minecraft:ender_pearl",
+    "N": "minecraft:nether_star"
+  },
+  "result": {
+    "id": "arcaneforge:lunar_fragment",
+    "count": 3
+  },
+  "show_notification": true
+}

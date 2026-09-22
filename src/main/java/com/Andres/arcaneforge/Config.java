@@ -57,6 +57,138 @@ public class Config {
     public static final int PEDESTAL_RANGE = 3;
 
     // ════════════════════════════════════
+    // Luna Oscura/Roja (evento mundial escalable)
+    // ════════════════════════════════════
+
+    /** Cada cuántos días de juego avanza una ronda de la Luna. */
+    public static final int MOON_INTERVAL_DAYS = 10;
+
+    /**
+     * Duración de la ventana de peligro extra tras subir de ronda, en ticks
+     * de juego (20 ticks = 1 segundo; 24000 = un día completo de juego).
+     * Esta versión de Minecraft ya no expone getDayTime()/isDay() en
+     * ServerLevel — de hecho, tras revisar el código fuente, el día/noche
+     * ahora corre por un sistema de "WorldClock" totalmente nuevo y aún
+     * experimental (net.minecraft.world.clock) — así que la ventana se mide
+     * en ticks de juego absolutos en vez de "hasta el próximo amanecer", y
+     * no depende para nada del ciclo real de sol/luna. El valor son 2 días
+     * completos (el doble de antes): la duración real de la "noche" en sí
+     * no se toca (arriesgado, sistema nuevo y frágil), pero el PELIGRO de la
+     * Luna (caza, horda, cielo rojo) dura el doble sea de día o de noche.
+     */
+    public static final long MOON_DURATION_TICKS = 48000L;
+
+    /** Probabilidad base (ronda 1) de que un mob hostil salga con equipo encantado. */
+    public static final double MOON_BASE_GEAR_CHANCE = 0.15;
+
+    /** Cuánto sube esa probabilidad por cada ronda. */
+    public static final double MOON_GEAR_CHANCE_PER_ROUND = 0.03;
+
+    /** Tope de esa probabilidad (fuera de la noche de Luna activa). */
+    public static final double MOON_MAX_GEAR_CHANCE = 0.55;
+
+    /** Probabilidad base de que un mob equipado sea ademas un "Heraldo" (elite/sub-jefe). */
+    public static final double MOON_BASE_ELITE_CHANCE = 0.03;
+
+    /** Probabilidad de Heraldo mientras la Luna esta activa (esa noche concreta). */
+    public static final double MOON_ACTIVE_ELITE_CHANCE = 0.18;
+
+    /** Días de juego que adelanta el Fragmento Lunar al consumirse. */
+    public static final int MOON_ACCELERATOR_DAYS_SKIPPED = 3;
+
+    /** Días de juego de espera entre dos usos del Fragmento Lunar. */
+    public static final int MOON_ACCELERATOR_COOLDOWN_DAYS = 1;
+
+    /** Radio (en chunks) en el que un mob detecta y persigue directamente al jugador durante la Luna activa. */
+    public static final int MOON_HUNT_RADIUS_CHUNKS = 15;
+
+    /** Cada cuantos ticks se vuelve a forzar el objetivo de todo mob hostil dentro del radio de caza (30 = 1.5s). */
+    public static final int MOON_HUNT_RETARGET_TICKS = 30;
+
+    /** Cada cuantos ticks aparece una nueva oleada de horda junto a cada jugador (100 = 5s). */
+    public static final int MOON_HORDE_INTERVAL_TICKS = 100;
+
+    /** Cuantos mobs nuevos intenta añadir cada oleada de horda por jugador. */
+    public static final int MOON_HORDE_SPAWNS_PER_WAVE = 4;
+
+    /**
+     * Tope de mobs hostiles ya cerca de un jugador (dentro de
+     * MOON_HORDE_CAP_RADIUS) antes de dejar de sumar mas oleadas — la horda
+     * se spawnea a mano con EntityType.spawn(...), que NO pasa por el limite
+     * natural de mobs de vainilla (NaturalSpawner), asi que sin este tope
+     * propio la cantidad crecería sin fin.
+     */
+    public static final int MOON_HORDE_MAX_PER_PLAYER = 40;
+
+    /** Radio (en bloques) en el que se cuentan los mobs ya cercanos para el tope de horda. */
+    public static final double MOON_HORDE_CAP_RADIUS = 64.0;
+
+    /** Distancia minima/maxima (en bloques) a la que aparece cada mob de una oleada de horda. */
+    public static final double MOON_HORDE_MIN_DIST = 20.0;
+    public static final double MOON_HORDE_MAX_DIST = 40.0;
+
+    /** Ronda minima a partir de la cual un Heraldo puede romper bloques naturales para llegar al jugador. */
+    public static final int MOON_HERALDO_DIG_MIN_ROUND = 4;
+
+    /** Cada cuantos ticks un Heraldo bloqueado intenta romper el bloque que lo detiene. */
+    public static final int MOON_HERALDO_DIG_INTERVAL_TICKS = 10;
+
+    /** Cuantos mobs aparecen por defecto con /arcaneforge moon wave si no se especifica cantidad. */
+    public static final int MOON_WAVE_DEFAULT_COUNT = 8;
+
+    /** Tope duro de mobs que puede pedir de una vez /arcaneforge moon wave (evitar spam/lag del comando). */
+    public static final int MOON_WAVE_MAX_COUNT = 300;
+
+    /** Ronda maxima que acepta /arcaneforge moon wave — por encima de esto el nivel de encantamiento ya no sube (tope real 255), pero salud/daño de Heraldo si siguen escalando. */
+    public static final int MOON_WAVE_MAX_ROUND = 50;
+
+    /**
+     * Tope real del multiplicador de vida/daño de un Heraldo (ver
+     * ArcaneMoonLogic.equipMob). Antes se topaba en la ronda 10 (mismo punto
+     * donde el nivel de encantamiento ya llega a 255) y nunca subia mas —
+     * asi que rondas "administrador" mas altas (via /arcaneforge moon wave)
+     * no se sentian mas peligrosas de verdad. Ahora sigue subiendo mucho mas
+     * alla de la ronda 10.
+     */
+    public static final double MOON_ELITE_HEALTH_MULT_CAP = 12.0;
+    public static final double MOON_ELITE_DAMAGE_MULT_CAP = 10.0;
+
+    /**
+     * A partir de esta ronda, un Heraldo sale con armadura COMPLETA (casco,
+     * pecho, piernas, botas) en vez de solo el peto — vainilla ya reduce
+     * mucho el daño recibido solo por llevar armadura puesta, y sin esto un
+     * Heraldo de ronda alta se sentia demasiado fragil pese a su enchant
+     * altisimo (el enchant sube el daño que HACE, no lo dificil que es
+     * matarlo).
+     */
+    public static final int MOON_HERALDO_FULL_ARMOR_MIN_ROUND = 3;
+
+    /** A partir de esta ronda, un Heraldo lleva un Totem de la Inmortalidad en la mano secundaria. */
+    public static final int MOON_HERALDO_TOTEM_MIN_ROUND = 6;
+
+    // ════════════════════════════════════
+    // Generador Arcano de Gólems
+    // ════════════════════════════════════
+
+    /** Cada cuántos ticks intenta producir un gólem el generador (6000 = 5 minutos reales). */
+    public static final int GOLEM_GENERATOR_INTERVAL_TICKS = 6000;
+
+    /** Bloques de Hierro por gólem (el doble de la receta vainilla real: 4). */
+    public static final int GOLEM_GENERATOR_IRON_BLOCKS = 8;
+
+    /** Calabazas Talladas por gólem (el doble de la receta vainilla real: 1). */
+    public static final int GOLEM_GENERATOR_PUMPKINS = 2;
+
+    /** Bloques de Nieve por gólem de nieve (el doble de la receta vainilla real: 2). */
+    public static final int GOLEM_GENERATOR_SNOW_BLOCKS = 4;
+
+    /** Tope de gólems ya generados cerca del bloque antes de pausar la producción (anti-spam/lag). */
+    public static final int GOLEM_GENERATOR_MAX_NEARBY = 4;
+
+    /** Radio (en bloques) en el que se cuentan los gólems ya generados para el tope anterior. */
+    public static final int GOLEM_GENERATOR_NEARBY_RADIUS = 16;
+
+    // ════════════════════════════════════
     // Sistema de Combustible Mágico
     // ════════════════════════════════════
 

@@ -1,0 +1,30 @@
+{
+  "stats": {
+    "minecraft:dropped": {
+      "minecraft:grass_block": 327
+    },
+    "minecraft:custom": {
+      "minecraft:open_chest": 11,
+      "minecraft:time_since_rest": 3514,
+      "minecraft:walk_one_cm": 1530,
+      "minecraft:total_world_time": 1915,
+      "minecraft:leave_game": 3,
+      "minecraft:sneak_time": 59,
+      "minecraft:play_time": 1757,
+      "minecraft:jump": 1,
+      "minecraft:time_since_death": 1757,
+      "minecraft:drop": 2
+    },
+    "minecraft:used": {
+      "arcaneforge:arcane_forge": 1,
+      "minecraft:chest": 2,
+      "arcaneforge:arcane_power_block": 1,
+      "arcaneforge:arcane_pedestal": 1
+    },
+    "minecraft:picked_up": {
+      "minecraft:leaf_litter": 2,
+      "minecraft:grass_block": 654
+    }
+  },
+  "DataVersion": 4790
+}

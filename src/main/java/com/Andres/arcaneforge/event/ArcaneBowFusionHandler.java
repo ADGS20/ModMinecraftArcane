@@ -49,8 +49,10 @@ public class ArcaneBowFusionHandler {
                             // Si se detecta la fusión legendaria de Infinidad + Reparación
                             if (mendingLvl > 0 && infinityLvl > 0) {
                                 float currentDmg = event.getNewDamage();
-                                // Calculamos el multiplicador prohibido
-                                float bowExtraDamage = (float) ((mendingLvl * 1.5f) + (infinityLvl * 0.5f));
+                                // Calculamos el multiplicador prohibido (topado: Reparacion e
+                                // Infinidad tambien se pueden subir hasta nivel 255 via la
+                                // Arcane Forge, y sin tope esto pasaba de 380 de daño extra).
+                                float bowExtraDamage = Math.min((mendingLvl * 1.5f) + (infinityLvl * 0.5f), 40.0f);
                                 event.setNewDamage(currentDmg + bowExtraDamage);
 
                                 ArcaneForge.LOGGER.debug("Arcane Bow Fusion: +{} damage applied safely!", bowExtraDamage);

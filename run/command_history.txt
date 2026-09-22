@@ -1,50 +1,50 @@
-/give @p arcaneforge:arcane_forge
-/give @p arcaneforge:arcane_power_block
-/give @p arcaneforge:arcane_guide_book
-/give @p arcaneforge:arcane_pedestal
-/gamemode survival
-/gamemode creative
-/give @p arcaneforge:arcane_pedestal
-/give @p arcaneforge:binding_wand
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/recipe give @s *
-/gamemode creative
-/tick rate 9999
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/tick rate 9999
-/gamemode survival
-/gamemode creative
-/gamemode survival
-/gamemode creative
+/time set night
+/tick rate 9000
+/time set minecraft:night
+/tick rate 9000
+/enchant Dev arcaneforge:eternal_feast
+/enchant Dev arcaneforge:eternal_feast 255
+/enchant Dev arcaneforge:eternal_feast 250
+/tick rate 20
+/tick rate 2000
+/tick rate 20
+/tick rate 2000
+/tick rate 4000
+/tick sprint 10d
+/tick sprint 3d
+/tick sprint 10d
+/difficulty hard
+/tick sprint 50d
+/tick sprint 60d
+/tick sprint 240d
+/spawnpoint Dev -1 -57 8
+/kill @a
+/give Dev minecraft:iron_block 9999
+/give Dev minecraft:iron_block 6400
+/give Dev minecraft:pumpkin 6400
+/tick sprint 50d
+/give @a arcaneforge:generator_core 1
+/tick sprint 50d
+/tick freeze
+/tick unfreeze
+/tick sprint 50d
+/xp add Dev 9999 levels
+/tick freeze
+/tick unfreeze
+/tick sprint 50d
+/tick freeze
+/tick sprint 50d
+/tick freeze
+/tick unfreeze
+/tick sprint 50d
+/xp add Dev 9999 levels
+/tick sprint 50d
+/xp add Dev 99999 levels
+/time set minecraft:night
+/arcaneforge moon wave 8 20 Andres
+/arcaneforge moon wave 8 20 Dev
+/arcaneforge moon wave 10 60 Dev
+/arcaneforge moon wave 50 200 Dev
+/tick sprint 30d
+/kill @a
+/kill @e

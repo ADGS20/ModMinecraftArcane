@@ -1,0 +1,31 @@
+{
+  "parent": "arcaneforge:craft_pedestal",
+  "display": {
+    "icon": { "id": "minecraft:chest" },
+    "title": { "translate": "advancements.arcaneforge.infinite_chest.title" },
+    "description": { "translate": "advancements.arcaneforge.infinite_chest.description" },
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "placed": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": [
+          { "condition": "minecraft:block_state_property", "block": "minecraft:chest" },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "predicates": {
+                "minecraft:enchantments": [
+                  { "enchantments": "arcaneforge:almacen_infinito", "levels": { "min": 1 } }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [ [ "placed" ] ]
+}

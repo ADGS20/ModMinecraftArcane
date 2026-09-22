@@ -60,8 +60,11 @@ public class ApocalypticBowHandler {
             Vec3 pos = target.position();
             RandomSource random = serverLevel.getRandom();
 
-            // Rayos: según el nivel del encantamiento
-            int boltCount = level;
+            // Rayos: escala suave con el nivel (1 + 0.08 por nivel), tope real en
+            // 20 rayos alcanzado alrededor del nivel 237 — asi invertir en subirlo
+            // en la Arcane Forge hasta cerca de 250 sigue dando algo, en vez de
+            // aplanarse de golpe en un nivel bajo.
+            int boltCount = (int) Math.min(1 + 0.08f * level, 20f);
             for (int i = 0; i < boltCount; i++) {
                 LightningBolt bolt = new LightningBolt(EntityType.LIGHTNING_BOLT, serverLevel);
                 bolt.setPos(

@@ -1,0 +1,189 @@
+---- Minecraft Crash Report ----
+// Don't do that.
+
+Time: 2026-08-13 01:00:05
+Description: Rendering screen
+
+java.lang.IllegalStateException: Can only blur once per frame
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.renderer.state.gui.GuiRenderState.blurBeforeThisStratum(GuiRenderState.java:42) ~[minecraft-patched-26.1.2.65-beta.jar:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.gui.GuiGraphicsExtractor.blurBeforeThisStratum(GuiGraphicsExtractor.java:148) ~[minecraft-patched-26.1.2.65-beta.jar:?] {neoforge:access_transformer}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.gui.screens.Screen.extractBlurredBackground(Screen.java:401) ~[minecraft-patched-26.1.2.65-beta.jar:?] {neoforge:access_transformer}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.gui.screens.Screen.extractBackground(Screen.java:391) ~[minecraft-patched-26.1.2.65-beta.jar:?] {neoforge:access_transformer}
+	at TRANSFORMER/arcaneforge@1.0.0/com.Andres.arcaneforge.menu.MinersSightScreen.extractRenderState(MinersSightScreen.java:94) ~[main/:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.gui.screens.Screen.extractRenderStateWithTooltipAndSubtitles(Screen.java:112) ~[minecraft-patched-26.1.2.65-beta.jar:?] {neoforge:access_transformer}
+	at TRANSFORMER/neoforge@26.1.2.65-beta/net.neoforged.neoforge.client.ClientHooks.drawScreenInternal(ClientHooks.java:414) ~[neoforge-26.1.2.65-beta-universal.jar:?] {}
+	at TRANSFORMER/neoforge@26.1.2.65-beta/net.neoforged.neoforge.client.ClientHooks.drawScreen(ClientHooks.java:409) ~[neoforge-26.1.2.65-beta-universal.jar:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.renderer.GameRenderer.extractGui(GameRenderer.java:515) ~[minecraft-patched-26.1.2.65-beta.jar:?] {neoforge:access_transformer}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.renderer.GameRenderer.extract(GameRenderer.java:424) ~[minecraft-patched-26.1.2.65-beta.jar:?] {neoforge:access_transformer}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.Minecraft.renderFrame(Minecraft.java:1377) [minecraft-patched-26.1.2.65-beta.jar:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.Minecraft.runTick(Minecraft.java:1329) [minecraft-patched-26.1.2.65-beta.jar:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.Minecraft.run(Minecraft.java:937) [minecraft-patched-26.1.2.65-beta.jar:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.main.Main.main(Main.java:246) [minecraft-patched-26.1.2.65-beta.jar:?] {}
+	at net.neoforged.fml.startup.Client.main(Client.java:19) [loader-11.0.13.jar:11.0] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+	at net.neoforged.devlaunch.Main.main(Main.java:57) [DevLaunch-1.0.2.jar:?] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Render thread
+Stacktrace:
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.renderer.state.gui.GuiRenderState.blurBeforeThisStratum(GuiRenderState.java:42) ~[minecraft-patched-26.1.2.65-beta.jar:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.gui.GuiGraphicsExtractor.blurBeforeThisStratum(GuiGraphicsExtractor.java:148) ~[minecraft-patched-26.1.2.65-beta.jar:?] {neoforge:access_transformer}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.gui.screens.Screen.extractBlurredBackground(Screen.java:401) ~[minecraft-patched-26.1.2.65-beta.jar:?] {neoforge:access_transformer}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.gui.screens.Screen.extractBackground(Screen.java:391) ~[minecraft-patched-26.1.2.65-beta.jar:?] {neoforge:access_transformer}
+	at TRANSFORMER/arcaneforge@1.0.0/com.Andres.arcaneforge.menu.MinersSightScreen.extractRenderState(MinersSightScreen.java:94) ~[main/:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.gui.screens.Screen.extractRenderStateWithTooltipAndSubtitles(Screen.java:112) ~[minecraft-patched-26.1.2.65-beta.jar:?] {neoforge:access_transformer}
+	at TRANSFORMER/neoforge@26.1.2.65-beta/net.neoforged.neoforge.client.ClientHooks.drawScreenInternal(ClientHooks.java:414) ~[neoforge-26.1.2.65-beta-universal.jar:?] {}
+	at TRANSFORMER/neoforge@26.1.2.65-beta/net.neoforged.neoforge.client.ClientHooks.drawScreen(ClientHooks.java:409) ~[neoforge-26.1.2.65-beta-universal.jar:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.renderer.GameRenderer.extractGui(GameRenderer.java:515) ~[minecraft-patched-26.1.2.65-beta.jar:?] {neoforge:access_transformer}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.renderer.GameRenderer.extract(GameRenderer.java:424) ~[minecraft-patched-26.1.2.65-beta.jar:?] {neoforge:access_transformer}
+-- Screen render details --
+Details:
+	Screen name: com.Andres.arcaneforge.menu.MinersSightScreen
+	Mouse location: Scaled: (199.500000, 126.374628). Absolute: (797.000000, 504.000000)
+	Screen size: Scaled: (399, 253). Absolute: (1594, 1009). Scale factor of 4
+Stacktrace:
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.renderer.GameRenderer.extractGui(GameRenderer.java:515) ~[minecraft-patched-26.1.2.65-beta.jar:?] {neoforge:access_transformer}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.renderer.GameRenderer.extract(GameRenderer.java:424) ~[minecraft-patched-26.1.2.65-beta.jar:?] {neoforge:access_transformer}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.Minecraft.renderFrame(Minecraft.java:1377) [minecraft-patched-26.1.2.65-beta.jar:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.Minecraft.runTick(Minecraft.java:1329) [minecraft-patched-26.1.2.65-beta.jar:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.Minecraft.run(Minecraft.java:937) [minecraft-patched-26.1.2.65-beta.jar:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.main.Main.main(Main.java:246) [minecraft-patched-26.1.2.65-beta.jar:?] {}
+	at net.neoforged.fml.startup.Client.main(Client.java:19) [loader-11.0.13.jar:11.0] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+	at net.neoforged.devlaunch.Main.main(Main.java:57) [DevLaunch-1.0.2.jar:?] {}
+
+
+-- Uptime --
+Details:
+	JVM uptime: 19.496s
+	Wall uptime: 13.430s
+	High-res time: 18.656s
+	Client ticks: 234 ticks / 11.700s
+Stacktrace:
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.Minecraft.fillReport(Minecraft.java:2472) [minecraft-patched-26.1.2.65-beta.jar:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.Minecraft.emergencySaveAndCrash(Minecraft.java:992) [minecraft-patched-26.1.2.65-beta.jar:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.Minecraft.run(Minecraft.java:957) [minecraft-patched-26.1.2.65-beta.jar:?] {}
+	at TRANSFORMER/minecraft@26.1.2/net.minecraft.client.main.Main.main(Main.java:246) [minecraft-patched-26.1.2.65-beta.jar:?] {}
+	at net.neoforged.fml.startup.Client.main(Client.java:19) [loader-11.0.13.jar:11.0] {}
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?] {}
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?] {}
+	at net.neoforged.devlaunch.Main.main(Main.java:57) [DevLaunch-1.0.2.jar:?] {}
+
+
+-- Affected level --
+Details:
+	All players: 1 total; LocalPlayer{name=Dev, id=49, pos=(4.519426891373941, 127.0, -11.403530625653337), mode=SURVIVAL, permission=owner}
+	Chunk stats: 1521, 1057
+	Level dimension: minecraft:overworld
+	Level time: 23843 game time, 26600 day time
+	Level spawn location: World: (0,126,0), Section: (at 0,14,0 in 0,7,0; chunk contains blocks 0,-64,0 to 15,319,15), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,-64,0 to 511,319,511)
+	Server brand: neoforge
+	Server type: Integrated singleplayer server
+	Tracked entity count: 144
+	Client weather: Raining: false, thundering: false
+
+-- Last reload --
+Details:
+	Reload number: 1
+	Reload reason: initial
+	Finished: Yes
+	Packs: vanilla, mod_resources, mod/arcaneforge, mod/neoforge
+
+-- System Details --
+Details:
+	Minecraft Version: 26.1.2
+	Minecraft Version ID: 26.1.2
+	Operating System: Windows 11 (amd64) version 10.0
+	Java Version: 25.0.3, Eclipse Adoptium
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode, sharing), Eclipse Adoptium
+	Memory: 337693712 bytes (322 MiB) / 1333788672 bytes (1272 MiB) up to 17146314752 bytes (16352 MiB)
+	Memory (heap): init: 1024MiB, used: 938MiB, committed: 1272MiB, max: 16352MiB
+	Memory (non-head): init: 007MiB, used: 223MiB, committed: 232MiB, max: 000MiB
+	CPUs: 16
+	Processor Vendor: GenuineIntel
+	Processor Name: 11th Gen Intel(R) Core(TM) i9-11900K @ 3.50GHz
+	Identifier: Intel64 Family 6 Model 167 Stepping 1
+	Microarchitecture: Rocket Lake
+	Frequency (GHz): 3.50
+	Number of physical packages: 1
+	Number of physical CPUs: 8
+	Number of logical CPUs: 16
+	Graphics card #0 name: NVIDIA GeForce RTX 3060
+	Graphics card #0 vendor: NVIDIA
+	Graphics card #0 VRAM (MiB): 12288.00
+	Graphics card #0 deviceId: VideoController1
+	Graphics card #0 versionInfo: 32.0.15.9621
+	Memory slot #0 capacity (MiB): 16384.00
+	Memory slot #0 clockSpeed (GHz): 3.20
+	Memory slot #0 type: DDR4
+	Memory slot #1 capacity (MiB): 16384.00
+	Memory slot #1 clockSpeed (GHz): 3.20
+	Memory slot #1 type: DDR4
+	Memory slot #2 capacity (MiB): 16384.00
+	Memory slot #2 clockSpeed (GHz): 3.20
+	Memory slot #2 type: DDR4
+	Memory slot #3 capacity (MiB): 16384.00
+	Memory slot #3 clockSpeed (GHz): 3.20
+	Memory slot #3 type: DDR4
+	Virtual memory max (MiB): 69501.06
+	Virtual memory used (MiB): 25919.55
+	Swap memory total (MiB): 4096.00
+	Swap memory used (MiB): 0.00
+	Space in storage for jna.tmpdir (MiB): <path not set>
+	Space in storage for org.lwjgl.system.SharedLibraryExtractPath (MiB): <path not set>
+	Space in storage for io.netty.native.workdir (MiB): <path not set>
+	Space in storage for java.io.tmpdir (MiB): available: 14974.76, total: 475477.00
+	Space in storage for workdir (MiB): available: 716169.94, total: 1907712.00
+	JVM Flags: 0 total; 
+	Debug Flags: 0 total; 
+	Launched Version: 26.1.2.65-beta
+	Backend library: LWJGL version 3.4.1+2
+	Backend API: NVIDIA GeForce RTX 3060/PCIe/SSE2 GL version 3.3.0 NVIDIA 596.21, NVIDIA Corporation
+	Window size: 1594x1009
+	GFLW Platform: win32
+	Render Extensions: GL_ARB_buffer_storage, GL_KHR_debug, GL_ARB_vertex_attrib_binding, GL_ARB_direct_state_access, GL_EXT_texture_filter_anisotropic
+	GL debug messages: 
+	Is Modded: Definitely; Client brand changed to 'neoforge'; Server brand changed to 'neoforge'
+	Universe: 400921fb54442d18
+	Type: Integrated Server
+	Transparency: regular
+	Render Distance: 16/16 chunks
+	Resource Packs: vanilla, mod_resources, mod/arcaneforge, mod/neoforge (incompatible)
+	Sound Cache: 0 bytes in 0 buffers
+	Current Language: es_mx
+	Locale: es_ES
+	System encoding: Cp1252
+	File encoding: UTF-8
+	CPU: 16x 11th Gen Intel(R) Core(TM) i9-11900K @ 3.50GHz
+	Server Running: true
+	Player Count: 1 / 8; [ServerPlayer['Dev'/49, l='ServerLevel[Mundo nuevo]', x=4.52, y=127.00, z=-11.40]]
+	Active Data Packs: vanilla, mod_data, mod/arcaneforge, mod/neoforge
+	Available Data Packs: minecart_improvements, redstone_experiments, trade_rebalance, vanilla, mod/arcaneforge, mod/neoforge, mod_data
+	Enabled Feature Flags: minecraft:vanilla
+	World Generation: Stable
+	World Seed: 3495023299438582304
+	Suppressed Exceptions: ~~NONE~~
+	Class Processors: 
+		00,00%: neoforge:neoforge_dev_dist_cleaner
+		00,00%: neoforge:computing_frames (marker)
+		00,00%: neoforge:runtime_enum_extender
+		04,26%: neoforge:access_transformer
+		00,04%: neoforge:mixin
+		00,00%: neoforge:simple_processors_default (marker)
+		00,01%: neoforge.coremods:field_to_getter.net.minecraft.world.level.biome.biome
+		00,01%: neoforge.coremods:field_to_getter.net.minecraft.world.level.block.flowerpotblock
+		00,01%: neoforge.coremods:field_to_getter.net.minecraft.world.level.levelgen.structure.structure
+		00,28%: neoforge.coremods:method_redirector
+	Mod List: 
+		main                                              |Arcane Forge                  |arcaneforge                   |1.0.0               |Manifest: NOSIGNATURE
+		minecraft-patched-26.1.2.65-beta.jar              |Minecraft                     |minecraft                     |26.1.2              |Manifest: NOSIGNATURE
+		neoforge-26.1.2.65-beta-universal.jar             |NeoForge                      |neoforge                      |26.1.2.65-beta      |Manifest: NOSIGNATURE
+	Crash Report UUID: 54b47d5e-9276-4650-ac7a-d9ad515b7352
+	FML: 11.0.13
+	NeoForge: 26.1.2.65-beta

@@ -1,0 +1,28 @@
+{
+  "parent": "arcaneforge:craft_pedestal",
+  "display": {
+    "icon": { "id": "minecraft:bundle" },
+    "title": { "translate": "advancements.arcaneforge.dimensional_bag.title" },
+    "description": { "translate": "advancements.arcaneforge.dimensional_bag.description" },
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "got_bag": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:bundle",
+            "predicates": {
+              "minecraft:enchantments": [
+                { "enchantments": "arcaneforge:dimensional_bind", "levels": { "min": 1 } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [ [ "got_bag" ] ]
+}

@@ -11,8 +11,8 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 /** Cliente -> Servidor: el jugador pidio cambiar a otra pagina del saco. */
 public record C2SBagPagePacket(int direction) implements CustomPacketPayload {
 
-    public static final CustomPacketPayload.Type<C2SBagPagePacket> TYPE =
-            new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(ArcaneForge.MODID, "bag_page"));
+    public static final Type<C2SBagPagePacket> TYPE =
+            new Type<>(Identifier.fromNamespaceAndPath(ArcaneForge.MODID, "bag_page"));
 
     public void write(FriendlyByteBuf buf) {
         buf.writeVarInt(direction);

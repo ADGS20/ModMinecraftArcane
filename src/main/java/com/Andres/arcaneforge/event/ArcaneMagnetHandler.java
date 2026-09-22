@@ -112,9 +112,13 @@ public class ArcaneMagnetHandler {
         }
     }
 
-    // ── Nivel 3: recoge items sueltos del suelo cercano ────────────────────────
-
-    private static final double VACUUM_RADIUS = 8.0;
+    // ── Nivel 3+: recoge items sueltos del suelo cercano ───────────────────────
+    // Radio base 8 al desbloquear el nivel 3; sigue creciendo con niveles mas
+    // altos (re-escalado, antes era un radio fijo sin importar cuanto se
+    // subiera en la Forja) hasta un techo de 32 bloques.
+    private static double vacuumRadiusFor(int magnetLevel) {
+        return Math.min(8.0 + (magnetLevel - 3) * 0.5, 32.0);
+    }
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
@@ -129,7 +133,7 @@ public class ArcaneMagnetHandler {
             if (bag.isEmpty()) return;
             if (!BagLogic.isMagnetEnabled(bag)) return;
 
-            AABB area = sp.getBoundingBox().inflate(VACUUM_RADIUS);
+            AABB area = sp.getBoundingBox().inflate(vacuumRadiusFor(magnetLevel));
             List<ItemEntity> nearby = sp.level().getEntitiesOfClass(ItemEntity.class, area, ItemEntity::isAlive);
             if (nearby.isEmpty()) return;
 
